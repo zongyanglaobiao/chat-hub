@@ -61,3 +61,5 @@ test/*
 # 排除前端项目的node_modules文件夹及所有文件夹下的文件
 **/node_modules/
 /fron-end/package-lock.json
+/.idea/modules.xml
+/.idea/workspace.xml

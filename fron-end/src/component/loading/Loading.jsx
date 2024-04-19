@@ -1,4 +1,4 @@
-export  default  function  Loading() {
+const  Loading = () =>  {
     return (
         <div className='layout-center h-100vh'>
             <h1>Loading...</h1>
@@ -6,5 +6,4 @@ export  default  function  Loading() {
     )
 }
 
-
-
+export  default Loading

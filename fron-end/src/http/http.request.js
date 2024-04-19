@@ -3,8 +3,11 @@ import axios from "axios";
 
 const URL = import.meta.env.VITE_REACT_APP_PATH
 
+export const TOKEN_NAME = "auth";
 const globalConfig = {
-
+	headers: {
+		[TOKEN_NAME]: localStorage.getItem(TOKEN_NAME) || ''
+	}
 }
 
 // 创建 axios 请求实例
