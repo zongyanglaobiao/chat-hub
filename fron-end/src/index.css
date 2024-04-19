@@ -1,0 +1,22 @@
+/*居中*/
+.layout-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*文本溢出显示省略号*/
+.text-overflow{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*去除滚轮*/
+.remove_the_scroll{
+
+}
+
+.remove_the_scroll::-webkit-scrollbar {
+    display: none;
+}
