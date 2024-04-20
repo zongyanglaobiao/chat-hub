@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const URL = import.meta.env.VITE_REACT_APP_PATH
+export const URL = import.meta.env.VITE_REACT_APP_PATH
 
 export const TOKEN_NAME = "auth";
 const globalConfig = {

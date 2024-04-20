@@ -63,20 +63,19 @@ const ChatHeader = () => {
         navigate({pathname:HOME_PERSON_SETTING,hash:IS_JUMP})
     }, []);
 
-
     const items = [
         { key: '1', label: (<div onClick={personSetting}>个人设置</div>) },
         { key: '2', label: (<div onClick={signOut}>退出登录</div>) },
-    ];
+    ]
 
     return (
-        <header className="flex justify-between items-center p-4 bg-white shadow h-[5%]">
+        <header className="flex justify-between items-center p-4  bg-white shadow h-[5%]">
             <div className="w-[50%] flex justify-between">
                 <div className='flex items-center'>
                     <img src={MessageSVG} alt="message" className="w-[50px]"/>
                     <h1 className="text-xl font-bold">Secure Chat Hub</h1>
                 </div>
-                {/*<div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_CHAT,hash:IS_JUMP})}>
+               {/* <div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_CHAT,hash:IS_JUMP})}>
                     <img src={DIALOGUE} alt="chat" className="w-[20px]"/>
                     <span>首页</span>
                 </div>

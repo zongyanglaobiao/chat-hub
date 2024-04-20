@@ -6,6 +6,7 @@ import {userInfoThunk} from "@/redux/feature/user.thunk.js";
 import {TOKEN_NAME} from "@/http/http.request.js";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {UploadOutlined} from "@ant-design/icons";
+import {getUploadUrl} from "@/http/api/file.api.js";
 
 
 const PersonSetting = () => {
@@ -26,7 +27,7 @@ const PersonSetting = () => {
 
     const onSave = async () => {
         setEditing(false);
-        const params = {...form.getFieldsValue(),userId:userInfo.userId};
+        const params = {...form.getFieldsValue(),id:userInfo.id,avatar:downloadUrl.current};
         const resp = await doModify(params)
 
         if (resp.code === 200) {
@@ -38,7 +39,7 @@ const PersonSetting = () => {
 
     const props = {
         name: 'file',
-        action: userInfo.avatar,
+        action: getUploadUrl(),
         headers: {
             auth: localStorage.getItem(TOKEN_NAME),
         },
@@ -49,8 +50,9 @@ const PersonSetting = () => {
             const {code} = info.file.response
             if (code === 200) {
                 console.log('resp',info.file.response)
-                // downloadUrl.current = info.file.response.data.id
-                // message.success("上传成功")
+                downloadUrl.current = info.file.response.message
+                //更新用户信息
+                message.success("上传成功")
             } else {
                 message.error(info.file.response.message);
             }

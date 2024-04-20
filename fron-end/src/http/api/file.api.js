@@ -1,4 +1,4 @@
-import request from "@/http/http.request.js";
+import request, {URL} from "@/http/http.request.js";
 
 /**
  * doDownload
@@ -16,4 +16,8 @@ export function doDownload(downloadId) {
  */
 export function doUpload(file) {
     return request.post(`/file/doUpload?file=${file}`);
+}
+
+export function getUploadUrl()  {
+    return URL + 'file/doUpload'
 }
