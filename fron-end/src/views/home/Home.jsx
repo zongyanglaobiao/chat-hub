@@ -1,16 +1,15 @@
 import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
 import {userInfoThunk} from "@/redux/feature/user.thunk.js";
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback, useEffect} from "react";
 import {isBlank} from "@/lib/toolkit/util.js";
-import {HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
+import {HOME_CHAT, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import {TOKEN_NAME} from "@/http/http.request.js";
-import MessageSVG from '@/assets/message.svg'
+import Message from '@/assets/message.svg'
+import Dialogue from '@/assets/dialogue.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
-
-const IS_JUMP = 'false';
 
 function init(dispatch) {
     dispatch(friendListInfoThunk())
@@ -20,13 +19,8 @@ function init(dispatch) {
 const Home = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const location = useLocation();
 
     useEffect(() => {
-        if (location.hash.indexOf(IS_JUMP) === -1) {
-            //todo navigate(HOME_ROUTE + HOME_CHAT)
-        }
-
         const auth = localStorage.getItem(TOKEN_NAME);
         //存在token则不判断
         if (isBlank(auth)) {
@@ -54,14 +48,14 @@ const ChatHeader = () => {
     const navigate = useNavigate();
     let user = useSelector(state => state.userInfo);
 
-    const signOut = useCallback((event) => {
+    const signOut = useCallback(() => {
         localStorage.removeItem(TOKEN_NAME)
         navigate(LOGIN)
-    }, []);
+    }, [navigate]);
 
-    const personSetting = useCallback((event) => {
-        navigate({pathname:HOME_PERSON_SETTING,hash:IS_JUMP})
-    }, []);
+    const personSetting = useCallback(() => {
+        navigate(HOME_PERSON_SETTING)
+    }, [navigate]);
 
     const items = [
         { key: '1', label: (<div onClick={personSetting}>个人设置</div>) },
@@ -72,14 +66,14 @@ const ChatHeader = () => {
         <header className="flex justify-between items-center p-4  bg-white shadow h-[5%]">
             <div className="w-[50%] flex justify-between">
                 <div className='flex items-center'>
-                    <img src={MessageSVG} alt="message" className="w-[50px]"/>
+                    <img src={Message} alt="message" className="w-[50px]"/>
                     <h1 className="text-xl font-bold">Secure Chat Hub</h1>
                 </div>
-               {/* <div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_CHAT,hash:IS_JUMP})}>
-                    <img src={DIALOGUE} alt="chat" className="w-[20px]"/>
+                <div className='flex items-center cursor-pointer' onClick={() => navigate(HOME_CHAT)}>
+                    <img src={Dialogue} alt="chat" className="w-[20px]"/>
                     <span>首页</span>
                 </div>
-                <div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_FRIEND,hash:IS_JUMP})}>
+                {/*<div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_FRIEND,hash:IS_JUMP})}>
                     <img src={FriendsSVG} alt="friends" className="w-[20px]"/>
                     <span>我的好友</span>
                 </div>

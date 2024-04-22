@@ -1,10 +1,10 @@
-/*
-import {Button} from "antd";
 import {useSelector} from "react-redux";
-import {getRandomId} from "../../../../lib/common/util";
+import {getRandomId} from "@/lib/toolkit/util.js";
+import {Button} from "antd";
+import Search from "antd/es/input/Search.js";
 
 
-export const ChatWindow = () => {
+const ChatWindow = () => {
     return (
         <div className="flex w-full h-full">
             <ChatSidebar className="w-[30%] h-full"/>
@@ -16,22 +16,25 @@ export const ChatWindow = () => {
 
 const ChatSidebar = ({className}) => {
     const friendInfo = useSelector(state => state.friendInfo);
-    console.log(friendInfo)
+    const onSearch = (value, _e, info) => alert(info?.source, value);
     return (
-        <aside className={"w-60 bg-white overflow-y-scroll " + className}>
-            {
-               friendInfo.map((item)=>{
-                    return (
-                        <div key={getRandomId()}>
-                            <img src={item.avatar} alt=""/>
-                            <div>
-                                {item.nickname}
-                            </div>
-                        </div>
-                    )
-                })
-            }
-        </aside>
+       <>
+           <Search placeholder="input search text" onSearch={onSearch} enterButton />
+           <aside className={"w-60 bg-white overflow-y-scroll " + className}>
+               {
+                   friendInfo.friendList.map((item)=>{
+                       return (
+                           <div key={getRandomId()}>
+                               <img src={item.avatar} alt=""/>
+                               <div>
+                                   {item.nickname}
+                               </div>
+                           </div>
+                       )
+                   })
+               }
+           </aside>
+       </>
     );
 };
 
@@ -53,7 +56,7 @@ const Window = () => {
                     </div>
                 ))}
             </div>
-            {/!* 消息输入区域 *!/}
+            {/* 消息输入区域 */}
             <div className="p-4 bottom-0 absolute w-[90%] gap-1 ">
                 <div className="layout-center w-full">
                     <input
@@ -70,4 +73,5 @@ const Window = () => {
         </main>
     );
 };
-*/
+
+export default ChatWindow;

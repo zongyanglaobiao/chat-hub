@@ -8,7 +8,7 @@ export const friendListInfoThunk =  createAsyncThunk(getRandomId(),async ()=> {
     return res.data;
 })
 
-const friendThunkProcessor = generateSlice(getRandomId(), [], {}, (builder) => {
+const friendThunkProcessor = generateSlice(getRandomId(), {}, {}, (builder) => {
     builder.addCase(friendListInfoThunk.fulfilled, (state, action) => {
         return {...action.payload}
     })

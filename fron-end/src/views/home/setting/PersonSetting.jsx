@@ -49,9 +49,7 @@ const PersonSetting = () => {
             }
             const {code} = info.file.response
             if (code === 200) {
-                console.log('resp',info.file.response)
                 downloadUrl.current = info.file.response.message
-                //更新用户信息
                 message.success("上传成功")
             } else {
                 message.error(info.file.response.message);
@@ -62,7 +60,7 @@ const PersonSetting = () => {
 
     return (
         <div className="flex items-center flex-row w-full h-full gap-5">
-            <div className=" w-[40%]">
+            <div className=" w-[40%] ml-25px">
                 <Form
                     form={form} initialValues={{...userInfo}} layout="vertical">
                     <Form.Item label="昵称" name="nickname">

@@ -2,10 +2,13 @@ package com.chat.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.chat.domain.user.entity.LoginUser;
+import com.chat.domain.user.entity.SysUser;
+import com.chat.domain.user.service.UserService;
 import com.common.util.AssertUtils;
 import com.common.util.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @since 2023/11/21
  */
 @Component
+@RequiredArgsConstructor
 public class JWTInterceptor implements HandlerInterceptor {
 
     private static final String AUTH = "auth";

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {notification} from "antd";
 
 
 export const URL = import.meta.env.VITE_REACT_APP_PATH
@@ -83,6 +84,14 @@ serviceAxios.interceptors.response.use(
 					message = "异常问题，请联系管理员！";
 					break;
 			}
+		}
+		else {
+			const [api, contextHolder] = notification.useNotification();
+			api.error({
+				message: `网络异常`,
+				description: <Context.Consumer>{({ name }) => `Hello, ${name}!`}</Context.Consumer>,
+				placement,
+			});
 		}
 		return Promise.reject(message);
 	}

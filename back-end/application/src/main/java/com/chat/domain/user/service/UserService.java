@@ -3,9 +3,11 @@ package com.chat.domain.user.service;
 import com.chat.domain.base.AbstractService;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.mapper.SysUserDao;
+import com.chat.toolkit.utils.IPUtils;
 import com.common.util.AssertUtils;
 import com.common.util.JWTUtils;
 import com.common.util.MD5Utils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,10 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class UserService extends AbstractService<SysUserDao, SysUser> {
+
+    private final HttpServletRequest request;
+
+    private final IPUtils ipUtils;
 
     public SysUser doLogin(SysUser sysUser) {
         SysUser user = getUserByMail(sysUser.getMail());
@@ -48,7 +54,13 @@ public class UserService extends AbstractService<SysUserDao, SysUser> {
     }
 
     public SysUser doGetInfo(String userId, SysUser user) {
-        return !Objects.isNull(userId) ? getById(userId) : user;
+        if (!Objects.isNull(userId)) {
+            return getById(userId);
+        }
+
+        user.setIpAddress(ipUtils.getCity(ipUtils.getIp(request)));
+        this.updateById(user);
+        return  user;
     }
 
     public List<SysUser> search(String searchText) {
