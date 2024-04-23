@@ -85,14 +85,6 @@ serviceAxios.interceptors.response.use(
 					break;
 			}
 		}
-		else {
-			const [api, contextHolder] = notification.useNotification();
-			api.error({
-				message: `网络异常`,
-				description: <Context.Consumer>{({ name }) => `Hello, ${name}!`}</Context.Consumer>,
-				placement,
-			});
-		}
 		return Promise.reject(message);
 	}
 );

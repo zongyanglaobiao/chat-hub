@@ -1,7 +1,9 @@
 import {useSelector} from "react-redux";
-import {getRandomId} from "@/lib/toolkit/util.js";
 import {Button} from "antd";
 import Search from "antd/es/input/Search.js";
+import {useNavigate} from "react-router-dom";
+import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
+
 
 
 const ChatWindow = () => {
@@ -15,8 +17,10 @@ const ChatWindow = () => {
 
 
 const ChatSidebar = ({className}) => {
+    const navigate = useNavigate();
+
     const friendInfo = useSelector(state => state.friendInfo);
-    const onSearch = (value, _e, info) => alert(info?.source, value);
+    const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
     return (
        <>
            <Search placeholder="input search text" onSearch={onSearch} enterButton />
