@@ -1,16 +1,10 @@
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {HOME_CHAT_WINDOW} from "@/router/index.jsx";
+import {HOME_CHAT} from "@/router/index.jsx";
 
 function Chat() {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        navigate(HOME_CHAT_WINDOW)
-    }, []);
-
     return (
-        <div>
+        <div className='h-full w-full'>
             <Outlet/>
         </div>
     )

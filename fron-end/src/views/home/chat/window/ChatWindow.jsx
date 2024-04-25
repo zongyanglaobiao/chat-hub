@@ -3,13 +3,13 @@ import {Button} from "antd";
 import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
-
+import {getRandomId} from "@/lib/toolkit/util.js";
 
 
 const ChatWindow = () => {
     return (
         <div className="flex w-full h-full">
-            <ChatSidebar className="w-[30%] h-full"/>
+            <ChatSidebar className="w-30% h-full"/>
             <Window/>
         </div>
     )
@@ -22,11 +22,13 @@ const ChatSidebar = ({className}) => {
     const friendInfo = useSelector(state => state.friendInfo);
     const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
     return (
-       <>
-           <Search placeholder="input search text" onSearch={onSearch} enterButton />
-           <aside className={"w-60 bg-white overflow-y-scroll " + className}>
-               {
-                   friendInfo.friendList.map((item)=>{
+       <div className={'flex flex-col ' + className}>
+           <div>
+               <Search placeholder="input search text" onSearch={onSearch} enterButton />
+           </div>
+           <div className="bg-white overflow-y-scroll">
+               {/*{
+                   friendInfo.friendList && friendInfo.friendList.map((item)=>{
                        return (
                            <div key={getRandomId()}>
                                <img src={item.avatar} alt=""/>
@@ -36,9 +38,20 @@ const ChatSidebar = ({className}) => {
                            </div>
                        )
                    })
+               }*/}
+               {
+                   (()=>{
+                       const arr = []
+                       for (let i = 0; i < 30; i++) {
+                           arr.push(<div className='text-20px m-5px' key={getRandomId()}>
+                               朋友 = {i}
+                           </div>)
+                       }
+                       return arr
+                   })()
                }
-           </aside>
-       </>
+           </div>
+       </div>
     );
 };
 
@@ -61,7 +74,7 @@ const Window = () => {
                 ))}
             </div>
             {/* 消息输入区域 */}
-            <div className="p-4 bottom-0 absolute w-[90%] gap-1 ">
+            <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
                     <input
 
