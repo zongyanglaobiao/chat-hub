@@ -54,13 +54,19 @@ public class UserService extends AbstractService<SysUserDao, SysUser> {
     }
 
     public SysUser doGetInfo(String userId, SysUser user) {
+
         if (!Objects.isNull(userId)) {
             return getById(userId);
         }
 
+        //如果是查询自己才会设置IP
         user.setIpAddress(ipUtils.getCity(ipUtils.getIp(request)));
         this.updateById(user);
         return  user;
+    }
+
+    public List<SysUser> doQueryUserInfos(List<String> userIds) {
+        return this.list(SysUser::getId, userIds);
     }
 
     public List<SysUser> search(String searchText) {
@@ -76,4 +82,6 @@ public class UserService extends AbstractService<SysUserDao, SysUser> {
     private SysUser getUserByMail(String mail) {
         return this.lambdaQuery().eq(SysUser::getMail, mail).one();
     }
+
+
 }

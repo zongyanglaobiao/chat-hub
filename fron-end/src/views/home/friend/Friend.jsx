@@ -1,9 +1,5 @@
-/*
 import {Avatar, Divider, List, Tabs} from "antd";
-import {useEffect} from "react";
-import {doQueryFriend} from "../../../http/api/friend.api";
 import {useSelector} from "react-redux";
-
 
 // 封装Tab内容为函数
 const RenderTabContent = (data, isStatusVisible = false) => (
@@ -21,7 +17,7 @@ const RenderTabContent = (data, isStatusVisible = false) => (
     />
 );
 
-export const Friend = () => {
+export const Friend_ = () => {
     const friendInfo =  useSelector(state => state.friendInfo)
 
 
@@ -65,5 +61,14 @@ export const Friend = () => {
     );
 };
 
+const Friend = () => {
+    return (
+        <div>
+            好友列表
+        </div>
+    )
+}
 
-*/
+export default Friend
+
+

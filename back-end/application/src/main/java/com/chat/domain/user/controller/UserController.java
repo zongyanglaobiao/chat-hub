@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author xxl
  * @since 2024/4/8
@@ -40,6 +42,12 @@ public class UserController extends Controller {
     @GetMapping("/doGetInfo")
     public RespEntity<SysUser> doGetInfo(@RequestParam(required = false) String userId) {
         return RespEntity.success(userService.doGetInfo(userId, LoginUser.getUser()));
+    }
+
+    //集合查询用户
+    @PostMapping("/doQueryUserInfos")
+    public RespEntity<List<SysUser>> doQueryUserInfos(@RequestBody List<String> userIds) {
+        return RespEntity.success(userService.doQueryUserInfos(userIds));
     }
 
 }

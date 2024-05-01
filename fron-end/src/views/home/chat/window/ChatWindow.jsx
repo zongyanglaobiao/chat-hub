@@ -1,15 +1,18 @@
 import {useSelector} from "react-redux";
-import {Button} from "antd";
+import {Button, message} from "antd";
 import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId} from "@/lib/toolkit/util.js";
+import {doQueryUserInfos} from "@/http/api/user.api.js";
+import {useEffect, useState} from "react";
 
 
 const ChatWindow = () => {
     return (
         <div className="flex w-full h-full">
-            <ChatSidebar className="w-30% h-full"/>
+            <ChatSidebar/>
+            <div className='w-0px h-full border-l rounded-md border-solid border-[#14141525]'></div>
             <Window/>
         </div>
     )
@@ -18,37 +21,43 @@ const ChatWindow = () => {
 
 const ChatSidebar = ({className}) => {
     const navigate = useNavigate();
-
     const friendInfo = useSelector(state => state.friendInfo);
+    const [friends, setFriends] = useState([])
     const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
+
+    useEffect(() => {
+        //请求朋友信息
+        (async ()=>{
+          const resp = await doQueryUserInfos(friendInfo.friendList.map(item => item.friendId))
+            if (resp.code === 200) {
+                setFriends(resp.data)
+            }else {
+                message.error(resp.message)
+            }
+        })()
+    }, [friendInfo.friendList]);
+
     return (
-       <div className={'flex flex-col ' + className}>
-           <div>
-               <Search placeholder="input search text" onSearch={onSearch} enterButton />
+       <div className='flex flex-col w-40% h-full'>
+           <div className='layout-center w-full mb-2'>
+               <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
            </div>
-           <div className="bg-white overflow-y-scroll">
-               {/*{
-                   friendInfo.friendList && friendInfo.friendList.map((item)=>{
-                       return (
-                           <div key={getRandomId()}>
-                               <img src={item.avatar} alt=""/>
-                               <div>
-                                   {item.nickname}
-                               </div>
-                           </div>
-                       )
-                   })
-               }*/}
+           <div className="bg-white overflow-y-scroll remove_the_scroll">
                {
-                   (()=>{
-                       const arr = []
-                       for (let i = 0; i < 30; i++) {
-                           arr.push(<div className='text-20px m-5px' key={getRandomId()}>
-                               朋友 = {i}
-                           </div>)
-                       }
-                       return arr
-                   })()
+                   friends.length > 0 ? friends.map((item)=>{
+                           return (
+                               <div key={getRandomId()}>
+                                   <img src={item.avatar} alt=""/>
+                                   <div>
+                                       {item.nickname}
+                                   </div>
+                               </div>
+                           )
+                       })
+                       :
+                       <div>
+                           去和志同道合的好友聊天吧
+                       </div>
                }
            </div>
        </div>

@@ -4,10 +4,11 @@ import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
 import {isBlank} from "@/lib/toolkit/util.js";
-import {HOME_CHAT_WINDOW, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
+import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import {TOKEN_NAME} from "@/http/http.request.js";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
+import Friend from '@/assets/friends.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 
@@ -34,9 +35,9 @@ const Home = () => {
 
     return (
         <div className="flex flex-col h-screen bg-gray-100 w-full">
-            <ChatHeader className="relative"/>
-            <div className="layout-center w-full relative  top-20px">
-                <div className="flex w-[60%] h-80% bg-white rounded-2xl p-2">
+            <ChatHeader/>
+            <div className="layout-center w-full h-full">
+                <div className="flex w-[70%] h-500px bg-white rounded-2xl p-2">
                     <Outlet/>
                 </div>
             </div>
@@ -44,13 +45,13 @@ const Home = () => {
     );
 }
 
-const ChatHeader = memo(({className}) => {
+const ChatHeader = memo(() => {
     const navigate = useNavigate();
     let user = useSelector(state => state.userInfo);
 
     const signOut = useCallback(() => {
-        navigate(LOGIN)
         localStorage.removeItem(TOKEN_NAME)
+        navigate(LOGIN)
     }, [navigate]);
 
     const personSetting = useCallback(() => {
@@ -63,7 +64,7 @@ const ChatHeader = memo(({className}) => {
     ]
 
     return (
-        <header className={"flex justify-between items-center p-4  bg-white shadow h-[5%] " + className}>
+        <header className="flex justify-between items-center p-4  bg-white shadow h-[5%] ">
             <div className="w-[50%] flex justify-between">
                 <div className='flex items-center'>
                     <img src={Message} alt="message" className="w-[50px]"/>
@@ -73,11 +74,11 @@ const ChatHeader = memo(({className}) => {
                     <img src={Dialogue} alt="chat" className="w-[20px]"/>
                     <span>首页</span>
                 </div>
-                {/*<div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_FRIEND,hash:IS_JUMP})}>
-                    <img src={FriendsSVG} alt="friends" className="w-[20px]"/>
+                <div className='flex items-center cursor-pointer' onClick={() => navigate(HOME_FRIEND)}>
+                    <img src={Friend} alt="friends" className="w-[20px]"/>
                     <span>我的好友</span>
                 </div>
-                <div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_GROUP,hash:IS_JUMP})}>
+                {/*<div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_GROUP,hash:IS_JUMP})}>
                     <img src={GroupChat} alt="groupChat" className="w-[20px]"/>
                     <span>我的群聊</span>
                 </div>*/}

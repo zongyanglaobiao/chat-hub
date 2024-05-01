@@ -47,3 +47,13 @@ export function doModify(params) {
 export function doGetInfo(userId) {
     return request.get("/user/doGetInfo" + (isNullOrUndefined(userId) ? "" : `?userId=${userId}`));
 }
+
+/**
+ * doQueryUserInfos
+ * @param {array} params string
+ * @returns
+ */
+export function doQueryUserInfos(params) {
+    return request.post(`/user/doQueryUserInfos`, params);
+}
+
