@@ -1,5 +1,4 @@
 import axios from "axios";
-import {notification} from "antd";
 
 
 export const URL = import.meta.env.VITE_REACT_APP_PATH

@@ -8,6 +8,7 @@ import {doLogin, doRegister} from "@/http/api/user.api.js";
 
 const Login = () => {
     const navigate = useNavigate();
+    const [isLogin, setLogin] = useState(true)
 
     useEffect(() => {
         const auth = localStorage.getItem(TOKEN_NAME);
@@ -18,8 +19,6 @@ const Login = () => {
         }
     }, [navigate]);
 
-
-    const [isLogin, setLogin] = useState(true)
     return (
         <div className='w-full h-[100vh] layout-center'>
             {
@@ -48,7 +47,7 @@ const LoginPage = ({setLogin}) => {
             localStorage.setItem(TOKEN_NAME, resp.data.token);
             navigate(HOME)
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div>

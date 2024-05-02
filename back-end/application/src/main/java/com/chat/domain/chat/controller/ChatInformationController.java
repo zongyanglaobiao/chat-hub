@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class ChatInformationController extends Controller {
 
-    //分页获取聊天市信息
+    //分页获取聊天信息
     @GetMapping("/page/getChatInfo")
-    public RespEntity<Page<SysChatInformation>> getChatInfo(@RequestParam String roomId ) {
+    public RespEntity<Page<SysChatInformation>> getChatInfo(@RequestParam String roomId) {
         return RespEntity.success(chatInformationService.getChatInformationByRoomId(roomId));
     }
 

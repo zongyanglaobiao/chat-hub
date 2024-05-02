@@ -46,5 +46,8 @@ public class SysFriend extends Entity {
 
     //发起人ID
     private String sponsorId;
+
+    //聊天ID,默认每个用户都可能会聊天所以提前创建聊天ID
+    private String chatId;
 }
 

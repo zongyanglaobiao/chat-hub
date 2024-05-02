@@ -1,5 +1,6 @@
 package com.chat.domain.friend.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.chat.domain.base.AbstractService;
 import com.chat.domain.friend.entity.SysFriend;
 import com.chat.domain.friend.enums.AgreeType;
@@ -63,11 +64,16 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> {
         AssertUtils.assertTrue(friend.getStatus().equals(SysFriend.STATUS_NOT_HANDLER),"已经处理过了");
         switch (type) {
             case AGREE_YES -> {
+                String chatId = IdUtil.simpleUUID();
                 friend.setStatus(SysFriend.STATUS_YES);
+                //设置聊天ID
+                friend.setChatId(chatId);
                 this.updateById(friend);
                 //互相调换，让被申请人也有这个好友
                 friend.setFriendId(friend.getUserId());
                 friend.setUserId(userId);
+                //设置聊天ID
+                friend.setChatId(chatId);
                 friend.setCreateTime(null);
                 friend.setUpdateTime(null);
                 friend.setId(null);
