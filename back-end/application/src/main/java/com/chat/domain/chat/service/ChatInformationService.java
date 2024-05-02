@@ -2,7 +2,7 @@ package com.chat.domain.chat.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.base.AbstractService;
-import com.chat.domain.chat.entity.MsgContext;
+import com.chat.domain.chat.entity.MsgContent;
 import com.chat.domain.chat.entity.SysChatInformation;
 import com.chat.domain.chat.mapper.SysChatInformationDao;
 import com.chat.domain.user.service.UserService;
@@ -26,7 +26,7 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
         return this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).page(CommonPageRequestUtils.defaultPage());
     }
 
-    public Boolean saveInfo(MsgContext context) {
+    public Boolean saveInfo(MsgContent context) {
         String roomId = context.getRoomId();
         Integer latestNumber = findLatestNumber(roomId);
         SysChatInformation information = SysChatInformation.create(latestNumber, roomId, userService.getById(context.getUserId()), context.getText());

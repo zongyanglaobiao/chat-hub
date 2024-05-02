@@ -4,11 +4,17 @@ import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId} from "@/lib/toolkit/util.js";
-import {doQueryUserInfos} from "@/http/api/user.api.js";
+import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {useEffect, useReducer, useRef, useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
-import {closeWebsocket, newWebSocket} from "@/http/websocket/websocket.js";
+import {
+    closeWebsocket,
+    createMsgContent,
+    newWebSocket,
+    receiveOfWebsocket,
+    sendOfWebsocket
+} from "@/http/websocket/websocket.js";
 
 /**
  * 聊天类型
@@ -62,9 +68,9 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                            return (
                                <div key={getRandomId()} className='flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
                                    windowRef.current = !windowRef.current
-                                   windowSelector({bool:windowRef.current,content:{chatId:getChatId(item.id),type:CHAT_TYPE_FRIEND}})
+                                   windowSelector({bool:windowRef.current,chatId:getChatId(item.id)})
                                }}>
-                                   <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined />} />
+                                   <Avatar src={item.avatar} shape="square" size={50}  icon={<UserOutlined />} />
                                    <div className='ml-4px'>
                                        {item.nickname}
                                    </div>
@@ -84,13 +90,22 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
 /**
  *  信息聊天窗
  */
-const InfoWindow = ({content}) => {
+const InfoWindow = ({chatId}) => {
     const [chatMessage, setChatMessage] = useState([])
-    const  {type,chatId} = content
+    const textRef = useRef(null);
+    const userInfo = useSelector(state => state.userInfo)
 
     useEffect(() => {
         //如果进入这个页面表示需要聊天则进行websocket连接
         newWebSocket(chatId)
+
+        //如果接收到websocket的信息
+        receiveOfWebsocket((data)=>{
+            ( async ()=>{
+                const resp = await doGetInfo(data.userId)
+                setChatMessage(prevState => [...prevState,{user:resp.data,information:data.text}])
+            })()
+        })
 
         return () => {
             //关闭连接
@@ -99,26 +114,24 @@ const InfoWindow = ({content}) => {
     }, []);
 
     useEffect(() => {
-
         //查询聊天信息
         (async ()=>{
-            console.log('chatId',chatId)
            const resp = await getChatInfo(chatId)
             if (resp.code === 200) {
                 const records = resp.data.records;
                 setChatMessage(prevState => records.length > 0 ? records : prevState)
             }
         })()
-    }, [chatMessage]);
+    }, []);
 
 
     return (
         <main className="w-full relative h-full">
             <div className="p-4">
-                {chatMessage.map((message, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                        <img src={`path_to_${message.author.toLowerCase()}_avatar`} alt={message.author} className="w-8 h-8 rounded-full" />
-                        <div className="ml-2 p-2 bg-green-300 rounded">{message.text}</div>
+               {chatMessage.map((message) => (
+                    <div key={getRandomId()} className="flex items-center mb-2">
+                        <Avatar src={message.user.avatar} shape="square" size="large"  icon={<UserOutlined />} />
+                        <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
                     </div>
                 ))}
             </div>
@@ -126,13 +139,14 @@ const InfoWindow = ({content}) => {
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
                     <input
-
+                        ref={textRef}
                         type="text"
                         placeholder="输入消息..."
                         className="w-[80%] p-2 border border-gray-300 rounded"
                     />
                     <Button className="ml-2" onClick={()=> {
-
+                        console.log(textRef.current.value);
+                        sendOfWebsocket(createMsgContent(textRef.current.value,chatId,userInfo.id))
                     }}>
                         发送
                     </Button>
@@ -156,9 +170,9 @@ const AnnouncementWindow = () => {
 }
 
 const selectWindowReducer = (state,action) => {
-    const {bool,content} = action
+    const {bool,chatId} = action
     if (bool) {
-        return <InfoWindow content={content}/>;
+        return <InfoWindow chatId={chatId}/>;
     }else {
         return <AnnouncementWindow/>
     }

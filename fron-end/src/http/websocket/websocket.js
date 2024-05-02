@@ -20,30 +20,37 @@ socket.onclose = function(event) {
         // event.code is usually 1006 in this case
         console.log('Connection died');
     }
-};
+};*/
 
-socket.onerror = function(error) {
+/*socket.onerror = function(error) {
     console.error(`WebSocket error observed: `, error);
 };*/
 
-export function send() {
 
+
+
+export function sendOfWebsocket(msgContent) {
+    socket.send(JSON.stringify(msgContent))
 }
 
-export function receive() {
-
+export function receiveOfWebsocket(callback) {
+    socket.onmessage = function(event) {
+        callback(JSON.parse(event.data))
+    };
 }
 
 export function closeWebsocket() {
     socket.close()
 }
 
-export function open() {
-    socket.onopen = function(e) {
-        console.log('websocket Connection established',e);
-    };
-}
-
 export function newWebSocket(roomId) {
     socket =  new WebSocket(WEBSOCKET_URL.concat(roomId));
+}
+
+export function createMsgContent(text, roomId, userId) {
+    return {
+        text: text,
+        roomId: roomId,
+        userId: userId,
+    }
 }

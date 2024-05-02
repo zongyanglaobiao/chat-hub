@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @since 2024/4/16
  */
 @Data
-public class MsgContext  implements Serializable {
+public class MsgContent implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2607785317442125949L;

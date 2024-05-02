@@ -34,7 +34,7 @@ public class SysChatInformation extends Entity {
 
     //用户ID
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private SysUser userId;
+    private SysUser user;
 
     //发送时间
     private Date sendTime;
@@ -51,7 +51,7 @@ public class SysChatInformation extends Entity {
     public static SysChatInformation create(Integer serialNumber, String roomId, SysUser user, String information) {
         SysChatInformation chatInformation = new SysChatInformation();
         chatInformation.setRoomId(roomId);
-        chatInformation.setUserId(user);
+        chatInformation.setUser(user);
         chatInformation.setSerialNumber(serialNumber);
         chatInformation.setSendTime(new Date());
         chatInformation.setInformation(information);

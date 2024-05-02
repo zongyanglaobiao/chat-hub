@@ -1,7 +1,7 @@
 package com.chat.domain.chat.controller;
 
 import cn.hutool.json.JSONUtil;
-import com.chat.domain.chat.entity.MsgContext;
+import com.chat.domain.chat.entity.MsgContent;
 import com.chat.domain.chat.service.ChatInformationService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
@@ -77,7 +77,7 @@ public class ChatController {
      */
     @OnMessage
     public void onMessage(String json, Session session) throws IOException {
-        MsgContext context = JSONUtil.toBean(json, MsgContext.class);
+        MsgContent context = JSONUtil.toBean(json, MsgContent.class);
 
         //保存聊天信息
         chatInformationService.saveInfo(context);
@@ -85,11 +85,8 @@ public class ChatController {
         if (!ON_LINE_USERS.containsKey(context.getRoomId())) {
             return;
         }
+
         ON_LINE_USERS.get(context.getRoomId()).parallelStream().forEach(t -> {
-            //不通知当前用户
-            if (t.equals(session)) {
-                return;
-            }
             //广播通知这个房间的的用户
             t.getAsyncRemote().sendText(json);
         });
