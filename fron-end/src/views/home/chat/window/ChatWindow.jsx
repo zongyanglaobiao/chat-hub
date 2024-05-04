@@ -4,7 +4,7 @@ import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId} from "@/lib/toolkit/util.js";
-import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
+import {doQueryUserInfos} from "@/http/api/user.api.js";
 import {useEffect, useReducer, useRef, useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
@@ -43,8 +43,8 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
     const [friends, setFriends] = useState([])
     const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
 
-    const getChatId = (friendId) => {
-        return  friendInfo.friendList.filter(t => t.userId === userInfo.id && t.friendId === friendId)[0].chatId
+    const getFriendWithChatId = (data) => {
+        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t.friendId === item.id)[0]}))
     }
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
         (async ()=>{
           const resp = await doQueryUserInfos(friendInfo.friendList.map(item => item.friendId))
             if (resp.code === 200) {
-                setFriends(resp.data)
+                setFriends(getFriendWithChatId(resp.data))
             }
         })()
     }, [friendInfo.friendList]);
@@ -68,7 +68,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                            return (
                                <div key={getRandomId()} className='flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
                                    windowRef.current = !windowRef.current
-                                   windowSelector({bool:windowRef.current,chatId:getChatId(item.id)})
+                                   windowSelector({bool:windowRef.current,chatId:item.chatId})
                                }}>
                                    <Avatar src={item.avatar} shape="square" size={50}  icon={<UserOutlined />} />
                                    <div className='ml-4px'>
@@ -96,14 +96,28 @@ const InfoWindow = ({chatId}) => {
     const userInfo = useSelector(state => state.userInfo)
 
     useEffect(() => {
+        //优化问题
+
+        //查询聊天信息
+        (async ()=>{
+            const resp = await getChatInfo(chatId)
+            if (resp.code === 200) {
+                const records = resp.data.records;
+                setChatMessage(prevState => records.length > 0 ? records : prevState)
+            }
+        })()
+
         //如果进入这个页面表示需要聊天则进行websocket连接
-        newWebSocket(chatId)
+        newWebSocket(chatId);
 
         //如果接收到websocket的信息
         receiveOfWebsocket((data)=>{
             ( async ()=>{
-                const resp = await doGetInfo(data.userId)
-                setChatMessage(prevState => [...prevState,{user:resp.data,information:data.text}])
+                const resp = await getChatInfo(chatId)
+                if (resp.code === 200) {
+                    const records = resp.data.records;
+                    setChatMessage(prevState => records.length > 0 ? records : prevState)
+                }
             })()
         })
 
@@ -114,14 +128,7 @@ const InfoWindow = ({chatId}) => {
     }, []);
 
     useEffect(() => {
-        //查询聊天信息
-        (async ()=>{
-           const resp = await getChatInfo(chatId)
-            if (resp.code === 200) {
-                const records = resp.data.records;
-                setChatMessage(prevState => records.length > 0 ? records : prevState)
-            }
-        })()
+
     }, []);
 
 

@@ -79,6 +79,8 @@ public class ChatController {
     public void onMessage(String json, Session session) throws IOException {
         MsgContent context = JSONUtil.toBean(json, MsgContent.class);
 
+        //这里给的信息不全导致前端请求多次
+
         //保存聊天信息
         chatInformationService.saveInfo(context);
 
