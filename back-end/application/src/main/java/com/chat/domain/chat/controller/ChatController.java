@@ -26,7 +26,6 @@ public class ChatController {
 
     private static final ConcurrentHashMap<String, CopyOnWriteArrayList<Session>> ON_LINE_USERS = new ConcurrentHashMap<>();
 
-
     /**
      * 连接建立时被调用
      */
@@ -79,8 +78,6 @@ public class ChatController {
     public void onMessage(String json, Session session) throws IOException {
         MsgContent context = JSONUtil.toBean(json, MsgContent.class);
 
-        //这里给的信息不全导致前端请求多次
-
         //保存聊天信息
         chatInformationService.saveInfo(context);
 
@@ -89,6 +86,10 @@ public class ChatController {
         }
 
         ON_LINE_USERS.get(context.getRoomId()).parallelStream().forEach(t -> {
+            if (t.getId().equals(session.getId())) {
+                //当前用户没必要通知
+                return;
+            }
             //广播通知这个房间的的用户
             t.getAsyncRemote().sendText(json);
         });

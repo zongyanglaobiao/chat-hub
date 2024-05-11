@@ -44,7 +44,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
     const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
 
     const getFriendWithChatId = (data) => {
-        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t.friendId === item.id)[0]}))
+        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t => t.friendId === item.id)[0]}))
     }
 
     useEffect(() => {

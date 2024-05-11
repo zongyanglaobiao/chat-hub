@@ -1,19 +1,20 @@
 import {useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {isBlank} from "@/lib/toolkit/util.js";
-import {TOKEN_NAME} from "@/http/http.request.js";
 import {HOME} from "@/router/index.jsx";
 import {message} from "antd";
 import {doLogin, doRegister} from "@/http/api/user.api.js";
+import {setToken} from "@/http/http.request.js";
+import {useSelector} from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
     const [isLogin, setLogin] = useState(true)
+    const token  = useSelector(state => state.token)
 
     useEffect(() => {
-        const auth = localStorage.getItem(TOKEN_NAME);
         //存在token则不判断
-        if (!isBlank(auth)) {
+        if (!isBlank(token)) {
             //跳转到首页
             navigate(HOME);
         }
@@ -28,11 +29,11 @@ const Login = () => {
     )
 }
 
-
 const LoginPage = ({setLogin}) => {
     const mail = useRef();
     const pwd = useRef();
     const navigate = useNavigate();
+
 
     const login = useCallback( async (event) => {
         event.preventDefault();
@@ -43,8 +44,9 @@ const LoginPage = ({setLogin}) => {
             return
         }
 
+        //todo token在何时更新
         if (code === 200) {
-            localStorage.setItem(TOKEN_NAME, resp.data.token);
+            setToken(resp.data.token)
             navigate(HOME)
         }
     }, [navigate]);

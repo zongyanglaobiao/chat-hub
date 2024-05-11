@@ -19,5 +19,6 @@ public class MsgContent implements Serializable {
 
     private String roomId;
 
+    //发送信息的用户ID
     private String userId;
 }

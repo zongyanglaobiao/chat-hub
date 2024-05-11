@@ -1,13 +1,22 @@
 import axios from "axios";
+import {message} from "antd";
+import {storeTokenAction} from "@/redux/feature/token.js";
+import {store} from "@/redux/store.js";
 
+const URL = import.meta.env.VITE_REACT_APP_PATH
+const TOKEN_NAME = "auth";
+const TOKEN_FAIL = "TOKEN";
 
-export const URL = import.meta.env.VITE_REACT_APP_PATH
+const getToken = () => {
+	return localStorage.getItem(TOKEN_NAME)
+}
 
-export const TOKEN_NAME = "auth";
-const globalConfig = {
-	headers: {
-		[TOKEN_NAME]: localStorage.getItem(TOKEN_NAME) || ''
-	}
+const setToken = (token) => {
+	localStorage.setItem(TOKEN_NAME, token)
+}
+
+const removeToken = () => {
+	localStorage.removeItem(TOKEN_NAME)
 }
 
 // 创建 axios 请求实例
@@ -20,7 +29,7 @@ const serviceAxios = axios.create({
 // 创建请求拦截
 serviceAxios.interceptors.request.use(
 	(config) => {
-		config.headers = {'Content-Type': 'application/json',...config.headers, ...globalConfig.headers};
+		config.headers = {'Content-Type': 'application/json',...config.headers,[TOKEN_NAME]:getToken()};
 		//Post是data
 		//get是params
 		return config;
@@ -34,6 +43,14 @@ serviceAxios.interceptors.request.use(
 // 创建响应拦截
 serviceAxios.interceptors.response.use(
 	(res) => {
+		if (res.data.code === 500 && res.data.message.indexOf(TOKEN_FAIL) !== -1) {
+			message.error(res.data.message);
+			//移除之前的token
+			removeToken()
+		}
+
+		//通知所有组件进行更新
+		store.dispatch(storeTokenAction(getToken()))
 		return res.data;
 	},
 	(error) => {
@@ -84,6 +101,8 @@ serviceAxios.interceptors.response.use(
 					break;
 			}
 		}
+		//http错误进行提醒
+		message.endsWith(message)
 		return Promise.reject(message);
 	}
 );
@@ -110,5 +129,7 @@ const request = {
 		})
 	}
 }
+
+export {getToken, setToken, removeToken,URL}
 
 export default request;

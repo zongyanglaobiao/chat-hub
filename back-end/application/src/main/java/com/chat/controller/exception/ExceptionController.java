@@ -35,9 +35,9 @@ public class ExceptionController {
                     toList().
                     toString());
         } else if (exception instanceof RejectedExecutionHandler) {
-            return RespEntity.fail("系统繁忙, 请稍后再试");
+            return RespEntity.fail("系统繁忙,请稍后再试");
         } else if (exception instanceof JWTException){
-            return RespEntity.fail("TOKEN不正确");
+            return RespEntity.fail("TOKEN异常,请重新登录");
         } else if (exception instanceof IllegalArgumentException){
             return RespEntity.fail(exception.getMessage());
         }

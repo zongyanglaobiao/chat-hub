@@ -31,12 +31,18 @@ public class JWTUtils {
     }
 
     public static boolean verifyToken(String token) {
-        if (JWTUtil.verify(token, JWT_HEADER.getBytes())) {
-            JWT jwt = JWTUtil.parseToken(token);
-            if (Long.parseLong(jwt.getPayload(EXPIRE_TIME).toString()) < System.currentTimeMillis()) {
-                throw new ChatException("TOEKN过期");
+        try {
+            if (JWTUtil.verify(token, JWT_HEADER.getBytes())) {
+                JWT jwt = JWTUtil.parseToken(token);
+                if (Long.parseLong(jwt.getPayload(EXPIRE_TIME).toString()) < System.currentTimeMillis()) {
+                    throw new ChatException("TOKEN过期,请重新登录");
+                }
+                return true;
             }
-            return true;
+        } catch (RuntimeException e) {
+            if (!(e instanceof ChatException)) {
+                throw new ChatException("TOKEN异常,请重新登录");
+            }
         }
         return false;
     }

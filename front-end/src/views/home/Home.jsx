@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
 import {isBlank} from "@/lib/toolkit/util.js";
 import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
-import {TOKEN_NAME} from "@/http/http.request.js";
+import {getToken, removeToken} from "@/http/http.request.js";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
@@ -13,18 +13,24 @@ import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 
 function init(dispatch) {
-    dispatch(friendListInfoThunk())
     dispatch(userInfoThunk())
+    dispatch(friendListInfoThunk())
 }
 
 const Home = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const token = useSelector(state => state.token)
 
     useEffect(() => {
-        const auth = localStorage.getItem(TOKEN_NAME);
+        console.log('render')
+    });
+
+
+
+    useEffect(() => {
         //存在token则不判断
-        if (isBlank(auth)) {
+        if (isBlank(token)) {
             navigate(LOGIN);
             return
         }
@@ -50,7 +56,8 @@ const ChatHeader = memo(() => {
     let user = useSelector(state => state.userInfo);
 
     const signOut = useCallback(() => {
-        localStorage.removeItem(TOKEN_NAME)
+        //移除TOKEN
+        removeToken()
         navigate(LOGIN)
     }, [navigate]);
 
