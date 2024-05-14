@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.chat.domain.user.entity.LoginUser;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.service.UserService;
+import com.common.exception.ChatException;
+import com.common.resp.HttpCode;
 import com.common.util.AssertUtils;
 import com.common.util.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +29,9 @@ public class JWTInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader(AUTH);
         token = StrUtil.isBlank(token) ? request.getHeader(AUTH.toLowerCase()) : token;
-        AssertUtils.assertTrue(!StrUtil.isBlank(token),"token不存在");
+        if (!StrUtil.isBlank(token)){
+            throw  new ChatException("TOKEN不存在", HttpCode.FORBIDDEN.getCode());
+        }
         //保存TOKEN
         LoginUser.store(token);
         return JWTUtils.verifyToken(token);

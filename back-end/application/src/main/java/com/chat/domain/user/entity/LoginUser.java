@@ -3,6 +3,7 @@ package com.chat.domain.user.entity;
 import cn.hutool.core.util.StrUtil;
 import com.chat.domain.user.service.UserService;
 import com.common.exception.ChatException;
+import com.common.resp.HttpCode;
 import com.common.util.JWTUtils;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class LoginUser {
     public static String getToken() {
         String token = LOCAL.get();
         if (StrUtil.isBlank(token)) {
-            throw new ChatException("TOKEN不存在请重新登录");
+            throw new ChatException("TOKEN不存在请重新登录", HttpCode.FORBIDDEN.getCode());
         }
         return JWTUtils.verifyToken(token) ? token : null;
     }

@@ -5,12 +5,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
 import {isBlank} from "@/lib/toolkit/util.js";
 import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
-import {getToken, removeToken} from "@/http/http.request.js";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
+import {removeToken} from "@/redux/feature/token.js";
 
 function init(dispatch) {
     dispatch(userInfoThunk())
@@ -21,12 +21,6 @@ const Home = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const token = useSelector(state => state.token)
-
-    useEffect(() => {
-        console.log('render')
-    });
-
-
 
     useEffect(() => {
         //存在token则不判断

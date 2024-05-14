@@ -5,7 +5,8 @@ import {HOME} from "@/router/index.jsx";
 import {message} from "antd";
 import {doLogin, doRegister} from "@/http/api/user.api.js";
 import {setToken} from "@/http/http.request.js";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setTokenAction} from "@/redux/feature/token.js";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ const LoginPage = ({setLogin}) => {
     const mail = useRef();
     const pwd = useRef();
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
 
     const login = useCallback( async (event) => {
         event.preventDefault();
@@ -46,7 +47,7 @@ const LoginPage = ({setLogin}) => {
 
         //todo token在何时更新
         if (code === 200) {
-            setToken(resp.data.token)
+            dispatch(setTokenAction(resp.data.token))
             navigate(HOME)
         }
     }, [navigate]);

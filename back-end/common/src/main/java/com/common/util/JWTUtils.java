@@ -3,6 +3,7 @@ package com.common.util;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import com.common.exception.ChatException;
+import com.common.resp.HttpCode;
 
 import java.util.Map;
 
@@ -35,13 +36,13 @@ public class JWTUtils {
             if (JWTUtil.verify(token, JWT_HEADER.getBytes())) {
                 JWT jwt = JWTUtil.parseToken(token);
                 if (Long.parseLong(jwt.getPayload(EXPIRE_TIME).toString()) < System.currentTimeMillis()) {
-                    throw new ChatException("TOKEN过期,请重新登录");
+                    throw new ChatException("TOKEN过期,请重新登录",HttpCode.FORBIDDEN.getCode());
                 }
                 return true;
             }
         } catch (RuntimeException e) {
             if (!(e instanceof ChatException)) {
-                throw new ChatException("TOKEN异常,请重新登录");
+                throw new ChatException("TOKEN异常,请重新登录", HttpCode.FORBIDDEN.getCode());
             }
         }
         return false;

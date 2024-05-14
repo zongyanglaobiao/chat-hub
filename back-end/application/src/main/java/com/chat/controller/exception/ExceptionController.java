@@ -2,6 +2,7 @@ package com.chat.controller.exception;
 
 
 import cn.hutool.jwt.JWTException;
+import com.common.resp.HttpCode;
 import com.common.resp.RespEntity;
 import com.common.exception.ChatException;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class ExceptionController {
         } else if (exception instanceof RejectedExecutionHandler) {
             return RespEntity.fail("系统繁忙,请稍后再试");
         } else if (exception instanceof JWTException){
-            return RespEntity.fail("TOKEN异常,请重新登录");
+            return RespEntity.fail(HttpCode.FORBIDDEN.getCode(), "TOKEN异常,请重新登录");
         } else if (exception instanceof IllegalArgumentException){
             return RespEntity.fail(exception.getMessage());
         }
