@@ -6,7 +6,7 @@ import {nanoid} from "nanoid";
  * @returns {boolean}
  */
 export function isBlank(text) {
-    return text === undefined || text === null;
+    return text === '' || text === undefined || text === null;
 }
 
 /**

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getToken, removeToken, storeTokenAction} from "@/redux/feature/token.js";
+import {getToken, removeToken, setTokenAction} from "@/redux/feature/token.js";
 import {store} from "@/redux/store.js";
 import {message} from "antd";
 
@@ -31,13 +31,13 @@ serviceAxios.interceptors.request.use(
 serviceAxios.interceptors.response.use(
 	(res) => {
 		if (res.data.code === 403) {
-			message.error(res.data.msg);
+			message.error(res.data.message);
 			//移除之前的token
 			removeToken()
 		}
 
 		//通知所有组件进行更新
-		store.dispatch(storeTokenAction(getToken()))
+		store.dispatch(setTokenAction(getToken()))
 		return res.data;
 	},
 	(error) => {

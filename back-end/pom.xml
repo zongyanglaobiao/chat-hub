@@ -65,6 +65,7 @@
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${com.github.xiaoymin.version}</version>
             </dependency>
+            <!--    自定义        -->
             <dependency>
                 <groupId>com.chat</groupId>
                 <artifactId>application</artifactId>
@@ -94,10 +95,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.chat</groupId>
-            <artifactId>common</artifactId>
         </dependency>
     </dependencies>
 

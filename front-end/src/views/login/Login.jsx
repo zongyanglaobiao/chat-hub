@@ -4,7 +4,6 @@ import {isBlank} from "@/lib/toolkit/util.js";
 import {HOME} from "@/router/index.jsx";
 import {message} from "antd";
 import {doLogin, doRegister} from "@/http/api/user.api.js";
-import {setToken} from "@/http/http.request.js";
 import {useDispatch, useSelector} from "react-redux";
 import {setTokenAction} from "@/redux/feature/token.js";
 

@@ -66,4 +66,5 @@ test/*
 /.idea/dataSources/c1cacfc0-45b0-4db4-9fa8-2e3ec7cc18e6.xml
 /.idea/dataSources/c1cacfc0-45b0-4db4-9fa8-2e3ec7cc18e6/storage_v2/_src_/schema/chat_hub.juuxVQ.meta
 /.idea/dataSources.local.xml
-/.idea/dataSources.xml
+/.idea/deployment.xml
+/.idea/webServers.xml

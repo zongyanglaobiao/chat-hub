@@ -22,7 +22,12 @@ const Home = () => {
     const dispatch = useDispatch();
     const token = useSelector(state => state.token)
 
+    useEffect(()=>{
+        console.log('Home render')
+    })
+
     useEffect(() => {
+        console.log('token', token,isBlank(token),typeof token,token === '')
         //存在token则不判断
         if (isBlank(token)) {
             navigate(LOGIN);
