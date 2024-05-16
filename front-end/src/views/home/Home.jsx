@@ -3,14 +3,13 @@ import {userInfoThunk} from "@/redux/feature/user.thunk.js";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
-import {isBlank} from "@/lib/toolkit/util.js";
 import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
-import {removeToken} from "@/redux/feature/token.js";
+import {removeToken} from "@/http/http.request.js";
 
 function init(dispatch) {
     dispatch(userInfoThunk())
@@ -18,25 +17,24 @@ function init(dispatch) {
 }
 
 const Home = () => {
+    const authorize = useSelector(state => state.authorize)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const token = useSelector(state => state.token)
 
     useEffect(()=>{
-        console.log('Home render')
+        console.log('Home render',authorize)
     })
 
     useEffect(() => {
-        console.log('token', token,isBlank(token),typeof token,token === '')
         //存在token则不判断
-        if (isBlank(token)) {
+        if (!authorize) {
             navigate(LOGIN);
             return
         }
 
         //加载用户信息、朋友列表信息
         init(dispatch)
-    }, [navigate]);
+    }, [authorize]);
 
     return (
         <div className="flex flex-col h-screen bg-gray-100 w-full">

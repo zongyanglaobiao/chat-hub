@@ -1,24 +1,24 @@
 import {useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {isBlank} from "@/lib/toolkit/util.js";
 import {HOME} from "@/router/index.jsx";
 import {message} from "antd";
 import {doLogin, doRegister} from "@/http/api/user.api.js";
+import {setToken} from "@/http/http.request.js";
 import {useDispatch, useSelector} from "react-redux";
-import {setTokenAction} from "@/redux/feature/token.js";
+import {AUTHORIZE_SUCCESS, authorizeAction} from "@/redux/feature/authorize.js";
 
 const Login = () => {
     const navigate = useNavigate();
     const [isLogin, setLogin] = useState(true)
-    const token  = useSelector(state => state.token)
+    const authorize = useSelector(state => state.authorize);
 
     useEffect(() => {
         //存在token则不判断
-        if (!isBlank(token)) {
+        if (authorize) {
             //跳转到首页
             navigate(HOME);
         }
-    }, [navigate]);
+    }, [authorize]);
 
     return (
         <div className='w-full h-[100vh] layout-center'>
@@ -46,7 +46,8 @@ const LoginPage = ({setLogin}) => {
 
         //todo token在何时更新
         if (code === 200) {
-            dispatch(setTokenAction(resp.data.token))
+            setToken(resp.data.token)
+            dispatch(authorizeAction(AUTHORIZE_SUCCESS))
             navigate(HOME)
         }
     }, [navigate]);
