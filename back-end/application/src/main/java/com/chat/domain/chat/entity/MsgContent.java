@@ -15,8 +15,10 @@ public class MsgContent implements Serializable {
     @Serial
     private static final long serialVersionUID = -2607785317442125949L;
 
+    //发送的文本信息
     private String text;
 
+    //聊天室ID
     private String roomId;
 
     //发送信息的用户ID

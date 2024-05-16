@@ -1,11 +1,11 @@
 import {useSelector} from "react-redux";
-import {Avatar, Button} from "antd";
+import {Avatar, Button, Input, message} from "antd";
 import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
-import {getRandomId} from "@/lib/toolkit/util.js";
+import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
-import {useEffect, useReducer, useRef, useState} from "react";
+import {createRef, useEffect, useReducer, useRef, useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
@@ -35,16 +35,15 @@ const ChatWindow = () => {
     )
 }
 
-
 const ChatSidebar = ({windowSelector,windowRef}) => {
     const navigate = useNavigate();
     const friendInfo = useSelector(state => state.friendInfo);
-    const userInfo = useSelector(state => state.userInfo);
     const [friends, setFriends] = useState([])
     const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
 
     const getFriendWithChatId = (data) => {
-        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t => t.friendId === item.id)[0]}))
+        //因为聊天室ID只会存在朋友列表身上
+        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t => t.friendId === item.id)[0].chatId}))
     }
 
     useEffect(() => {
@@ -67,6 +66,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                    friends.length > 0 ? friends.map((item)=>{
                            return (
                                <div key={getRandomId()} className='flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
+                                   //通过改变是显示公告还是聊天界面
                                    windowRef.current = !windowRef.current
                                    windowSelector({bool:windowRef.current,chatId:item.chatId})
                                }}>
@@ -91,19 +91,22 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
  *  信息聊天窗
  */
 const InfoWindow = ({chatId}) => {
-    const [chatMessage, setChatMessage] = useState([])
-    const textRef = useRef(null);
-    const userInfo = useSelector(state => state.userInfo)
+    const initDefaultValue = {value:''}
+    const [chatMessages, setChatMessage] = useState([])
+    const [defaultValue, setDefaultValue] = useState(initDefaultValue)
+    const lastTextRef = createRef();
+    const textRef = createRef();
+    const userInfo = useSelector(state => state.userInfo);
 
+    //初始化加载如websocket初始化
     useEffect(() => {
-        //优化问题
-
         //查询聊天信息
         (async ()=>{
             const resp = await getChatInfo(chatId)
             if (resp.code === 200) {
                 const records = resp.data.records;
-                setChatMessage(prevState => records.length > 0 ? records : prevState)
+                //防止一直重新渲染
+                setChatMessage(prevState => prevState.length === records.length ? prevState : records)
             }
         })()
 
@@ -112,15 +115,16 @@ const InfoWindow = ({chatId}) => {
 
         //如果接收到websocket的信息
         receiveOfWebsocket((data)=>{
-            ( async ()=>{
-                const resp = await getChatInfo(chatId)
+            //todo 优化问题是全部查询一遍还是只是查询用户信息
+            /*(async ()=>{
+                //通过websocket传递的数据查询用户信息
+                const resp = await getChatInfo(data.userId)
                 if (resp.code === 200) {
                     const records = resp.data.records;
                     setChatMessage(prevState => records.length > 0 ? records : prevState)
                 }
-            })()
+            })()*/
         })
-
         return () => {
             //关闭连接
             closeWebsocket()
@@ -128,33 +132,58 @@ const InfoWindow = ({chatId}) => {
     }, []);
 
     useEffect(() => {
+        if (lastTextRef.current) {
+            //有最新的信息则滚动到容器底部
+            lastTextRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatMessages]);
 
-    }, []);
 
+    //发送信息处理函数
+    const sendTextHandler = () => {
+        const sendText = textRef.current.input.value
+        if (isBlank(sendText)) {
+            message.warning("发送内容不能为空");
+            return
+        }
+        sendOfWebsocket(createMsgContent(sendText, chatId, userInfo.id));
+        //更新聊天集合
+        setChatMessage(prevState => [...prevState, {
+            user: userInfo,
+            information: sendText
+        }])
+        setDefaultValue({...initDefaultValue})
+    }
 
     return (
         <main className="w-full relative h-full">
-            <div className="p-4">
-               {chatMessage.map((message) => (
-                    <div key={getRandomId()} className="flex items-center mb-2">
-                        <Avatar src={message.user.avatar} shape="square" size="large"  icon={<UserOutlined />} />
-                        <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
-                    </div>
+            <div className="p-4 h-400px overflow-y-scroll remove_the_scroll">
+                {chatMessages.map((message) => (
+                    message.user.id === userInfo.id ?
+                        (<div key={getRandomId()} className='flex items-center mb-2 justify-end'>
+                            <div className="mr-2 p-2 bg-green-300 rounded">{message.information}</div>
+                            <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
+                        </div>)
+                        :
+                        (<div key={getRandomId()} className='flex items-center mb-2 '>
+                            <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
+                            <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
+                        </div>)
                 ))}
+                <div ref={lastTextRef} className={'h-0 w-0'}/>
             </div>
             {/* 消息输入区域 */}
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
-                    <input
+                    <Input
                         ref={textRef}
+                        defaultValue={defaultValue.value}
                         type="text"
                         placeholder="输入消息..."
                         className="w-[80%] p-2 border border-gray-300 rounded"
+                        onPressEnter={sendTextHandler}
                     />
-                    <Button className="ml-2" onClick={()=> {
-                        console.log(textRef.current.value);
-                        sendOfWebsocket(createMsgContent(textRef.current.value,chatId,userInfo.id))
-                    }}>
+                    <Button size={"large"} className="ml-2" onClick={sendTextHandler}>
                         发送
                     </Button>
                 </div>
