@@ -10,6 +10,7 @@ import Friend from '@/assets/friends.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
+import {AUTHORIZE_FAIL, authorizeAction} from "@/redux/feature/authorize.js";
 
 function init(dispatch) {
     dispatch(userInfoThunk())
@@ -51,10 +52,13 @@ const Home = () => {
 const ChatHeader = memo(() => {
     const navigate = useNavigate();
     let user = useSelector(state => state.userInfo);
+    const dispatch = useDispatch();
 
     const signOut = useCallback(() => {
         //移除TOKEN
         removeToken()
+        //授权状态改为未授权
+        dispatch(authorizeAction(AUTHORIZE_FAIL))
         navigate(LOGIN)
     }, [navigate]);
 
