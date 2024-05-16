@@ -1,11 +1,10 @@
 import {useSelector} from "react-redux";
 import {Avatar, Button, Input, message} from "antd";
-import Search from "antd/es/input/Search.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
-import {doQueryUserInfos} from "@/http/api/user.api.js";
-import {createRef, useEffect, useReducer, useRef, useState} from "react";
+import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
+import {useEffect, useReducer, useRef, useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
@@ -15,6 +14,8 @@ import {
     receiveOfWebsocket,
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
+
+const { Search } = Input;
 
 /**
  * 聊天类型
@@ -79,7 +80,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                        })
                        :
                        <div>
-                           去和志同道合的好友聊天吧
+                           更新日志...
                        </div>
                }
            </div>
@@ -91,18 +92,17 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
  *  信息聊天窗
  */
 const InfoWindow = ({chatId}) => {
-    const initDefaultValue = {value:''}
+    const [inputInitValue, setInputInitValue] = useState({value: ""})
     const [chatMessages, setChatMessage] = useState([])
-    const [defaultValue, setDefaultValue] = useState(initDefaultValue)
-    const lastTextRef = createRef();
-    const textRef = createRef();
+    const lastTextRef = useRef();
+    const textRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
 
     //初始化加载如websocket初始化
     useEffect(() => {
         //查询聊天信息
         (async ()=>{
-            const resp = await getChatInfo(chatId)
+            const resp = await getChatInfo(chatId,1,1000)
             if (resp.code === 200) {
                 const records = resp.data.records;
                 //防止一直重新渲染
@@ -112,18 +112,18 @@ const InfoWindow = ({chatId}) => {
 
         //如果进入这个页面表示需要聊天则进行websocket连接
         newWebSocket(chatId);
-
         //如果接收到websocket的信息
         receiveOfWebsocket((data)=>{
-            //todo 优化问题是全部查询一遍还是只是查询用户信息
-            /*(async ()=>{
+            (async ()=>{
                 //通过websocket传递的数据查询用户信息
-                const resp = await getChatInfo(data.userId)
+                const resp = await doGetInfo(data.userId)
                 if (resp.code === 200) {
-                    const records = resp.data.records;
-                    setChatMessage(prevState => records.length > 0 ? records : prevState)
+                    setChatMessage(prevState => [...prevState,{
+                        user: resp.data,
+                        information: data.text
+                    }])
                 }
-            })()*/
+            })()
         })
         return () => {
             //关闭连接
@@ -138,10 +138,14 @@ const InfoWindow = ({chatId}) => {
         }
     }, [chatMessages]);
 
+    useEffect(() => {
+        console.log('render',inputInitValue)
+    }, [inputInitValue]);
 
     //发送信息处理函数
     const sendTextHandler = () => {
-        const sendText = textRef.current.input.value
+        const sendText = textRef.current?.input.value
+        //解决antd 渲染 Input值一直存在
         if (isBlank(sendText)) {
             message.warning("发送内容不能为空");
             return
@@ -152,7 +156,9 @@ const InfoWindow = ({chatId}) => {
             user: userInfo,
             information: sendText
         }])
-        setDefaultValue({...initDefaultValue})
+
+        //todo Input组件无法通过ref清空input元素的value
+        setInputInitValue(prevState => ({...prevState}))
     }
 
     return (
@@ -177,8 +183,8 @@ const InfoWindow = ({chatId}) => {
                 <div className="layout-center w-full">
                     <Input
                         ref={textRef}
-                        defaultValue={defaultValue.value}
                         type="text"
+                        defaultValue={inputInitValue.value}
                         placeholder="输入消息..."
                         className="w-[80%] p-2 border border-gray-300 rounded"
                         onPressEnter={sendTextHandler}
