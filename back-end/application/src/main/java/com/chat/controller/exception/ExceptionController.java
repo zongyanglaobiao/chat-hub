@@ -6,6 +6,7 @@ import com.common.resp.HttpCode;
 import com.common.resp.RespEntity;
 import com.common.exception.ChatException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,8 @@ public class ExceptionController {
             return RespEntity.fail(HttpCode.FORBIDDEN.getCode(), "TOKEN异常,请重新登录");
         } else if (exception instanceof IllegalArgumentException){
             return RespEntity.fail(exception.getMessage());
+        } else if (exception instanceof HttpMessageNotReadableException) {
+            return RespEntity.fail("请求参数异常");
         }
         return RespEntity.fail();
     }

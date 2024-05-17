@@ -20,8 +20,7 @@ public class FriendSearch implements ISearch {
 
     @Override
     public SearchResponse getSearchContent(String keyword) {
-        return new SearchResponse().
-                setFriends(friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId())));
+        return new SearchResponse().setFriends(friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId())));
     }
 
     @Override

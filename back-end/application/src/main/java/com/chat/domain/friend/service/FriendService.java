@@ -107,11 +107,13 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
         //这里获取的是系统本机用户ID
         return this.lambdaQuery().
                 eq(SysFriend::getUserId, request.sysUserId()).
-                eq(SysFriend::getFriendId, request.keyword()).
                 list().
                 stream().
                 map(SysFriend::getUserId).
                 map(userService::getById).
+                filter(t -> t.getMail().contains(request.keyword()) ||
+                        t.getNickname().contains(request.keyword()) ||
+                        t.getSignature().contains(request.keyword())).
                 toList();
     }
 

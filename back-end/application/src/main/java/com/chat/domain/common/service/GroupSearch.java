@@ -18,8 +18,7 @@ public class GroupSearch implements ISearch {
 
     @Override
     public SearchResponse getSearchContent(String keyword) {
-        return new SearchResponse().
-                setGroups(groupInformationService.doSearch(keyword));
+        return new SearchResponse().setGroups(groupInformationService.doSearch(keyword));
     }
 
     @Override

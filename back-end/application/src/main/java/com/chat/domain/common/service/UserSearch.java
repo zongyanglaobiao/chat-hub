@@ -18,8 +18,7 @@ public class UserSearch implements ISearch {
 
     @Override
     public SearchResponse getSearchContent(String keyword) {
-        return new SearchResponse().
-                setUsers(userService.doSearch(keyword));
+        return new SearchResponse().setUsers(userService.doSearch(keyword));
     }
 
     @Override
