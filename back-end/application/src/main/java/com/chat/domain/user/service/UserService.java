@@ -1,6 +1,7 @@
 package com.chat.domain.user.service;
 
 import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.search.Search;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.mapper.SysUserDao;
 import com.chat.toolkit.utils.IPUtils;
@@ -20,7 +21,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
-public class UserService extends AbstractService<SysUserDao, SysUser> {
+public class UserService extends AbstractService<SysUserDao, SysUser> implements Search<String,List<SysUser>> {
 
     private final HttpServletRequest request;
 
@@ -69,19 +70,18 @@ public class UserService extends AbstractService<SysUserDao, SysUser> {
         return this.list(SysUser::getId, userIds);
     }
 
-    public List<SysUser> search(String searchText) {
+    @Override
+    public List<SysUser> doSearch(String keyword) {
         return this.lambdaQuery().
-                like(SysUser::getNickname, searchText).
+                like(SysUser::getNickname, keyword).
                 or().
-                like(SysUser::getSignature, searchText).
+                like(SysUser::getSignature, keyword).
                 or().
-                like(SysUser::getMail, searchText).
+                like(SysUser::getMail, keyword).
                 list();
     }
 
     private SysUser getUserByMail(String mail) {
         return this.lambdaQuery().eq(SysUser::getMail, mail).one();
     }
-
-
 }

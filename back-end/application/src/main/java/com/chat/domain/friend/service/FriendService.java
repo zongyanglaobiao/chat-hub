@@ -2,11 +2,16 @@ package com.chat.domain.friend.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.search.Search;
 import com.chat.domain.friend.entity.SysFriend;
 import com.chat.domain.friend.enums.AgreeType;
 import com.chat.domain.friend.mapper.SysFriendDao;
+import com.chat.domain.friend.request.SearchFriendRequest;
+import com.chat.domain.user.entity.SysUser;
+import com.chat.domain.user.service.UserService;
 import com.common.exception.ChatException;
 import com.common.util.AssertUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +22,8 @@ import java.util.Map;
  * @since 2024/4/8
  */
 @Service
-public class FriendService extends AbstractService<SysFriendDao, SysFriend> {
+@RequiredArgsConstructor
+public class FriendService extends AbstractService<SysFriendDao, SysFriend> implements Search<SearchFriendRequest, List<SysUser>> {
 
     /**
      * 好友列表
@@ -34,7 +40,7 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> {
      */
     private static final String UNPROCESSED_LIST = "unprocessedList";
 
-
+    private final UserService userService;
 
     public Object doQueryFriend(String userId) {
         return Map.of(FRIEND_LIST,
@@ -94,6 +100,21 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> {
                 && this.lambdaUpdate().eq(SysFriend::getUserId, friendId).eq(SysFriend::getFriendId, userId).remove();
     }
 
+
+
+    @Override
+    public List<SysUser> doSearch(SearchFriendRequest request) {
+        //这里获取的是系统本机用户ID
+        return this.lambdaQuery().
+                eq(SysFriend::getUserId, request.sysUserId()).
+                eq(SysFriend::getFriendId, request.keyword()).
+                list().
+                stream().
+                map(SysFriend::getUserId).
+                map(userService::getById).
+                toList();
+    }
+
     /**
      *  判断是否是好友
      * @param userId 用户ID
@@ -106,4 +127,6 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> {
                 eq(SysFriend::getFriendId, friendId).
                 eq(SysFriend::getStatus, SysFriend.STATUS_YES).exists();
     }
+
+
 }

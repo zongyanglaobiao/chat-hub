@@ -1,6 +1,7 @@
 package com.chat.domain.group.information.service;
 
 import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.search.Search;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.announcement.service.GroupAnnouncementService;
 import com.chat.domain.group.information.entity.SysGroupInformation;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class GroupInformationService extends AbstractService<SysGroupInformationDao, SysGroupInformation>  {
+public class GroupInformationService extends AbstractService<SysGroupInformationDao, SysGroupInformation> implements Search<String,List<SysGroupInformation>> {
 
     private final GroupAnnouncementService announcementService;
 
@@ -63,21 +64,13 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return memberService.save(groupMember);
     }
 
-    public List<SysGroupInformation> search(String keyword) {
-        return this.lambdaQuery().
-                like(SysGroupInformation::getGroupName, keyword).
-                list();
-    }
-
     public List<SysGroupInformation> getMyGroup(String userId, GetType getType) {
         switch (getType) {
-            case MY ->
-            {
-                List<SysGroupInformation> list = this.lambdaQuery().eq(SysGroupInformation::getCreateUserId, userId).list();
-                return fillGroupInfo(list);
+            case MY -> {
+                return fillGroupInfo(this.lambdaQuery().eq(SysGroupInformation::getCreateUserId, userId).list());
             }
-
             case IN -> {
+                //查询群ID
                 List<String> groupIds = memberService.
                         getMemberByUserId(userId).
                         stream().
@@ -85,14 +78,10 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                         filter(t -> IdentityType.MEMBER.equals(t.getIdentity())).
                         map(SysGroupMember::getGroupId).
                         toList();
-
-                if (groupIds.isEmpty()) {
-                    return Collections.emptyList();
-                }
-
-                //获取所有群信息
-                List<SysGroupInformation> groups = this.listByIds(groupIds);
-                return fillGroupInfo(groups) ;
+                return groupIds.isEmpty() ?
+                        Collections.emptyList() :
+                        //获取所有群信息
+                        fillGroupInfo(this.listByIds(groupIds)) ;
             }
             default -> throw new ChatException("类型错误");
         }
@@ -151,6 +140,13 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return this.announcementService.removeById(announcementId);
     }
 
+    @Override
+    public List<SysGroupInformation> doSearch(String keyword) {
+        return fillGroupInfo(this.lambdaQuery().
+                like(SysGroupInformation::getGroupName, keyword).
+                list());
+    }
+
     private List<SysGroupInformation> fillGroupInfo(List<SysGroupInformation> list) {
         return  list.stream().
                 peek(t -> {
@@ -160,11 +156,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                 toList();
     }
 
-
     private SysGroupInformation getMyGroupByGroupId(String groupId, String userId) {
         return this.lambdaQuery().eq(SysGroupInformation::getId, groupId).eq(SysGroupInformation::getCreateUserId, userId).one();
     }
-
-
-
 }
