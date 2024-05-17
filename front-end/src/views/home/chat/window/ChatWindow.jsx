@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 import {Avatar, Button, Input, message} from "antd";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
@@ -37,10 +37,11 @@ const ChatWindow = () => {
 }
 
 const ChatSidebar = ({windowSelector,windowRef}) => {
+    const location = useLocation();
     const navigate = useNavigate();
     const friendInfo = useSelector(state => state.friendInfo);
     const [friends, setFriends] = useState([])
-    const onSearch = (value, _e, info) => navigate(HOME_CHAT_SEARCH);
+    const onSearch = (value, _e, info) => navigate({pathname:HOME_CHAT_SEARCH,search:value},{state:location.pathname})
 
     const getFriendWithChatId = (data) => {
         //因为聊天室ID只会存在朋友列表身上
@@ -79,8 +80,8 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                            )
                        })
                        :
-                       <div>
-                           更新日志...
+                       <div className='text-center'>
+                           快去找志同道合的好友吧
                        </div>
                }
            </div>
@@ -92,11 +93,10 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
  *  信息聊天窗
  */
 const InfoWindow = ({chatId}) => {
-    const [inputInitValue, setInputInitValue] = useState({value: ""})
     const [chatMessages, setChatMessage] = useState([])
     const lastTextRef = useRef();
-    const textRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
+    const [sendText, setSendText] = useState('')
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -138,13 +138,8 @@ const InfoWindow = ({chatId}) => {
         }
     }, [chatMessages]);
 
-    useEffect(() => {
-        console.log('render',inputInitValue)
-    }, [inputInitValue]);
-
     //发送信息处理函数
     const sendTextHandler = () => {
-        const sendText = textRef.current?.input.value
         //解决antd 渲染 Input值一直存在
         if (isBlank(sendText)) {
             message.warning("发送内容不能为空");
@@ -156,9 +151,7 @@ const InfoWindow = ({chatId}) => {
             user: userInfo,
             information: sendText
         }])
-
-        //todo Input组件无法通过ref清空input元素的value
-        setInputInitValue(prevState => ({...prevState}))
+        setSendText('')
     }
 
     return (
@@ -182,11 +175,11 @@ const InfoWindow = ({chatId}) => {
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
                     <Input
-                        ref={textRef}
                         type="text"
-                        defaultValue={inputInitValue.value}
+                        value={sendText}
                         placeholder="输入消息..."
                         className="w-[80%] p-2 border border-gray-300 rounded"
+                        onChange={(e) => setSendText(e.target.value)}
                         onPressEnter={sendTextHandler}
                     />
                     <Button size={"large"} className="ml-2" onClick={sendTextHandler}>
@@ -205,7 +198,7 @@ const AnnouncementWindow = () => {
     return (
         <div className="w-full h-full layout-center">
             <h3>
-                公告：生活就是在聊天中过去的
+                更新日志...
             </h3>
         </div>
     );
