@@ -38,7 +38,8 @@ public class LoginUser {
         if (StrUtil.isBlank(token)) {
             throw new ChatException("TOKEN不存在请重新登录", HttpCode.FORBIDDEN.getCode());
         }
-        return JWTUtils.verifyToken(token) ? token : null;
+        //校验TOKEN
+        return JWTUtils.verifyToken(token);
     }
 
     public static SysUser getUser() {

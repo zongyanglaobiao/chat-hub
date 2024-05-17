@@ -7,22 +7,19 @@ import lombok.RequiredArgsConstructor;
  * @author xxl
  * @since 2024/5/18
  */
-@Getter
-@RequiredArgsConstructor
 public enum SearchType {
 
     //用户搜索
-    USER("user"),
+    USER,
 
     //群搜索
-    GROUP("group"),
+    GROUP,
 
     //好友搜索
-    FRIEND("friend"),
+    FRIEND,
 
     //所有
-    ALL("all")
+    ALL
     ;
 
-    private final String name;
 }

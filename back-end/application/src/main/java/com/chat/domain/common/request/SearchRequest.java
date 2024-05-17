@@ -19,5 +19,5 @@ public class SearchRequest implements Serializable {
     private String keyword;
 
     @NotEmpty(message = "搜索类型不能为空")
-    private SearchType searchTypes;
+    private SearchType searchType;
 }

@@ -4,9 +4,7 @@ import com.chat.domain.common.model.SearchType;
 import com.chat.domain.common.response.SearchResponse;
 import com.chat.domain.friend.request.SearchFriendRequest;
 import com.chat.domain.friend.service.FriendService;
-import com.chat.domain.group.information.service.GroupInformationService;
 import com.chat.domain.user.entity.LoginUser;
-import com.chat.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,25 +14,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AllSearch implements ISearch {
+public class FriendSearch implements ISearch {
 
     private final FriendService friendService;
 
-    private final UserService userService;
-
-    private final GroupInformationService groupInformationService;
-
     @Override
-
     public SearchResponse getSearchContent(String keyword) {
         return new SearchResponse().
-                setFriends( friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId()))).
-                setUsers(userService.doSearch(keyword)).
-                setGroups(groupInformationService.doSearch(keyword));
+                setFriends(friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId())));
     }
 
     @Override
     public SearchType getSearchType() {
-        return SearchType.ALL;
+        return SearchType.FRIEND;
     }
 }

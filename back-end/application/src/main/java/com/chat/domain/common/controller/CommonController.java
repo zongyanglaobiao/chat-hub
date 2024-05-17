@@ -2,11 +2,14 @@ package com.chat.domain.common.controller;
 
 import com.chat.controller.Controller;
 import com.chat.domain.common.request.SearchRequest;
-import com.chat.domain.common.service.CommonService;
+import com.chat.domain.common.response.SearchResponse;
 import com.common.resp.RespEntity;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author xxl
@@ -19,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class CommonController extends Controller {
 
     //搜索
-    @PostMapping("/search")
-    public RespEntity<Object> search(SearchRequest request) {
-        return RespEntity.success(commonService.search(request));
+    @PostMapping("/doSearch")
+    public RespEntity<SearchResponse> doSearch(@RequestBody @Validated SearchRequest request) {
+        return RespEntity.success(commonService.doSearch(request));
     }
 }

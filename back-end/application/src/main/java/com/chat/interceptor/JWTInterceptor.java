@@ -27,13 +27,14 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader(AUTH);
-        token = StrUtil.isBlank(token) ? request.getHeader(AUTH.toLowerCase()) : token;
+        String token = StrUtil.isBlank(request.getHeader(AUTH)) ?
+                request.getHeader(AUTH.toLowerCase()) :
+                request.getHeader(AUTH);
         if (StrUtil.isBlank(token)){
             throw  new ChatException("TOKEN不存在", HttpCode.FORBIDDEN.getCode());
         }
         //保存TOKEN
-        LoginUser.store(token);
-        return JWTUtils.verifyToken(token);
+        LoginUser.store(JWTUtils.verifyToken(token));
+        return true;
     }
 }

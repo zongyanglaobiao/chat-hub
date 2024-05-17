@@ -31,21 +31,20 @@ public class JWTUtils {
         return JWTUtil.createToken(Map.of(USER_ID, userId, EXPIRE_TIME, System.currentTimeMillis() + time), JWT_HEADER.getBytes());
     }
 
-    public static boolean verifyToken(String token) {
-        try {
-            if (JWTUtil.verify(token, JWT_HEADER.getBytes())) {
-                JWT jwt = JWTUtil.parseToken(token);
-                if (Long.parseLong(jwt.getPayload(EXPIRE_TIME).toString()) < System.currentTimeMillis()) {
-                    throw new ChatException("TOKEN过期,请重新登录",HttpCode.FORBIDDEN.getCode());
-                }
-                return true;
+    /**
+     * 如果TOKEN正常就返回
+     * @param token 验证的TOKEN
+     * @return 返回正常的TOKEN
+     */
+    public static String verifyToken(String token) {
+        if (JWTUtil.verify(token, JWT_HEADER.getBytes())) {
+            JWT jwt = JWTUtil.parseToken(token);
+            if (Long.parseLong(jwt.getPayload(EXPIRE_TIME).toString()) < System.currentTimeMillis()) {
+                throw new ChatException("TOKEN过期,请重新登录",HttpCode.FORBIDDEN.getCode());
             }
-        } catch (RuntimeException e) {
-            if (!(e instanceof ChatException)) {
-                throw new ChatException("TOKEN异常,请重新登录", HttpCode.FORBIDDEN.getCode());
-            }
+            return token;
         }
-        return false;
+        throw new ChatException("TOKEN异常");
     }
 
     public static String getUserId(String token) {
