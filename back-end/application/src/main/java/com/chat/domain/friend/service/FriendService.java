@@ -100,8 +100,6 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
                 && this.lambdaUpdate().eq(SysFriend::getUserId, friendId).eq(SysFriend::getFriendId, userId).remove();
     }
 
-
-
     @Override
     public List<SysUser> doSearch(SearchFriendRequest request) {
         //这里获取的是系统本机用户ID
