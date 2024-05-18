@@ -2,11 +2,8 @@ package com.chat.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.chat.domain.user.entity.LoginUser;
-import com.chat.domain.user.entity.SysUser;
-import com.chat.domain.user.service.UserService;
 import com.common.exception.ChatException;
 import com.common.resp.HttpCode;
-import com.common.util.AssertUtils;
 import com.common.util.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
