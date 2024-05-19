@@ -39,7 +39,7 @@ mybatis-plus:
 #=============================================================================
 #======================== 自定义配置  =========================================
 #=============================================================================
-auth-path:
+authorization:
   exclude:
     - /**/doc.html
     - /**/*.css
@@ -52,6 +52,13 @@ auth-path:
     - /**/doRegister
     - /**/file/doDownload/**
     - /chat/**
+  token-name: auth
 
+# 图床服务
 file:
-  path: @save.path@
+  upload:
+    url: xxxx
+  download:
+    url: xxxx
+  signature: xxxx
+  cipher-text: xxxx

@@ -2,12 +2,10 @@ package com.chat.domain.file.service;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSON;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chat.domain.base.AbstractService;
 import com.chat.domain.file.entity.SysFile;
 import com.chat.domain.file.mapper.SysFileDao;
-import jakarta.servlet.http.HttpServletRequest;
+import com.chat.toolkit.utils.FileUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +37,9 @@ public class FileService extends AbstractService<SysFileDao, SysFile> {
     @Value("${file.cipher-text}")
     private String cipherText;
 
-    private final HttpServletRequest request;
-
     private final HttpServletResponse response;
+
+    private static final String FILE_NAME = "fileName";
 
     public void download(String downloadId) {
         HttpResponse httpResponse = HttpRequest.
@@ -49,6 +47,7 @@ public class FileService extends AbstractService<SysFileDao, SysFile> {
                 addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
                 executeAsync();
         log.warn("httpResponse = {}",httpResponse);
+        FileUtils.webDownload(httpResponse.bodyBytes(),response,httpResponse.header(FILE_NAME));
     }
 
     public String upload(MultipartFile file) {

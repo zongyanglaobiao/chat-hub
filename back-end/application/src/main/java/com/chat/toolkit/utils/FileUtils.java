@@ -99,6 +99,19 @@ public class FileUtils {
         }
     }
 
+    public static void webDownload(byte[] fileBytes,HttpServletResponse response,String fileName) throws RuntimeException {
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLUtil.encode(fileName));
+            response.addHeader("Content-Length", "" + fileBytes.length);
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            IoUtil.write(response.getOutputStream(), true, fileBytes);
+        } catch (Exception  e) {
+            throw new RuntimeException("WEB下载失败," + e.getMessage());
+        }
+    }
+
 
     /**
      * 获取文件后缀
