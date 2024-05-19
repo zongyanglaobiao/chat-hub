@@ -1,22 +1,24 @@
 package com.chat.config;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.chat.interceptor.JWTInterceptor;
-import jakarta.annotation.Resource;
-import lombok.Getter;
+import com.chat.domain.user.entity.LoginUser;
+import com.common.exception.ChatException;
+import com.common.resp.HttpCode;
+import com.common.util.JWTUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * mvc配置
@@ -24,27 +26,28 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author xxl
  * @since 2023/9/16
  */
-@ConfigurationProperties(prefix = "auth-path")
+@ConfigurationProperties(prefix = "authorization")
 @Configuration
 @RequiredArgsConstructor
-public class SpringMvcWebConfiguration implements WebMvcConfigurer {
+@Data
+public class SpringMvcWebConfiguration implements HandlerInterceptor {
 
     private static final String PATH = "/**";
 
-    @Getter
-    @Setter
+    /**
+     *  排除的路径
+     */
     private String[] exclude;
 
-    @Resource
-    private JWTInterceptor tokenInterceptor;
+    /**
+     * 是否开启验证,默认为开启
+     */
+    private boolean enable = true;
 
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration authInterceptorRegistration = registry.addInterceptor(tokenInterceptor);
-        authInterceptorRegistration.addPathPatterns(PATH);
-        authInterceptorRegistration.excludePathPatterns(exclude);
-    }
+    /**
+     * token key
+     */
+    private String tokenName;
 
     /**
      * 跨域配置
@@ -62,13 +65,19 @@ public class SpringMvcWebConfiguration implements WebMvcConfigurer {
         return new CorsFilter(source);
     }
 
-    /**
-     * 添加分页插件
-     */
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        return interceptor;
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (!enable) {
+            return true;
+        }
+        String token = StrUtil.isBlank(request.getHeader(tokenName)) ?
+                request.getHeader(tokenName.toLowerCase()) :
+                request.getHeader(tokenName);
+        if (StrUtil.isBlank(token)){
+            throw  new ChatException("TOKEN不存在", HttpCode.FORBIDDEN.getCode());
+        }
+        //保存TOKEN
+        LoginUser.store(JWTUtils.verifyToken(token));
+        return true;
     }
 }

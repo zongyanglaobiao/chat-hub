@@ -1,8 +1,9 @@
 package com.chat.domain.file.entity;
 
-import com.chat.domain.base.Entity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * (SysFile)表实体类
@@ -10,12 +11,12 @@ import lombok.EqualsAndHashCode;
  * @author makejava
  * @since 2024-04-08 11:51:39
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysFile extends Entity {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SysFile  {
 
-    //保存路径
-    private String path;
+    private MultipartFile file;
 
 }
 
