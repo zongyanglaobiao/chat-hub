@@ -32,9 +32,8 @@ public class SysChatInformation extends Entity {
     //聊天室ID重复出现(如果是群聊的话则是指群ID，如果是单聊则是指双方的id相加)
     private String roomId;
 
-    //用户ID
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private SysUser user;
+    //发送信息的用户ID
+    private String sendUserId;
 
     //发送时间
     private Date sendTime;
@@ -46,12 +45,15 @@ public class SysChatInformation extends Entity {
     //序号
     private Integer serialNumber;
 
+    @TableField(exist = false)
+    private SysUser user;
+
     private SysChatInformation() {}
 
-    public static SysChatInformation create(Integer serialNumber, String roomId, SysUser user, String information) {
+    public static SysChatInformation create(Integer serialNumber, String roomId, String  sendUserId, String information) {
         SysChatInformation chatInformation = new SysChatInformation();
         chatInformation.setRoomId(roomId);
-        chatInformation.setUser(user);
+        chatInformation.setSendUserId(sendUserId);
         chatInformation.setSerialNumber(serialNumber);
         chatInformation.setSendTime(new Date());
         chatInformation.setInformation(information);

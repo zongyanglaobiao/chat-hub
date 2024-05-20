@@ -23,13 +23,17 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
     private final UserService userService;
 
     public Page<SysChatInformation> getChatInformationByRoomId(String roomId) {
-        return this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).page(CommonPageRequestUtils.defaultPage());
+        Page<SysChatInformation> page = this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).page(CommonPageRequestUtils.defaultPage());
+        page.getRecords().forEach(t -> {
+            t.setUser(userService.getById(t.getSendUserId(),false));
+        });
+        return page;
     }
 
     public Boolean saveInfo(MsgContent context) {
         String roomId = context.getRoomId();
         Integer latestNumber = findLatestNumber(roomId);
-        SysChatInformation information = SysChatInformation.create(latestNumber, roomId, userService.getById(context.getUserId()), context.getText());
+        SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText());
         return this.save(information);
     }
 
@@ -38,12 +42,7 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
      */
     private Integer findLatestNumber(String roomId) {
         List<SysChatInformation> list = this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).orderByDesc(SysChatInformation::getSerialNumber).list();
-
         //查询房间号为空则为初始序号
-        if (list.isEmpty()) {
-            return 0;
-        }
-
-        return list.get(0).getSerialNumber() + 1;
+        return list.isEmpty() ? 0 : list.get(0).getSerialNumber() + 1;
     }
 }

@@ -1,10 +1,22 @@
 # chat-hub
-无限制聊天平台
 
+使用react框架开发的聊天室，源码简单易读，界面是采用现代简约风。初衷是使用react练手的项目
 
-### vite + react
+## 技术栈
 
+### 后端
 
-## 前端规范
+1. spring boot
+2. hutool
+3. docker
+4. mysql
+5. mybatis-plus
+6. knife4j
 
-**组件和组件之间隔离：不能互相使用不同组件的方法**
+### 前端
+
+1. vite
+2. react
+3. antd
+4. unocss
+5. redux

@@ -17,12 +17,6 @@ import {
 
 const { Search } = Input;
 
-/**
- * 聊天类型
- */
-const CHAT_TYPE_FRIEND = "friend";
-const CHAT_TYPE_GROUP = "group";
-
 const ChatWindow = () => {
     const windowRef = useRef(false);
     const [window, dispatch] = useReducer(selectWindowReducer,windowRef.current,(val)=> selectWindowReducer(null,{bool:val}))
@@ -41,7 +35,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
     const navigate = useNavigate();
     const friendInfo = useSelector(state => state.friendInfo);
     const [friends, setFriends] = useState([])
-    const onSearch = (value, _e, info) => navigate({pathname:HOME_CHAT_SEARCH,search:value},{state:location.pathname})
+    const onSearch = (value) => navigate({pathname:HOME_CHAT_SEARCH,search:value},{state:location.pathname})
 
     const getFriendWithChatId = (data) => {
         //因为聊天室ID只会存在朋友列表身上
@@ -102,7 +96,7 @@ const InfoWindow = ({chatId}) => {
     useEffect(() => {
         //查询聊天信息
         (async ()=>{
-            const resp = await getChatInfo(chatId,1,1000)
+            const resp = await getChatInfo(chatId,2)
             if (resp.code === 200) {
                 const records = resp.data.records;
                 //防止一直重新渲染

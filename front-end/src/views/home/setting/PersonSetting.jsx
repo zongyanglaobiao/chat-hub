@@ -3,7 +3,7 @@ import {Avatar, Button, Form, Input, message, Upload} from "antd";
 import {useEffect, useRef, useState} from "react";
 import {doModify} from "@/http/api/user.api.js";
 import {userInfoThunk} from "@/redux/feature/user.thunk.js";
-import {TOKEN_NAME} from "@/http/http.request.js";
+import {getToken} from "@/http/http.request.js";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {UploadOutlined} from "@ant-design/icons";
 import {getUploadUrl} from "@/http/api/file.api.js";
@@ -41,7 +41,7 @@ const PersonSetting = () => {
         name: 'file',
         action: getUploadUrl(),
         headers: {
-            auth: localStorage.getItem(TOKEN_NAME),
+            auth: getToken(),
         },
         onChange(info) {
             if (isNullOrUndefined(info.file.response)) {
