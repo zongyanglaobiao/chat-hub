@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * mvc配置
@@ -30,7 +32,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Configuration
 @RequiredArgsConstructor
 @Data
-public class SpringMvcWebConfiguration implements HandlerInterceptor {
+public class SpringMvcWebConfiguration implements HandlerInterceptor, WebMvcConfigurer {
 
     private static final String PATH = "/**";
 
@@ -66,7 +68,12 @@ public class SpringMvcWebConfiguration implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(this).addPathPatterns(PATH).excludePathPatterns(exclude);
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
         if (!enable) {
             return true;
         }

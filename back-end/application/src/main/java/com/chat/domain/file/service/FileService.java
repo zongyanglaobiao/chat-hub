@@ -2,10 +2,13 @@ package com.chat.domain.file.service;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.chat.domain.base.AbstractService;
-import com.chat.domain.file.entity.SysFile;
-import com.chat.domain.file.mapper.SysFileDao;
+import cn.hutool.json.JSONUtil;
 import com.chat.toolkit.utils.FileUtils;
+import com.common.exception.ChatException;
+import com.common.log.AsyncLogger;
+import com.common.resp.RespEntity;
+import com.common.util.AssertUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +26,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FileService extends AbstractService<SysFileDao, SysFile> {
+public class FileService {
 
     @Value("${file.upload.url}")
     private String uploadUrl;
@@ -37,29 +40,41 @@ public class FileService extends AbstractService<SysFileDao, SysFile> {
     @Value("${file.cipher-text}")
     private String cipherText;
 
+    private final HttpServletRequest request;
+
     private final HttpServletResponse response;
 
+    private final AsyncLogger logger;
+
     private static final String FILE_NAME = "fileName";
+
+    private static final String FILE_DOWNLOAD_PATH = "/file/doDownload/";
 
     public void download(String downloadId) {
         HttpResponse httpResponse = HttpRequest.
                 get(downloadUrl + "/" + downloadId).
                 addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
                 executeAsync();
-        log.warn("httpResponse = {}",httpResponse);
+
         FileUtils.webDownload(httpResponse.bodyBytes(),response,httpResponse.header(FILE_NAME));
+        logger.warn(this.getClass(),"下载文件: {}",httpResponse);
+        //关闭头
+        httpResponse.close();
     }
 
     public String upload(MultipartFile file) {
-        try {
-            HttpResponse httpResponse = HttpRequest.post(uploadUrl).
-                    addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
-                    form("file",file.getBytes(),file.getOriginalFilename()).
-                    executeAsync();
-            log.warn("httpResponse = {}",httpResponse);
+        try (HttpResponse httpResponse = HttpRequest.post(uploadUrl).
+                addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
+                form("file", file.getBytes(), file.getOriginalFilename()).
+                executeAsync()){
+            RespEntity resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
+            logger.warn(this.getClass(),"上传文件: {}",resp);
+            AssertUtils.assertTrue(resp.getCode() == 200, "上传文件失败: " + resp.getMessage());
+            //因为返回的URL所以需要分割
+            String id = ((String) resp.getData());
+            return FileUtils.getUrl(request,FILE_DOWNLOAD_PATH + (id.substring(id.lastIndexOf("/") + 1)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ChatException("上传文件失败: " + e.getMessage());
         }
-        return null;
     }
 }

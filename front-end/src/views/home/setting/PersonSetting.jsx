@@ -49,7 +49,7 @@ const PersonSetting = () => {
             }
             const {code} = info.file.response
             if (code === 200) {
-                downloadUrl.current = info.file.response.message
+                downloadUrl.current = info.file.response.data
                 message.success("上传成功")
             } else {
                 message.error(info.file.response.message);
