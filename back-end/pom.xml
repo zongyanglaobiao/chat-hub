@@ -130,8 +130,6 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.version}</version>
                     <configuration>
-                        <!--    自己打出的包也能用 ,就是打出的包不包含BOOT-INF目录        -->
-                        <skip>true</skip>
                         <excludes>
                             <exclude>
                                 <groupId>org.projectlombok</groupId>
