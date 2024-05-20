@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xxl
@@ -41,8 +42,12 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
      *  查询最后一个序号
      */
     private Integer findLatestNumber(String roomId) {
-        List<SysChatInformation> list = this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).orderByDesc(SysChatInformation::getSerialNumber).list();
+        //解决查询集合查询
+        Page<SysChatInformation> page = new Page<>();
+        page.setCurrent(1);
+        page.setSize(1);
+        page = this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).orderByDesc(SysChatInformation::getSerialNumber).page(page);
         //查询房间号为空则为初始序号
-        return list.isEmpty() ? 0 : list.get(0).getSerialNumber() + 1;
+        return page.getRecords().isEmpty() ? 0 : page.getRecords().get(0).getSerialNumber() + 1;
     }
 }

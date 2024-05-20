@@ -11,7 +11,6 @@ import com.common.util.AssertUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +24,6 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class FileService {
 
     @Value("${file.upload.url}")
@@ -58,7 +56,7 @@ public class FileService {
 
         FileUtils.webDownload(httpResponse.bodyBytes(),response,httpResponse.header(FILE_NAME));
         logger.warn(this.getClass(),"下载文件: {}",httpResponse);
-        //关闭头
+        //关闭
         httpResponse.close();
     }
 

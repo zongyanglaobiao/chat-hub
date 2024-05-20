@@ -1,6 +1,4 @@
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
-import {HOME_CHAT} from "@/router/index.jsx";
+import {Outlet} from "react-router-dom";
 
 function Chat() {
     return (
