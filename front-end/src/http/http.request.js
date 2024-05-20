@@ -51,7 +51,7 @@ serviceAxios.interceptors.response.use(
 		return res.data;
 	},
 	(error) => {
-		let msg = "";
+		let msg = "网络异常问题，请联系管理员！";
 		if (error && error.response) {
 			switch (error.response.status) {
 				case 302:
