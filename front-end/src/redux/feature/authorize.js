@@ -10,7 +10,6 @@ const AUTHORIZE_FAIL = false;
  */
 const authorizeProcessor = generateSlice(getRandomId(), AUTHORIZE_SUCCESS, {
     authorizeAction(state,action) {
-        console.log('authorize',action.payload)
         return action.payload
     },
 });

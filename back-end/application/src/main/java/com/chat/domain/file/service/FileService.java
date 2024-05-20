@@ -42,8 +42,9 @@ public class FileService extends AbstractService<SysFileDao, SysFile> {
             String savePath = FileUtils.upload(file.getInputStream(), path + file.getOriginalFilename());
             SysFile sysFile = new SysFile();
             sysFile.setPath(savePath);
+            sysFile.setPath(FileUtils.getUrl(request,REQUEST_URL + sysFile.getId()));
             this.save(sysFile);
-            return FileUtils.getUrl(request,REQUEST_URL + sysFile.getId());
+            return sysFile.getUrl();
         } catch (IOException e) {
             throw new ChatException("文件上传失败: " + e.getMessage());
         }

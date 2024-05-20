@@ -17,5 +17,7 @@ public class SysFile extends Entity {
     //保存路径
     private String path;
 
+    //请求地址
+    private String url;
 }
 
