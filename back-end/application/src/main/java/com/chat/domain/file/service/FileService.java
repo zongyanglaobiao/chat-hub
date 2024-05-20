@@ -1,19 +1,20 @@
 package com.chat.domain.file.service;
 
-import cn.hutool.http.server.HttpServerRequest;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.chat.domain.base.AbstractService;
 import com.chat.domain.file.entity.SysFile;
 import com.chat.domain.file.mapper.SysFileDao;
 import com.chat.toolkit.utils.FileUtils;
-import com.common.exception.ChatException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author xxl
@@ -21,32 +22,44 @@ import java.io.IOException;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileService extends AbstractService<SysFileDao, SysFile> {
 
-    @Value("${file.path}")
-    private String path;
+    @Value("${file.upload.url}")
+    private String uploadUrl;
 
-    private final HttpServletRequest request;
+    @Value("${file.download.url}")
+    private String downloadUrl;
+
+    @Value("${file.signature}")
+    private String  signature;
+
+    @Value("${file.cipher-text}")
+    private String cipherText;
 
     private final HttpServletResponse response;
 
-    private static final String REQUEST_URL = "/file/doDownload/";
+    private static final String FILE_NAME = "fileName";
 
     public void download(String downloadId) {
-        SysFile file = getById(downloadId);
-        FileUtils.webDownload(file.getPath(),response,FileUtils.getFileName(file.getPath()));
+        HttpResponse httpResponse = HttpRequest.
+                get(downloadUrl + "/" + downloadId).
+                addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
+                executeAsync();
+        log.warn("httpResponse = {}",httpResponse);
+        FileUtils.webDownload(httpResponse.bodyBytes(),response,httpResponse.header(FILE_NAME));
     }
 
     public String upload(MultipartFile file) {
         try {
-            String savePath = FileUtils.upload(file.getInputStream(), path + file.getOriginalFilename());
-            SysFile sysFile = new SysFile();
-            sysFile.setPath(savePath);
-            sysFile.setPath(FileUtils.getUrl(request,REQUEST_URL + sysFile.getId()));
-            this.save(sysFile);
-            return sysFile.getUrl();
+            HttpResponse httpResponse = HttpRequest.post(uploadUrl).
+                    addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
+                    form("file",file.getBytes(),file.getOriginalFilename()).
+                    executeAsync();
+            log.warn("httpResponse = {}",httpResponse);
         } catch (IOException e) {
-            throw new ChatException("文件上传失败: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        return null;
     }
 }

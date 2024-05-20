@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.chat</groupId>
+        <groupId>com.james.aks</groupId>
         <artifactId>chat-hub</artifactId>
         <version>${revision}</version>
     </parent>
@@ -79,7 +79,7 @@
             <artifactId>ip2region</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.chat</groupId>
+            <groupId>com.james.aks</groupId>
             <artifactId>common</artifactId>
         </dependency>
     </dependencies>

@@ -1,6 +1,9 @@
 package com.chat.config;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.chat.domain.chat.controller.ChatController;
 import com.chat.domain.chat.service.ChatInformationService;
 import com.common.log.AsyncLogger;
@@ -61,5 +64,15 @@ public class ChatConfiguration implements MetaObjectHandler {
         ChatController chatController = new ChatController();
         chatController.setChatInformationService(chatInformationService);
         return chatController;
+    }
+
+    /**
+     * 添加分页插件
+     */
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
     }
 }
