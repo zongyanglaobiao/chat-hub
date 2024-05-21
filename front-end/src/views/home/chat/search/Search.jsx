@@ -1,30 +1,41 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {Button, Input, List, Select, Space} from "antd";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {Button, Input, List, message, Select, Space} from "antd";
 import {LeftCircleTwoTone} from "@ant-design/icons";
+import {doSearch} from "@/http/api/common.api.js";
 
 const { Search } = Input;
+
+const SEARCH_TYPES = [
+    {label: '所有', value: 'ALL'},
+    {label: '用户', value: 'USER'},
+    {label: '朋友', value: 'FRIEND'},
+    {label: '群', value: 'GROUP'},
+]
+
 
 function SearchPage() {
     //找到来这页面的路由
     const location = useLocation();
     const navigate = useNavigate();
-    const [list, setList] = useState([]);
+    //搜索改为数据同步渲染
+    const [searchType, setSearchType] = useState(SEARCH_TYPES[0].value)
+    const [keyword, setKeyword] = useState('')
 
-    useEffect(() => {
-        const arr =[]
-        for (let i = 0; i < 10; i++) {
-             arr.push({ id: i, name: `测试${i}`})
+    const search = useMemo( async (current = 1, size = 10) => {
+        const resp =  await doSearch({searchType: searchType, keyword: keyword}, current, size);
+        if (resp.code !== 200) {
+            message.error(resp.message);
+            return
         }
-        setList(arr);
-    },[]);
+         return  resp.data
+    }, [searchType, keyword]);
 
-    const options = [
-        {label: '所有', value: 'ALL'},
-        {label: '用户', value: 'USER'},
-        {label: '朋友', value: 'FRIEND'},
-        {label: '群', value: 'GROUP'},
-    ]
+    //跳转过来时搜索
+    useEffect(() => {
+        //去除传递参数中的?
+        setKeyword(location.search.slice(1))
+    }, [location.search]);
 
     return (
         <div className=' w-full text-center relative'>
@@ -37,14 +48,12 @@ function SearchPage() {
                            }}
                            enterButton />
                    <Select
-                       defaultValue="所有"
-                       options={options}
+                       defaultValue={SEARCH_TYPES[0].label}
+                       options={SEARCH_TYPES}
                        style={{
                            width: 80,
                        }}
-                       onChange={(value, option)=>{
-                           console.log(value,option)
-                       }}/>
+                       onChange={(value)=> setSearchType(value)}/>
                </Space>
             </header>
             <main className='p5px'>
@@ -60,22 +69,27 @@ function SearchPage() {
                                 }}
                             >
                                 <Button onClick={()=>{
-                                    setList([...list,{id:3,name:'xxxx'}])
+                                    message.warning("没有更多啦")
                                 }}>loading more</Button>
                             </div>
                         )}
-                        dataSource={list}
-                        renderItem={item => (
-                            <List.Item key={item.id}>
-                                {item.name}
-                            </List.Item>
-                        )}
+                        dataSource={[{id:1,name:"1"},{id:2,name:"2"}]}
+                        renderItem={item => {
+                            const searchResult = search();
+                            console.log('searchResult', searchResult);
+                            return (
+                                <List.Item key={item.id}>
+                                    {item.name}
+                                </List.Item>
+                            )
+                        }}
                     />
                 </div>
             </main>
         </div>
     )
 }
+
 
 
 export default SearchPage;
