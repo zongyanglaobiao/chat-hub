@@ -5,6 +5,7 @@ import com.chat.domain.common.response.SearchResponse;
 import com.chat.domain.friend.request.SearchFriendRequest;
 import com.chat.domain.friend.service.FriendService;
 import com.chat.domain.user.entity.LoginUser;
+import com.chat.toolkit.utils.CommonPageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class FriendSearch implements ISearch {
 
     @Override
     public SearchResponse getSearchContent(String keyword) {
-        return new SearchResponse().setFriends(friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId())));
+        return new SearchResponse().setFriends(friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId()),CommonPageRequestUtils.defaultPage()));
     }
 
     @Override

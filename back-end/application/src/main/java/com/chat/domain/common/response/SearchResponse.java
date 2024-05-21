@@ -1,10 +1,9 @@
 package com.chat.domain.common.response;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.group.information.entity.SysGroupInformation;
 import com.chat.domain.user.entity.SysUser;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -18,10 +17,10 @@ import java.util.List;
 @Accessors(chain = true)
 public class SearchResponse implements Serializable {
 
-    private List<SysUser> users;
+    private Page<SysUser> users;
 
-    private List<SysGroupInformation> groups;
+    private Page<SysGroupInformation> groups;
 
-    private List<SysUser> friends;
+    private Page<SysUser> friends;
 
 }

@@ -1,7 +1,7 @@
 package com.chat.domain.user.controller;
 
 import com.chat.controller.Controller;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.chat.domain.user.entity.LoginUser;
 import com.chat.domain.user.entity.SysUser;
 import com.common.resp.RespEntity;

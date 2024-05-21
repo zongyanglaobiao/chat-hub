@@ -3,6 +3,7 @@ package com.chat.domain.common.service;
 import com.chat.domain.common.model.SearchType;
 import com.chat.domain.common.response.SearchResponse;
 import com.chat.domain.group.information.service.GroupInformationService;
+import com.chat.toolkit.utils.CommonPageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class GroupSearch implements ISearch {
 
     @Override
     public SearchResponse getSearchContent(String keyword) {
-        return new SearchResponse().setGroups(groupInformationService.doSearch(keyword));
+        return new SearchResponse().setGroups(groupInformationService.doSearch(keyword,CommonPageRequestUtils.defaultPage()));
     }
 
     @Override

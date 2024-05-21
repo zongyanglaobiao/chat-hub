@@ -57,7 +57,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
            <div className='layout-center w-full mb-2'>
                <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
            </div>
-           <div className="bg-white overflow-y-scroll remove_the_scroll">
+           <div className="bg-white overflow-y-scroll remove-the-scroll">
                {
                    friends.length > 0 ? friends.map((item)=>{
                            return (
@@ -150,7 +150,7 @@ const InfoWindow = ({chatId}) => {
 
     return (
         <main className="w-full relative h-full">
-            <div className="p-4 h-400px overflow-y-scroll remove_the_scroll">
+            <div className="p-4 h-400px overflow-y-scroll remove-the-scroll">
                 {chatMessages.map((message) => (
                     message.user.id === userInfo.id ?
                         (<div key={getRandomId()} className='flex items-center mb-2 justify-end'>

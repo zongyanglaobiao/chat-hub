@@ -1,7 +1,7 @@
 package com.chat.domain.group.information.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.member.entity.SysGroupMember;
 import com.fasterxml.jackson.annotation.JsonView;

@@ -18,10 +18,39 @@
 }
 
 /*去除滚轮*/
-.remove_the_scroll{
+.remove-the-scroll{
 
 }
 
-.remove_the_scroll::-webkit-scrollbar {
+.remove-the-scroll::-webkit-scrollbar {
     display: none;
 }
+
+/*滚轮样式*/
+.scroll-y-style{
+    overflow-y: scroll;
+}
+
+/* 自定义滚动条宽度 */
+.scroll-y-style::-webkit-scrollbar {
+    width: 5px; /* 纵向滚动条宽度 */
+    height: 12px; /* 横向滚动条高度 */
+}
+
+/* 滚动条轨道 */
+.scroll-y-style::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 轨道颜色 */
+    border-radius: 10px; /* 轨道圆角 */
+}
+
+/* 滚动条拇指（滑块） */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 204, 253, 0.31); /* 滑块颜色 */
+    border-radius: 10px; /* 滑块圆角 */
+}
+
+/* 滑块悬停时 */
+.scroll-y-style::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 悬停时滑块颜色 */
+}
+

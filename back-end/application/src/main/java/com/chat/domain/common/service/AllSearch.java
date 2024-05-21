@@ -7,6 +7,7 @@ import com.chat.domain.friend.service.FriendService;
 import com.chat.domain.group.information.service.GroupInformationService;
 import com.chat.domain.user.entity.LoginUser;
 import com.chat.domain.user.service.UserService;
+import com.chat.toolkit.utils.CommonPageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +29,9 @@ public class AllSearch implements ISearch {
 
     public SearchResponse getSearchContent(String keyword) {
         return new SearchResponse().
-                setFriends( friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId()))).
-                setUsers(userService.doSearch(keyword)).
-                setGroups(groupInformationService.doSearch(keyword));
+                setFriends( friendService.doSearch(new SearchFriendRequest(keyword,LoginUser.getUserId()), CommonPageRequestUtils.defaultPage())).
+                setUsers(userService.doSearch(keyword,CommonPageRequestUtils.defaultPage())).
+                setGroups(groupInformationService.doSearch(keyword,CommonPageRequestUtils.defaultPage()));
     }
 
     @Override

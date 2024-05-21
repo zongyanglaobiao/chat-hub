@@ -1,6 +1,6 @@
 package com.chat.domain.group.announcement.entity;
 
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 

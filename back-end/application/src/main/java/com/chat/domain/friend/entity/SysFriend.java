@@ -1,14 +1,10 @@
 package com.chat.domain.friend.entity;
 
 import java.io.Serial;
-import java.util.Date;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
 
 /**
  * (SysFriend)表实体类

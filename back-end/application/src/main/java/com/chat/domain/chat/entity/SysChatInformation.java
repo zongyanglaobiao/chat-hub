@@ -5,15 +5,11 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.chat.domain.user.entity.SysUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * (SysChatInformation)表实体类

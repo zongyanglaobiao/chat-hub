@@ -1,4 +1,4 @@
-package com.chat.domain.base;
+package com.chat.domain.base.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

@@ -1,7 +1,8 @@
 package com.chat.domain.user.service;
 
-import com.chat.domain.base.AbstractService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.base.search.Search;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.mapper.SysUserDao;
 import com.chat.toolkit.utils.IPUtils;
@@ -21,7 +22,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
-public class UserService extends AbstractService<SysUserDao, SysUser> implements Search<String,List<SysUser>> {
+public class UserService extends AbstractService<SysUserDao, SysUser> implements Search<String,SysUser> {
 
     private final HttpServletRequest request;
 
@@ -71,14 +72,14 @@ public class UserService extends AbstractService<SysUserDao, SysUser> implements
     }
 
     @Override
-    public List<SysUser> doSearch(String keyword) {
+    public Page<SysUser> doSearch(String keyword,Page<SysUser> page) {
         return this.lambdaQuery().
                 like(SysUser::getNickname, keyword).
                 or().
                 like(SysUser::getSignature, keyword).
                 or().
                 like(SysUser::getMail, keyword).
-                list();
+                page(page);
     }
 
     private SysUser getUserByMail(String mail) {

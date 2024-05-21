@@ -1,6 +1,6 @@
 package com.chat.domain.group.member.entity;
 
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.chat.domain.group.member.enums.IdentityType;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;

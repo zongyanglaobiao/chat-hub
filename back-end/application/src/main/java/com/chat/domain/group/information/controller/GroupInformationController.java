@@ -1,8 +1,7 @@
 package com.chat.domain.group.information.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.chat.controller.Controller;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.information.entity.SysGroupInformation;
 import com.chat.domain.group.information.enums.GetType;
@@ -16,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xxl

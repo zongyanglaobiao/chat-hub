@@ -1,6 +1,6 @@
 package com.chat.domain.group.announcement.service;
 
-import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.announcement.mapper.SysGroupAnnouncementDao;
 import org.springframework.stereotype.Service;

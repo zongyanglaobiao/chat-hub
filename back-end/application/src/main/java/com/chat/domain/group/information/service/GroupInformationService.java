@@ -1,7 +1,8 @@
 package com.chat.domain.group.information.service;
 
-import com.chat.domain.base.AbstractService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.base.search.Search;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.announcement.service.GroupAnnouncementService;
 import com.chat.domain.group.information.entity.SysGroupInformation;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class GroupInformationService extends AbstractService<SysGroupInformationDao, SysGroupInformation> implements Search<String,List<SysGroupInformation>> {
+public class GroupInformationService extends AbstractService<SysGroupInformationDao, SysGroupInformation> implements Search<String,SysGroupInformation> {
 
     private final GroupAnnouncementService announcementService;
 
@@ -141,10 +142,10 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     @Override
-    public List<SysGroupInformation> doSearch(String keyword) {
-        return fillGroupInfo(this.lambdaQuery().
-                like(SysGroupInformation::getGroupName, keyword).
-                list());
+    public Page<SysGroupInformation> doSearch(String keyword, Page<SysGroupInformation> page) {
+        page = this.lambdaQuery().like(SysGroupInformation::getGroupName, keyword).page(page);
+        fillGroupInfo(page.getRecords());
+        return page;
     }
 
     private List<SysGroupInformation> fillGroupInfo(List<SysGroupInformation> list) {

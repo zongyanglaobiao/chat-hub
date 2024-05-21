@@ -1,6 +1,5 @@
 package com.chat.domain.common.service;
 
-import com.chat.domain.base.search.Search;
 import com.chat.domain.common.model.SearchType;
 import com.chat.domain.common.request.SearchRequest;
 import com.chat.domain.common.response.SearchResponse;
@@ -16,11 +15,10 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class CommonService implements Search<SearchRequest,SearchResponse> {
+public class CommonService {
 
     private final List<ISearch> searches;
 
-    @Override
     public SearchResponse doSearch(SearchRequest request) {
         return getSearches(request.getSearchType()).getSearchContent(request.getKeyword());
     }

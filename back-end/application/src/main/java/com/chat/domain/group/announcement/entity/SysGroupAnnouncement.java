@@ -3,7 +3,7 @@ package com.chat.domain.group.announcement.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.chat.domain.base.Entity;
+import com.chat.domain.base.entity.Entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

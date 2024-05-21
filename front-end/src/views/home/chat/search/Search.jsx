@@ -1,7 +1,7 @@
-import {SearchOutlined} from "@ant-design/icons";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Button, Input, List, Select, Space} from "antd";
+import {LeftCircleTwoTone} from "@ant-design/icons";
 
 const { Search } = Input;
 
@@ -12,8 +12,12 @@ function SearchPage() {
     const [list, setList] = useState([]);
 
     useEffect(() => {
-        setList([{id:1,name:'xxxx'},{id:2,name:'xxxx'}])
-    }, []);
+        const arr =[]
+        for (let i = 0; i < 10; i++) {
+             arr.push({ id: i, name: `测试${i}`})
+        }
+        setList(arr);
+    },[]);
 
     const options = [
         {label: '所有', value: 'ALL'},
@@ -24,17 +28,9 @@ function SearchPage() {
 
     return (
         <div className=' w-full text-center relative'>
-            <header className='relative top-20px'>
+            <header className='relative top-15px mb-20px'>
                <Space>
-                   <Button
-                       shape="circle"
-                       onClick={() =>  {
-                           console.log('点击')
-                           navigate(location.state)
-                       }}
-                       icon={ <SearchOutlined /> }
-                   >
-                   </Button>
+                   <LeftCircleTwoTone style={{fontSize:30}} onClick={() =>  navigate(location.state)}/>
                    <Search placeholder="input search text"
                            onSearch={(value)=> {
                                console.log(value)
@@ -44,15 +40,15 @@ function SearchPage() {
                        defaultValue="所有"
                        options={options}
                        style={{
-                           width: 120,
+                           width: 80,
                        }}
                        onChange={(value, option)=>{
                            console.log(value,option)
                        }}/>
                </Space>
             </header>
-            <main>
-                <div className="overflow-auto max-h-80">
+            <main className='p5px'>
+                <div className="scroll-y-style max-h-100">
                     <List
                         loadMore = {(
                             <div

@@ -1,4 +1,4 @@
-package com.chat.domain.base;
+package com.chat.domain.base.service;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

@@ -1,6 +1,6 @@
 package com.chat.domain.group.member.service;
 
-import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.group.member.entity.SysGroupMember;
 import com.chat.domain.group.member.enums.IdentityType;
 import com.chat.domain.group.member.mapper.SysGroupMemberDao;

@@ -1,7 +1,7 @@
 package com.chat.domain.chat.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.chat.domain.base.AbstractService;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.chat.entity.MsgContent;
 import com.chat.domain.chat.entity.SysChatInformation;
 import com.chat.domain.chat.mapper.SysChatInformationDao;
@@ -9,9 +9,6 @@ import com.chat.domain.user.service.UserService;
 import com.chat.toolkit.utils.CommonPageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author xxl

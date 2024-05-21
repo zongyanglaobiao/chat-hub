@@ -1,8 +1,10 @@
 package com.chat.domain.friend.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
-import com.chat.domain.base.AbstractService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.base.search.Search;
+import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.friend.entity.SysFriend;
 import com.chat.domain.friend.enums.AgreeType;
 import com.chat.domain.friend.mapper.SysFriendDao;
@@ -23,7 +25,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class FriendService extends AbstractService<SysFriendDao, SysFriend> implements Search<SearchFriendRequest, List<SysUser>> {
+public class FriendService extends AbstractService<SysFriendDao, SysFriend> implements Search<SearchFriendRequest,SysUser> {
 
     /**
      * 好友列表
@@ -101,18 +103,26 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     }
 
     @Override
-    public List<SysUser> doSearch(SearchFriendRequest request) {
+    public Page<SysUser> doSearch(SearchFriendRequest request, Page<SysUser> page) {
         //这里获取的是系统本机用户ID
-        return this.lambdaQuery().
-                eq(SysFriend::getUserId, request.sysUserId()).
-                list().
+        Page<SysFriend> friendPage = new Page<>();
+        BeanUtil.copyProperties(page, friendPage);
+        //查询我的朋友
+        friendPage = this.lambdaQuery().eq(SysFriend::getUserId, request.sysUserId()).page(friendPage);
+
+        //查询朋友的信息
+        BeanUtil.copyProperties(friendPage, page);
+        List<SysUser> list = friendPage.getRecords().
                 stream().
-                map(SysFriend::getUserId).
+                map(SysFriend::getFriendId).
                 map(userService::getById).
                 filter(t -> t.getMail().contains(request.keyword()) ||
                         t.getNickname().contains(request.keyword()) ||
                         t.getSignature().contains(request.keyword())).
                 toList();
+        page.setRecords(list);
+        page.setTotal(list.size());
+        return page;
     }
 
     /**
