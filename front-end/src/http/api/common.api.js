@@ -10,5 +10,5 @@ import request from "@/http/http.request.js";
  * @returns
  */
 export function doSearch(params,current,size) {
-    return request.post(`/common/doSearch?current=${crrent}&size=${size}`, params);
+    return request.post(`/common/doSearch?current=${current}&size=${size}`, params);
 }
