@@ -51,6 +51,6 @@
 
 /* 滑块悬停时 */
 .scroll-y-style::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 悬停时滑块颜色 */
+    background: rgba(85, 85, 85, 0.22); /* 悬停时滑块颜色 */
 }
 

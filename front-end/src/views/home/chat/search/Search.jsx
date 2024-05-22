@@ -1,9 +1,9 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {Button, Input, List, message, Select, Space} from "antd";
 import {LeftCircleTwoTone} from "@ant-design/icons";
+import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
-import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 
 const { Search } = Input;
 
@@ -14,49 +14,41 @@ const SEARCH_TYPES = [
     {label: '群', value: 'GROUP'},
 ]
 
-const  useSearch = () => {
-    const [searchType, setSearchType] = useState(SEARCH_TYPES[0].value)
-    const [keyword, setKeyword] = useState('')
-    const searchResult = useRef({
-        users:{record:[]},
-        friends:{record:[]},
-        groups:{record:[]},
-    });
-
-    useEffect(() => {
-        (async ()=>{
-            const resp =  await doSearch({searchType: searchType, keyword: keyword}, 1, 10);
-            if (resp.code !== 200) {
-                message.error(resp.message);
-                return
-            }
-            searchResult.current = resp.data;
-            console.log('自定义HOOK',searchResult)
-        })()
-    },[searchType, keyword]);
-
-
-    return {
-        searchResult,
-        setSearchType,
-        setKeyword
-    }
-}
-
 function SearchPage() {
     //找到来这页面的路由
     const location = useLocation();
     const navigate = useNavigate();
-    const {searchResult, setSearchType, setKeyword} = useSearch();
+    //搜素类型
+    const searchType = useRef(SEARCH_TYPES[0].value)
+    //搜索结果
+    const [searchResult, setSearchResult] = useState({
+        users:{records:[]},
+        friends:{records:[]},
+        groups:{records:[]},
+    });
 
-    /*//跳转过来时搜索
+    const search = useCallback((searchType,keyword,size = 10,current = 1) => {
+        (async ()=>{
+            const resp =  await doSearch({searchType:searchType,keyword:keyword},current,size);
+            if (resp.code !== 200) {
+                message.error(resp.message);
+                return
+            }
+            setSearchResult(resp.data)
+        })()
+    },[])
+
+    //跳转过来时搜索
     useEffect(() => {
+        if (isNullOrUndefined(location?.search)) {
+            return
+        }
         //去除传递参数中的?
-        setKeyword(location.search.slice(1))
-    }, [location.search]);*/
+        search(searchType.current,location.search.slice(1))
+    }, [location.search, search]);
 
     useEffect(() => {
-        console.log('SearchPage',searchResult)
+        console.log('SearchPage',searchResult,searchType)
     });
 
     return (
@@ -70,7 +62,7 @@ function SearchPage() {
                                    message.warning("搜索内容不能为空")
                                    return
                                }
-                               setKeyword(value)
+                               search(searchType.current,value)
                            }}
                            enterButton />
                    <Select
@@ -79,16 +71,15 @@ function SearchPage() {
                        style={{
                            width: 80,
                        }}
-                       onChange={(value)=> setSearchType(value)}/>
+                       onChange={(value)=> searchType.current = value}/>
                </Space>
             </header>
             <main className='p5px'>
                 <div className="scroll-y-style max-h-100">
                     <div>朋友</div>
                     <List
-                        dataSource={searchResult.current.friends?.records || []}
+                        dataSource={searchResult.friends?.records || []}
                         renderItem={item => {
-                            console.log('searchResult', searchResult);
                             return (
                                 <List.Item key={item.id}>
                                     {item.nickname}
@@ -96,7 +87,7 @@ function SearchPage() {
                             )
                         }}
                     />
-                    {/*<div
+                    <div
                         style={{
                             textAlign: 'center',
                             marginTop: 12,
@@ -105,9 +96,9 @@ function SearchPage() {
                         }}
                     >
                         <Button onClick={() => {
-                            message.warning("没有更多啦")
+                            setSearchResult({users:{record:[]},friends:{record:[]},groups:{record:[]}});
                         }}>loading more</Button>
-                    </div>*/}
+                    </div>
                 </div>
             </main>
         </div>
