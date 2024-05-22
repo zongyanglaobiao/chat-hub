@@ -65,7 +65,11 @@ public class GroupInformationController extends Controller {
         return RespEntity.success(groupInformationService.doAddMember(groupMember,LoginUser.getUserId()));
     }
 
-
+    //查看我是否在某个群
+    @GetMapping("/member/doIsInGroup")
+    public RespEntity<Boolean> doIsInGroup(@RequestParam String groupId) {
+        return RespEntity.success(groupInformationService.doIsInGroup(groupId,LoginUser.getUserId()));
+    }
 
     //添加公告
     @PostMapping("/announcement/doAddAnnouncement")
@@ -81,7 +85,7 @@ public class GroupInformationController extends Controller {
 
     //删除公告
     @GetMapping("/announcement/doDeleteAnnouncement")
-        public RespEntity<Boolean> doDeleteAnnouncement(@RequestParam String announcementId) {
+    public RespEntity<Boolean> doDeleteAnnouncement(@RequestParam String announcementId) {
         return RespEntity.success(groupInformationService.doDeleteAnnouncement(announcementId,LoginUser.getUserId()));
     }
 }

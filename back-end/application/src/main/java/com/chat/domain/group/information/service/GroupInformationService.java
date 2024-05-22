@@ -88,6 +88,10 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         }
     }
 
+    public Boolean doIsInGroup(String groupId, String userId) {
+        return memberService.lambdaQuery().eq(SysGroupMember::getGroupId, groupId).eq(SysGroupMember::getUserId, userId).exists();
+    }
+
     public Boolean doDelete(String groupId, String userId) {
         SysGroupInformation group = getMyGroupByGroupId(groupId, userId);
         AssertUtils.notNull(group, "群不存在/你无权删除");

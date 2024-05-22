@@ -125,6 +125,10 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
         return page;
     }
 
+    public Boolean doIsMyFriend(String friendId, String userId) {
+        return isMyFriend(friendId, userId);
+    }
+
     /**
      *  判断是否是好友
      * @param userId 用户ID
@@ -137,6 +141,7 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
                 eq(SysFriend::getFriendId, friendId).
                 eq(SysFriend::getStatus, SysFriend.STATUS_YES).exists();
     }
+
 
 
 }

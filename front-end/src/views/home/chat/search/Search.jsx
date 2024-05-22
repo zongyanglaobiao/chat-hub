@@ -77,16 +77,7 @@ function SearchPage() {
             <main className='p5px'>
                 <div className="scroll-y-style max-h-100">
                     <div>朋友</div>
-                    <List
-                        dataSource={searchResult.friends?.records || []}
-                        renderItem={item => {
-                            return (
-                                <List.Item key={item.id}>
-                                    {item.nickname}
-                                </List.Item>
-                            )
-                        }}
-                    />
+
                     <div
                         style={{
                             textAlign: 'center',
@@ -105,5 +96,36 @@ function SearchPage() {
     )
 }
 
+const ShowSearchContent = ({users,friends,groups,searchType}) => {
+    //合并users和friend
+    let usersList;
+    switch (SEARCH_TYPES.map(t => t.value)) {
+        case 'ALL':
+            usersList = [...users, ...friends].filter(t -> );
+            break;
+        case 'USER':
+            break;
+        case 'GROUP':
+            break;
+        case 'FRIEND':
+            break;
+    }
+
+    return (
+        <div>
+            <List
+                dataSource={searchResult.friends?.records || []}
+                renderItem={item => {
+                    return (
+                        <List.Item key={item.id}>
+                            {item.nickname}
+                        </List.Item>
+                    )
+                }}
+            />
+        </div>
+    )
+}
 
 export default SearchPage;
+

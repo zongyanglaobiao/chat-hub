@@ -41,4 +41,10 @@ public class FriendController extends Controller {
     public RespEntity<Boolean> doDeleteFriend(@PathVariable("friendId") String friendId) {
         return RespEntity.success(friendService.doDeleteFriend(friendId,LoginUser.getUserId()));
     }
+
+    //是否为我的好友
+    @GetMapping("doIsMyFriend/{friendId}")
+    public RespEntity<Boolean> doIsMyFriend(@PathVariable("friendId") String friendId) {
+        return RespEntity.success(friendService.doIsMyFriend(friendId,LoginUser.getUserId()));
+    }
 }
