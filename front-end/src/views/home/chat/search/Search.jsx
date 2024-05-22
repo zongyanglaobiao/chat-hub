@@ -1,7 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {Button, Input, List, message, Select, Space} from "antd";
-import {LeftCircleTwoTone} from "@ant-design/icons";
+import {Avatar, Button, Input, List, message, Select, Space} from "antd";
+import {LeftCircleTwoTone, UserOutlined} from "@ant-design/icons";
 import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
 
@@ -95,36 +95,62 @@ function SearchPage() {
         </div>
     )
 }
-
-const ShowSearchContent = ({users,friends,groups,searchType}) => {
+const QUERY_USER_TYPE = 'USER'
+const QUERY__TYPE = 'USER'
+const ShowSearchContent = ({users,friends,groups}) => {
     //合并users和friend
-    let usersList;
+    let list = [uniqueArray([...users, ...friends]).map(t => ({...t,type:'USER'})),...groups.map(t => ({...t,type:'GROUP'}))];
     switch (SEARCH_TYPES.map(t => t.value)) {
         case 'ALL':
-            usersList = [...users, ...friends].filter(t -> );
+            //取出重复的值
+            usersList = ;
             break;
         case 'USER':
-            break;
         case 'GROUP':
+            groups = groups.map(t1 => ({...t1,name:t1.groupName}))
+            usersList = [...users];
             break;
         case 'FRIEND':
+            usersList = [...friends];
             break;
     }
+
+
 
     return (
         <div>
             <List
-                dataSource={searchResult.friends?.records || []}
+                dataSource={usersList}
                 renderItem={item => {
                     return (
                         <List.Item key={item.id}>
-                            {item.nickname}
+                            <div>
+                                {item.nickname}
+                            </div>
+                            <div>
+                                <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
+                            </div>
+                            <div>
+                                可能是你认识的好友
+                            </div>
                         </List.Item>
                     )
                 }}
             />
         </div>
     )
+}
+
+const uniqueArray = (array) =>{
+    array.reduce((acc, current) => {
+        const x = acc.find(item => item.id === current.id);
+        if (!x) {
+            return acc.concat([current]);
+        } else {
+            return acc;
+        }
+    }, []);
+    return array;
 }
 
 export default SearchPage;
