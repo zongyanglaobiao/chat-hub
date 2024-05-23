@@ -34,3 +34,12 @@ export function doQueryFriend() {
 export function doYesOrNoAgreeFriend(id, type) {
     return request.get(`/user/friend/doYesOrNoAgreeFriend/${id}?type=${type}`);
 }
+
+/**
+ * doIsMyFriend
+ * @param {string} friendId
+ * @returns
+ */
+export function doIsMyFriend(friendId) {
+    return request.get(`/user/friend/doIsMyFriend/${friendId}`);
+}

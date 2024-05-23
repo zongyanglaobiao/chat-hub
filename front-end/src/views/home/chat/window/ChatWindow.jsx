@@ -197,7 +197,7 @@ const AnnouncementWindow = () => {
                 items={[
                     {
                         label: '2024-04-10',
-                        children: '项目开始写',
+                        children: '项目开始启动',
                         color: 'green',
                     },
                     {
@@ -207,19 +207,19 @@ const AnnouncementWindow = () => {
                     },
                     {
                         label: '2024-5-12',
-                        children: '解决登录失败/TOKEN失效跳转到首页',
+                        children: '解决登录失败/TOKEN失效无法跳转到首页问题',
                         color: 'green',
                     },
                     {
                         label: '2024-05-23',
-                        children: '完成聊天问题和搜索功能',
+                        children: '完成websocket聊天和搜索功能',
                         color: 'green',
                     },
                     {
                         label: '2024-05...',
                         children: (
                             <>
-                                <p>todo: 聊天信心分页查询</p>
+                                <p>todo: 聊天信息分页查询</p>
                                 <p>todo: 搜索信息分页查询</p>
                             </>
                         ),

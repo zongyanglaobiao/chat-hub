@@ -4,6 +4,8 @@ import {Avatar, Button, Input, List, message, Select, Space, Tag} from "antd";
 import {LeftCircleTwoTone, UserOutlined} from "@ant-design/icons";
 import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
+import {useSelector} from "react-redux";
+import {doIsMyFriend} from "@/http/api/friend.api.js";
 
 const { Search } = Input;
 
@@ -84,7 +86,14 @@ function SearchPage() {
     )
 }
 
+const RESULT_USER_TYPE = "用户";
+const RESULT_GROUP_TYPE = "群";
+
 const ShowSearchContent = ({users,friends,groups}) => {
+    const userInfo = useSelector(state => state.userInfo)
+    const friendInfo = useSelector(state => state.friendInfo)
+
+
     //将数组中重复的项去重
     const uniqueArray = (array) =>{
         //对于ID重复的去重
@@ -95,8 +104,8 @@ const ShowSearchContent = ({users,friends,groups}) => {
 
     //合并users和friend
     let list = [
-        ...uniqueArray([...users, ...friends]).map(t => ({...t,type:'USER',name:t.nickname})),
-        ...groups.map(t => ({...t,type:'GROUP',name:t.groupName}))
+        ...uniqueArray([...users, ...friends]).map(t => ({...t,type:RESULT_USER_TYPE,name:t.nickname})),
+        ...groups.map(t => ({...t,type:RESULT_GROUP_TYPE,name:t.groupName}))
     ];
 
     return (
@@ -118,7 +127,10 @@ const ShowSearchContent = ({users,friends,groups}) => {
                 )}
                 dataSource={list}
                 renderItem={item => {
-                    console.log(item)
+                    console.log('item',item);
+                    console.log('user',userInfo);
+                    // console.log('RESULT_GROUP_TYPE',item.members.filter(t => userInfo.id === t.userId));
+                    console.log('RESULT_USER_TYPE',friendInfo.friendList.filter(t => t.friendId === item.id).length > 0);
                     return (
                         <List.Item key={item.id}>
                             <div>
@@ -127,16 +139,19 @@ const ShowSearchContent = ({users,friends,groups}) => {
                             <div>
                                 {item.name}
                             </div>
-                            {item.type === 'USER' && (
+                            {item.type === RESULT_USER_TYPE && (
                                 <>
                                     <div>{item.mail}</div>
                                     <div>{item.signature}</div>
                                 </>
                             )}
-                            <div>
-                                可能是你认识的好友
-                            </div>
-                            <Tag color="cyan">{item.type}</Tag>
+                            {
+                                // 判断当前群是否是自己加入的
+                                item.type === RESULT_GROUP_TYPE && (item.members.filter(t => userInfo.id === t.userId).length > 0 ? <Tag>你在群里</Tag> : <></>)
+                                ||
+                                item.type === RESULT_USER_TYPE && (friendInfo.friendList.filter(t => t.friendId === item.id).length > 0 ? <Tag>你是好友</Tag> : <></>)
+                            }
+                            <Tag color="blue">{item.type}</Tag>
                         </List.Item>
                     )
                 }}
