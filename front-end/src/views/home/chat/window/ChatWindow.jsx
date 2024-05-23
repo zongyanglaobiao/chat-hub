@@ -1,11 +1,11 @@
 import {useSelector} from "react-redux";
-import {Avatar, Button, Input, message} from "antd";
+import {Avatar, Button, Input, message, Timeline} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {useEffect, useReducer, useRef, useState} from "react";
-import {UserOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
@@ -191,9 +191,48 @@ const InfoWindow = ({chatId}) => {
 const AnnouncementWindow = () => {
     return (
         <div className="w-full h-full layout-center">
-            <h3>
-                更新日志...
-            </h3>
+            <Timeline
+                className='w-full'
+                mode={'right'}
+                items={[
+                    {
+                        label: '2024-04-10',
+                        children: '项目开始写',
+                        color: 'green',
+                    },
+                    {
+                        label: '2024-04-19',
+                        children: '把项目构建工具从webpack改成vite',
+                        color: 'green',
+                    },
+                    {
+                        label: '2024-5-12',
+                        children: '解决登录失败/TOKEN失效跳转到首页',
+                        color: 'green',
+                    },
+                    {
+                        label: '2024-05-23',
+                        children: '完成聊天问题和搜索功能',
+                        color: 'green',
+                    },
+                    {
+                        label: '2024-05...',
+                        children: (
+                            <>
+                                <p>todo: 聊天信心分页查询</p>
+                                <p>todo: 搜索信息分页查询</p>
+                            </>
+                        ),
+                        dot: (
+                            <ClockCircleOutlined
+                                style={{
+                                    fontSize: '16px',
+                                }}
+                            />
+                        ),
+                    },
+                ]}
+            />
         </div>
     );
 }
