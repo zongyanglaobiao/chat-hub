@@ -1,11 +1,10 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Input, List, message, Select, Space, Tag} from "antd";
+import {Avatar, Button, Input, List, message, Modal, Select, Space, Tag} from "antd";
 import {LeftCircleTwoTone, UserOutlined} from "@ant-design/icons";
 import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
 import {useSelector} from "react-redux";
-import {doIsMyFriend} from "@/http/api/friend.api.js";
 
 const { Search } = Input;
 
@@ -48,7 +47,6 @@ function SearchPage() {
         //去除传递参数中的?
         search(searchType.current,location.search.slice(1))
     }, [location.search, search]);
-
 
     return (
         <div className=' w-full text-center relative'>
@@ -93,7 +91,6 @@ const ShowSearchContent = ({users,friends,groups}) => {
     const userInfo = useSelector(state => state.userInfo)
     const friendInfo = useSelector(state => state.friendInfo)
 
-
     //将数组中重复的项去重
     const uniqueArray = (array) =>{
         //对于ID重复的去重
@@ -127,32 +124,42 @@ const ShowSearchContent = ({users,friends,groups}) => {
                 )}
                 dataSource={list}
                 renderItem={item => {
-                    console.log('item',item);
-                    console.log('user',userInfo);
-                    // console.log('RESULT_GROUP_TYPE',item.members.filter(t => userInfo.id === t.userId));
-                    console.log('RESULT_USER_TYPE',friendInfo.friendList.filter(t => t.friendId === item.id).length > 0);
                     return (
-                        <List.Item key={item.id}>
-                            <div>
-                                <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
-                            </div>
-                            <div>
-                                {item.name}
-                            </div>
-                            {item.type === RESULT_USER_TYPE && (
-                                <>
-                                    <div>{item.mail}</div>
-                                    <div>{item.signature}</div>
-                                </>
-                            )}
-                            {
-                                // 判断当前群是否是自己加入的
-                                item.type === RESULT_GROUP_TYPE && (item.members.filter(t => userInfo.id === t.userId).length > 0 ? <Tag>你在群里</Tag> : <></>)
-                                ||
-                                item.type === RESULT_USER_TYPE && (friendInfo.friendList.filter(t => t.friendId === item.id).length > 0 ? <Tag>你是好友</Tag> : <></>)
-                            }
-                            <Tag color="blue">{item.type}</Tag>
-                        </List.Item>
+                        <div>
+                            <List.Item key={item.id}  className='hover:cursor-pointer' onClick={()=>{
+
+                            }}>
+                                <div>
+                                    <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
+                                </div>
+                                <div>
+                                    {item.name}
+                                </div>
+                                {item.type === RESULT_USER_TYPE && (
+                                    <>
+                                        <div>{item.mail}</div>
+                                        <div>{item.signature}</div>
+                                    </>
+                                )}
+                                {
+                                    // 判断群里是否有我
+                                    item.type === RESULT_GROUP_TYPE && (item.members.filter(t => userInfo.id === t.userId).length > 0 ? <Tag>你在群里</Tag> : <></>)
+                                    ||
+                                    //判断用户里是否为我好友
+                                    item.type === RESULT_USER_TYPE && (friendInfo.friendList.filter(t => t.friendId === item.id).length > 0 ? <Tag>你是好友</Tag> : <></>)
+                                }
+                                <Tag color="blue">{item.type}</Tag>
+                            </List.Item>
+                            <Modal
+                                title="Title"
+                                open={false}
+                                onOk={()=>{}}
+                                confirmLoading={true}
+                                onCancel={()=>{}}
+                            >
+                                <p>你好</p>
+                            </Modal>
+                        </div>
                     )
                 }}
             />
