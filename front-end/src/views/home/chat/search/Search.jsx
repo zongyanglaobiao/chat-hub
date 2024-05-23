@@ -47,9 +47,6 @@ function SearchPage() {
         search(searchType.current,location.search.slice(1))
     }, [location.search, search]);
 
-    useEffect(() => {
-        console.log('SearchPage',searchResult,searchType)
-    });
 
     return (
         <div className=' w-full text-center relative'>
@@ -76,8 +73,35 @@ function SearchPage() {
             </header>
             <main className='p5px'>
                 <div className="scroll-y-style max-h-100">
-                    <div>朋友</div>
+                    <ShowSearchContent
+                        friends={searchResult.friends?.records || []}
+                        groups={searchResult.groups?.records || []}
+                        users={searchResult.users?.records || []}
+                    />
+                </div>
+            </main>
+        </div>
+    )
+}
+const ShowSearchContent = ({users,friends,groups}) => {
+    //将数组中重复的项去重
+    const uniqueArray = (array) =>{
+        //对于ID重复的去重
+        const newArr = [...new Set(array.map(item => item.id))]
+        //查找ID重复的元素
+        return newArr.map(id => array.find(item => item.id === id))
+    }
 
+    //合并users和friend
+    let list = [
+        ...uniqueArray([...users, ...friends]).map(t => ({...t,type:'USER',name:t.nickname})),
+        ...groups.map(t => ({...t,type:'GROUP',name:t.groupName}))
+    ];
+
+    return (
+        <div>
+            <List
+                loadMore={(
                     <div
                         style={{
                             textAlign: 'center',
@@ -87,49 +111,27 @@ function SearchPage() {
                         }}
                     >
                         <Button onClick={() => {
-                            setSearchResult({users:{record:[]},friends:{record:[]},groups:{record:[]}});
+                            alert('没有更多啦')
                         }}>loading more</Button>
                     </div>
-                </div>
-            </main>
-        </div>
-    )
-}
-const QUERY_USER_TYPE = 'USER'
-const QUERY__TYPE = 'USER'
-const ShowSearchContent = ({users,friends,groups}) => {
-    //合并users和friend
-    let list = [uniqueArray([...users, ...friends]).map(t => ({...t,type:'USER'})),...groups.map(t => ({...t,type:'GROUP'}))];
-    switch (SEARCH_TYPES.map(t => t.value)) {
-        case 'ALL':
-            //取出重复的值
-            usersList = ;
-            break;
-        case 'USER':
-        case 'GROUP':
-            groups = groups.map(t1 => ({...t1,name:t1.groupName}))
-            usersList = [...users];
-            break;
-        case 'FRIEND':
-            usersList = [...friends];
-            break;
-    }
-
-
-
-    return (
-        <div>
-            <List
-                dataSource={usersList}
+                )}
+                dataSource={list}
                 renderItem={item => {
+                    console.log(item)
                     return (
                         <List.Item key={item.id}>
                             <div>
-                                {item.nickname}
-                            </div>
-                            <div>
                                 <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                             </div>
+                            <div>
+                                {item.name}
+                            </div>
+                            {item.type === 'USER' && (
+                                <>
+                                    <div>{item.mail}</div>
+                                    <div>{item.signature}</div>
+                                </>
+                            )}
                             <div>
                                 可能是你认识的好友
                             </div>
@@ -139,18 +141,6 @@ const ShowSearchContent = ({users,friends,groups}) => {
             />
         </div>
     )
-}
-
-const uniqueArray = (array) =>{
-    array.reduce((acc, current) => {
-        const x = acc.find(item => item.id === current.id);
-        if (!x) {
-            return acc.concat([current]);
-        } else {
-            return acc;
-        }
-    }, []);
-    return array;
 }
 
 export default SearchPage;

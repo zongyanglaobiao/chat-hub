@@ -2,34 +2,65 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #用于连接本地数据库测试是否能正确运行
-    url: mpw:GFTZU8gB7DkQoQRcWHlRmyfOTJyI9NZc0r5g+965Nn5tv8xpYvlBoItJhcUlJ5kVCRhj5qAGsLY0mbwGXDXA+CMCYnk6sG0GlbcG9PY14dC46gFpxhKa+X6kkfpX1ODhO5FxFID2IhHbrWMMGubYKWaoR0Ja6ES1kffcGodUVy0=
-    username: mpw:TtAku+MdsMUMMIxefB+TlQ==
-    password: mpw:4bSEqpgIz/lHOT2uTLpVjg==
     hikari:
-      max-lifetime: 600000  #连接的最大生命周期，表示一个连接在被关闭之前的最长使用时间。设置为30分钟（1800000毫秒）
+      # 连接池最大连接数，默认是 10
+      maximum-pool-size: 60
+      # 链接超时时间，默认 30000(30 秒)
+      connection-timeout: 60000
+      # 空闲连接存活最大时间，默认 600000(10 分钟)
+      idle-timeout: 60000
+      # 连接将被测试活动的最大时间量
+      validation-timeout: 3000
+      # 此属性控制池中连接的最长生命周期，值 0 表示无限生命周期，默认 1800000(30 分钟)
+      max-lifetime: 60000
+      # 连接到数据库时等待的最长时间(秒)
+      login-timeout: 5
+      # 池中维护的最小空闲连接数
+      minimum-idle: 10
+      #连接测试SQL
       connection-test-query: "SELECT 1"
+    # 以下为解决 No operations allowed after connection closed 的主要配置
+    dbcp2:
+      # 验证连接是否有效
+      validation-query: SELECT 1
+      # 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+      test-on-borrow: false
+      # 指明连接是否被空闲连接回收器(如果有)进行检验；如果检测失败,则连接将被从池中去除。
+      test-while-idle: true
+      # 指定空闲连接检查、废弃连接清理、空闲连接池大小调整之间的操作时间间隔
+      time-between-eviction-runs-millis: 18800
 #=============================================================================
 #======================== swagger 配置  =======================================
 #=============================================================================
 
 springdoc:
   api-docs:
-    enabled: true   #是否开启文档功能关系到swagger-ui能否开启
-    path: /v3/api-docs #swagger后端请求地址，查看swagger所有配置，同时也是配置web端的接口配置,必须写
+    #是否开启文档功能关系到swagger-ui能否开启
+    enabled: true
+    #swagger后端请求地址，查看swagger所有配置，同时也是配置web端的接口配置,必须写
+    path: /v3/api-docs
   swagger-ui:
-    tags-sorter: alpha  #标签排序
-    operations-sorter: alpha  #操作排序
-    path: /swagger  #自定义swagger前端请求路径，输入http：127.0.0.1:8080/swagger会自动重定向到swagger页面注意是path不是url
+    #标签排序
+    tags-sorter: alpha
+    #操作排序
+    operations-sorter: alpha
+    #自定义swagger前端请求路径，输入http：127.0.0.1:8080/swagger会自动重定向到swagger页面注意是path不是url
+    path: /swagger
   group-configs:
     - group: 测试API
       packages-to-scan:
         - com.chat.controller
         - com.chat.domain
-knife4j:   # knife4j的增强配置，不需要增强可以不配
-  enable: true  #开启访问默认路径doc.html
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  #开启访问默认路径doc.html
+  enable: true
   setting:
     language: zh_cn
-    enable-request-cache: false  #不开启缓存请求
-  cors: true  #跨域请求
-  production: false   #是否是生产环境，如果设置true,doc.html就不能访问
+    #不开启缓存请求
+    enable-request-cache: false
+  #跨域请求
+  cors: true
+  #是否是生产环境，如果设置true,doc.html就不能访问
+  production: @knife4j.enable@

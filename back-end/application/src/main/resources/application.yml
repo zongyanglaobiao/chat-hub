@@ -9,18 +9,23 @@ spring:
   task:
     scheduling:
       pool:
-        size: 10 #定时任务线程池大小设置默认1设置为5
+        #定时任务线程池大小设置默认1设置为5
+        size: 10
   jackson:
     time-zone: GMT+8
-    date-format: yyyy-MM-dd HH:mm:ss #jackson时间格式化类
+    #jackson时间格式化格式
+    date-format: yyyy-MM-dd HH:mm:ss
   mvc:
     format:
-      date-time: yyyy-MM-dd HH:mm:ss #日期格式化
+      #日期格式化
+      date-time: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
-      max-request-size: 5MB
-      file-size-threshold: 0 #文件写入磁盘的阈值,设置为0，即上传就存储在服务器,如果是100则表示小于100会存储在内存
-      max-file-size: 5MB    #单个文件上传的最大值
+      max-request-size: 30MB
+      #文件写入磁盘的阈值,设置为0，即上传就存储在服务器,如果是100则表示小于100会存储在内存
+      file-size-threshold: 0
+      #单个文件上传的最大值
+      max-file-size: 30MB
 server:
   port: 8080
 
@@ -31,9 +36,11 @@ server:
 mybatis-plus:
   global-config:
     db-config:
-      id-type: assign_id #全局主键使用雪花算法生成id
+      #全局主键使用雪花算法生成id
+      id-type: assign_id
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   #打印sql
+    #打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: "classpath:**/mapping/*.xml"
 
 #=============================================================================
@@ -55,10 +62,8 @@ authorization:
   token-name: auth
 
 # 图床服务
-file:
-  upload:
-    url: xxxx
-  download:
-    url: xxxx
-  signature: xxxx
-  cipher-text: xxxx
+
+
+#日志文件存储位置
+log:
+  path: @log.path@
