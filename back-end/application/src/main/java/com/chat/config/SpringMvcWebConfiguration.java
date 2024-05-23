@@ -1,9 +1,6 @@
 package com.chat.config;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.chat.domain.user.entity.LoginUser;
 import com.common.exception.ChatException;
 import com.common.resp.HttpCode;
