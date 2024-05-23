@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Input, List, message, Select, Space} from "antd";
+import {Avatar, Button, Input, List, message, Select, Space, Tag} from "antd";
 import {LeftCircleTwoTone, UserOutlined} from "@ant-design/icons";
 import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
@@ -83,6 +83,7 @@ function SearchPage() {
         </div>
     )
 }
+
 const ShowSearchContent = ({users,friends,groups}) => {
     //将数组中重复的项去重
     const uniqueArray = (array) =>{
@@ -135,6 +136,7 @@ const ShowSearchContent = ({users,friends,groups}) => {
                             <div>
                                 可能是你认识的好友
                             </div>
+                            <Tag color="cyan">{item.type}</Tag>
                         </List.Item>
                     )
                 }}
