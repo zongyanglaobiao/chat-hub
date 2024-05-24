@@ -28,7 +28,7 @@
 
 /*滚轮样式*/
 .scroll-y-style{
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /* 自定义滚动条宽度 */
