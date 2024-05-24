@@ -103,10 +103,6 @@ const ShowSearchContent = ({users,friends,groups}) => {
         ...groups.map(t => ({...t,type:RESULT_GROUP_TYPE,name:t.groupName}))
     ];
 
-    for (let i = 0; i < 10; i++) {
-        list.push.apply(list,[...users, ...friends].map(t => ({...t,type:RESULT_USER_TYPE,name:t.nickname})))
-    }
-
     return (
         <div className='scroll-y-style max-h-100'>
             <List
@@ -120,7 +116,7 @@ const ShowSearchContent = ({users,friends,groups}) => {
                         }}
                     >
                         <Button onClick={() => {
-                            alert('暂时无数据')
+                            message.info("暂时无数据")
                         }}>loading more</Button>
                     </div>
                 )}
@@ -152,15 +148,6 @@ const ShowSearchContent = ({users,friends,groups}) => {
                                 }
                                 <Tag color="blue">{item.type}</Tag>
                             </List.Item>
-                            <Modal
-                                title="Title"
-                                open={false}
-                                onOk={()=>{}}
-                                confirmLoading={true}
-                                onCancel={()=>{}}
-                            >
-                                <p>你好</p>
-                            </Modal>
                         </div>
                     )
                 }}

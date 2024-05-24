@@ -31,7 +31,7 @@ const Home = () => {
 
         //加载用户信息、朋友列表信息
         init(dispatch)
-    }, [authorize]);
+    }, [authorize, dispatch, navigate]);
 
     return (
         <div className="flex flex-col h-screen bg-gray-100 w-full">

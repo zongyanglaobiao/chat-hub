@@ -123,7 +123,7 @@ const InfoWindow = ({chatId}) => {
             //关闭连接
             closeWebsocket()
         }
-    }, []);
+    }, [chatId]);
 
     useEffect(() => {
         if (lastTextRef.current) {
@@ -206,7 +206,7 @@ const AnnouncementWindow = () => {
                         color: 'green',
                     },
                     {
-                        label: '2024-5-12',
+                        label: '2024-05-12',
                         children: '解决登录失败/TOKEN失效无法跳转到首页问题',
                         color: 'green',
                     },
@@ -216,7 +216,7 @@ const AnnouncementWindow = () => {
                         color: 'green',
                     },
                     {
-                        label: '2024-05...',
+                        label: '2024-05-...',
                         children: (
                             <>
                                 <p>todo: 聊天信息分页查询</p>
