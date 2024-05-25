@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
 import {Avatar, Button, Input, message, Timeline} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
-import {HOME_CHAT_SEARCH, HOME_INFO} from "@/router/index.jsx";
+import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {useEffect, useReducer, useRef, useState} from "react";
@@ -14,7 +14,6 @@ import {
     receiveOfWebsocket,
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
-import {SHOW_USER} from "@/views/home/info/Info.jsx";
 
 const { Search } = Input;
 
@@ -92,8 +91,6 @@ const InfoWindow = ({chatId}) => {
     const lastTextRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
     const [sendText, setSendText] = useState('')
-    const navigate = useNavigate()
-    const location = useLocation();
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -161,7 +158,7 @@ const InfoWindow = ({chatId}) => {
                             <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                         </div>)
                         :
-                        (<div key={getRandomId()} onClick={()=>{navigate({pathname:HOME_INFO},{state:{id:message.user.id,showType:SHOW_USER,sourcePath:location.pathname}})}} className='flex items-center mb-2 '>
+                        (<div key={getRandomId()}  className='flex items-center mb-2 '>
                             <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                             <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
                         </div>)

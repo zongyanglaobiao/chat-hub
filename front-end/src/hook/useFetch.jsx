@@ -1,9 +1,14 @@
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 
 /**
  * 用于请求的HOOK
- * 给我请求方法我给你返回值
+ * @param defaultValue 请求的默认值
+ * @param requestMethod 请求方法
+ * @param isDebug 是否开启debug模式
+ * @returns response 请求返回值
+ * @returns error 请求的错误
+ * @returns setRequestMethodParam  设置请求方法的参数
  */
 const useFetch = (defaultValue,requestMethod,isDebug = false) =>{
     //请求返回值
@@ -21,11 +26,12 @@ const useFetch = (defaultValue,requestMethod,isDebug = false) =>{
                 const resp = await requestMethod(requestMethodParam);
                 setResponse(resp)
                 if (isDebug) {
-                    console.log('请求参数', requestMethodParam)
-                    console.log('请求返回值', resp)
+                    console.log('useFetch requestMethodParam', requestMethodParam)
+                    console.log('useFetch response', resp)
                 }
             })()
         } catch (e) {
+            isDebug && console.log('useFetch method error', e)
             setError(e)
         }
     }, [requestMethodParam]);

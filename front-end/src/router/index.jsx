@@ -8,7 +8,6 @@ export const HOME_CHAT = "/home/chat"
 export const HOME_CHAT_SEARCH = "/home/chat/search"
 export const HOME_CHAT_WINDOW = "/home/chat/window"
 export const HOME_FRIEND = "/home/friend"
-export const HOME_INFO = "/home/info"
 
 const Home = lazy(()=> import('@/views/home/Home.jsx'))
 const NotFound = lazy(() => import('@/component/404/NotFound.jsx'))
@@ -18,7 +17,6 @@ const Chat = lazy(() => import('@/views/home/chat/Chat.jsx'))
 const ChatWindow = lazy(() => import('@/views/home/chat/window/ChatWindow.jsx'))
 const ChatSearch = lazy(() => import('@/views/home/chat/search/Search.jsx'))
 const Friend = lazy(() => import('@/views/home/friend/Friend.jsx'))
-const Info = lazy(() => import('@/views/home/info/Info.jsx'))
 
 export default function routes() {
     return [
@@ -44,10 +42,6 @@ export default function routes() {
                             element:<ChatSearch/>
                         }
                     ]
-                },
-                {
-                    path:HOME_INFO,
-                    element:<Info/>
                 },
                 {
                     path: HOME_FRIEND,
