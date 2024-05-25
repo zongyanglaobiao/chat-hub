@@ -56,7 +56,7 @@ const ChatHeader = memo(() => {
         //授权状态改为未授权
         dispatch(authorizeAction(AUTHORIZE_FAIL))
         navigate(LOGIN)
-    }, [navigate]);
+    }, [navigate, dispatch]);
 
     const personSetting = useCallback(() => {
         navigate(HOME_PERSON_SETTING)

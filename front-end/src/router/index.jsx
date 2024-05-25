@@ -42,12 +42,12 @@ export default function routes() {
                         {
                             path:HOME_CHAT_SEARCH,
                             element:<ChatSearch/>
-                        },
-                        {
-                            path:HOME_CHAT,
-                            element:<Info/>
                         }
                     ]
+                },
+                {
+                    path:HOME_INFO,
+                    element:<Info/>
                 },
                 {
                     path: HOME_FRIEND,

@@ -1,6 +1,9 @@
-import {useEffect} from "react";
 import {LeftCircleTwoTone} from "@ant-design/icons";
 import {useLocation, useNavigate} from "react-router-dom";
+import {doGetInfo} from "@/http/api/user.api.js";
+import {useEffect} from "react";
+import {useFetch} from "@/hook/useFetch.jsx";
+import {Avatar} from "antd";
 
 /**
  *  用户展示群/用户信息的页面
@@ -8,39 +11,46 @@ import {useLocation, useNavigate} from "react-router-dom";
 const SHOW_GROUP = "group";
 const SHOW_USER = "user";
 
-const Info = ({id,type}) => {
+const Info = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        //查询信息
-    }, [id,type]);
+    const {showType,sourcePath,id} = location.state
 
     return (
         <div>
             <header>
-                <LeftCircleTwoTone style={{fontSize:30}} onClick={() =>  navigate(location.state)}/>
+                <LeftCircleTwoTone style={{fontSize:30}} onClick={() =>  navigate(sourcePath)}/>
             </header>
             <main>
                 {
-                    type === SHOW_GROUP && <GroupInfo/>
+                    showType === SHOW_GROUP && <GroupInfo/>
                     ||
-                    type === SHOW_USER && <UserInfo/>
+                    showType === SHOW_USER && <UserInfo userId={id}/>
                 }
             </main>
         </div>
     )
 }
 
-const GroupInfo = ({group}) => {
+const GroupInfo = ({groupId}) => {
     return (
         <div>群</div>
     )
 }
 
-const UserInfo = ({user}) => {
+const UserInfo = ({userId}) => {
+    const {response,setRequestMethodParam} = useFetch(null,doGetInfo)
+
+    console.log('response',response)
+
+    useEffect(() => {
+        setRequestMethodParam(userId)
+    }, [userId]);
+
     return (
-        <div>用户</div>
+        <div>
+            <Avatar src={response?.data?.avatar}/>
+        </div>
     )
 }
 
