@@ -2,12 +2,12 @@ import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
 import {userInfoThunk} from "@/redux/feature/user.thunk.js";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {memo, useCallback, useEffect} from "react";
+import {createContext, memo, useCallback, useEffect, useState} from "react";
 import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
-import {Avatar, Dropdown} from "antd";
+import {Avatar, Drawer, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
 import {AUTHORIZE_FAIL, authorizeAction} from "@/redux/feature/authorize.js";
@@ -17,10 +17,17 @@ function init(dispatch) {
     dispatch(friendListInfoThunk())
 }
 
+export const DrawerContext= createContext(null)
+
 const Home = () => {
     const authorize = useSelector(state => state.authorize)
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
+    const [reactNode, setReactNode] = useState((<><p>这是默认的</p></>))
+    const showDrawer = () => {
+        setOpen(true);
+    };
 
     useEffect(() => {
         //存在token则不判断
@@ -35,12 +42,17 @@ const Home = () => {
 
     return (
         <div className="flex flex-col h-screen bg-gray-100 w-full">
-            <ChatHeader/>
-            <div className="layout-center w-full h-full">
-                <div className="flex w-[70%] h-500px bg-white rounded-2xl p-2">
-                    <Outlet/>
+            <DrawerContext.Provider value={{setReactNode,showDrawer}}>
+                <ChatHeader/>
+                <div className="layout-center w-full h-full">
+                    <div className="flex w-[70%] h-500px bg-white rounded-2xl p-2">
+                        <Outlet/>
+                    </div>
                 </div>
-            </div>
+                <Drawer title="Basic Drawer" onClose={()=>{ setOpen(false)}} open={open}>
+                    {reactNode}
+                </Drawer>
+            </DrawerContext.Provider>
         </div>
     );
 }

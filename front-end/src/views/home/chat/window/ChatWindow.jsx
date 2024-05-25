@@ -4,7 +4,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {HOME_CHAT_SEARCH} from "@/router/index.jsx";
 import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
-import {useEffect, useReducer, useRef, useState} from "react";
+import {useContext, useEffect, useReducer, useRef, useState} from "react";
 import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
@@ -14,6 +14,7 @@ import {
     receiveOfWebsocket,
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
+import {DrawerContext} from "@/views/home/Home.jsx";
 
 const { Search } = Input;
 
@@ -84,13 +85,14 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
 };
 
 /**
- *  信息聊天窗
+ *  聊天信息窗
  */
 const InfoWindow = ({chatId}) => {
     const [chatMessages, setChatMessage] = useState([])
     const lastTextRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
     const [sendText, setSendText] = useState('')
+    const {setReactNode,showDrawer} = useContext(DrawerContext)
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -158,7 +160,7 @@ const InfoWindow = ({chatId}) => {
                             <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                         </div>)
                         :
-                        (<div key={getRandomId()}  className='flex items-center mb-2 '>
+                        (<div key={getRandomId()} onClick={()=>{showDrawer()}} className='flex items-center mb-2 '>
                             <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                             <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
                         </div>)

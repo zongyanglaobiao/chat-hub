@@ -5,7 +5,7 @@ import {Suspense} from "react";
 import {Provider} from "react-redux";
 import {store} from "@/redux/store.js";
 
-let  router = null
+let router = null
 
 export  default  function App() {
     router = useRoutes(routes());
