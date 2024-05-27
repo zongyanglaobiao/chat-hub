@@ -26,7 +26,7 @@ const UserInfo = memo(({userInfo}) => {
     return (
         <div className='relative w-full'>
             <Image
-                size={{width:'100%'}}
+                width={'100%'}
                 height={200}
                 className='relative'
                 src={infoBg}
