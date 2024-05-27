@@ -1,9 +1,14 @@
+import  './index.css'
+
 const  Loading = () =>  {
     return (
         <div className='layout-center h-100vh'>
-            <h1>Loading...</h1>
+            <div className="loader-container">
+                <div className="loader"></div>
+                <div className="loader-text">Loading...</div>
+            </div>
         </div>
     )
 }
 
-export  default Loading
+export default Loading

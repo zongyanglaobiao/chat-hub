@@ -3,7 +3,7 @@ import {userInfoThunk} from "@/redux/feature/user.thunk.js";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {createContext, memo, useCallback, useEffect, useState} from "react";
-import {HOME_CHAT_WINDOW, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
+import {HOME_CHAT, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
@@ -17,7 +17,7 @@ function init(dispatch) {
     dispatch(friendListInfoThunk())
 }
 
-export const DrawerContext= createContext(null)
+const DrawerContext= createContext(null)
 
 const Home = () => {
     const authorize = useSelector(state => state.authorize)
@@ -86,7 +86,7 @@ const ChatHeader = memo(() => {
                     <img src={Message} alt="message" className="w-[50px]"/>
                     <h1 className="text-xl font-bold ml-2px">Chat Hub</h1>
                 </div>
-                <div className='flex items-center cursor-pointer' onClick={() => navigate(HOME_CHAT_WINDOW)}>
+                <div className='flex items-center cursor-pointer' onClick={() => navigate(HOME_CHAT)}>
                     <img src={Dialogue} alt="chat" className="w-[20px]"/>
                     <span>首页</span>
                 </div>
@@ -115,3 +115,4 @@ const ChatHeader = memo(() => {
     );
 })
 export default Home;
+export {DrawerContext}
