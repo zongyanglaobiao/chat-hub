@@ -8,22 +8,25 @@ import {isNullOrUndefined} from "@/lib/toolkit/util.js";
  * @param isDebug 是否开启debug模式
  * @returns response 请求返回值
  * @returns error 请求的错误
- * @returns setRequestMethodParam  设置请求方法的参数
+ * @returns setProxyMethodParam  设置代理请求方法的参数
  */
 const useFetch = (defaultValue,requestMethod,isDebug = false) =>{
     //请求返回值
     const [response, setResponse] = useState(defaultValue)
     //代理方法的请求参数
-    const [requestMethodParam, setRequestMethodParam] = useState(null)
+    const [requestMethodParam, setRequestMethodParam] = useState([])
     //方法抛出异常的
     const [error, setError] = useState(null)
 
+    //如果传NULL表示代理的方法不需要参数
+    const setProxyMethodParam = (...param) => {
+        setRequestMethodParam(param.length === 0 && isNullOrUndefined(param[0]) ? null : [...param])
+    }
+
     useEffect(() => {
         try {
-            !isNullOrUndefined(requestMethodParam)
-            &&
             (async () => {
-                const resp = await requestMethod(requestMethodParam);
+                const resp = isNullOrUndefined(requestMethodParam) ? await requestMethod() : await requestMethod(...requestMethodParam);
                 setResponse(resp)
                 if (isDebug) {
                     console.log('useFetch requestMethodParam', requestMethodParam)
@@ -39,7 +42,7 @@ const useFetch = (defaultValue,requestMethod,isDebug = false) =>{
     return {
         response,
         error,
-        setRequestMethodParam
+        setProxyMethodParam
     }
 }
 
