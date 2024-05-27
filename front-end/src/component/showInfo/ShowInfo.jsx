@@ -1,5 +1,5 @@
 import {memo} from "react";
-import {Avatar, Flex, Input, Space, Tag} from "antd";
+import {Avatar, Flex, Space, Tag} from "antd";
 import {AntDesignOutlined} from "@ant-design/icons";
 
 /**
