@@ -16,7 +16,6 @@ import {
 } from "@/http/websocket/websocket.js";
 import {HOME_SEARCH} from "@/router/index.jsx";
 import {UserInfo} from "@/component/showInfo/ShowInfo.jsx";
-import {useFetch} from "@/hook/useFetch.jsx";
 
 const { Search } = Input;
 

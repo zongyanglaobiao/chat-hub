@@ -55,7 +55,7 @@ public class FileService {
                 executeAsync();
 
         FileUtils.webDownload(httpResponse.bodyBytes(),response,httpResponse.header(FILE_NAME));
-        logger.warn(this.getClass(),"下载文件: {}",httpResponse);
+        logger.warn(this.getClass(),"下载的文件大小: {}",(httpResponse.bodyBytes().length / 1024 ) + "KB");
         //关闭
         httpResponse.close();
     }
@@ -66,7 +66,7 @@ public class FileService {
                 form("file", file.getBytes(), file.getOriginalFilename()).
                 executeAsync()){
             RespEntity resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
-            logger.warn(this.getClass(),"上传文件: {}",resp);
+            logger.warn(this.getClass(),"上传文件: {}",httpResponse.body());
             AssertUtils.assertTrue(resp.getCode() == 200, "上传文件失败: " + resp.getMessage());
             //因为返回的URL所以需要分割
             String id = ((String) resp.getData());

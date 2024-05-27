@@ -11,6 +11,7 @@ import {Avatar, Drawer, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
 import {AUTHORIZE_FAIL, authorizeAction} from "@/redux/feature/authorize.js";
+import infoBg from '@/assets/infoBg.jpg'
 
 function init(dispatch) {
     dispatch(userInfoThunk())
@@ -49,7 +50,12 @@ const Home = () => {
                         <Outlet/>
                     </div>
                 </div>
-                <Drawer   title='信息展示' onClose={()=>{ setOpen(false)}}  open={open}>
+                <Drawer bodyStyle={{
+                           padding:'0px'
+                        }}
+                        title='信息展示'
+                        onClose={()=>{ setOpen(false)}}
+                        open={open}>
                     {reactNode}
                 </Drawer>
             </DrawerContext.Provider>
