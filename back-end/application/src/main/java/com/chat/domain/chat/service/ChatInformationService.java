@@ -5,10 +5,14 @@ import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.chat.entity.MsgContent;
 import com.chat.domain.chat.entity.SysChatInformation;
 import com.chat.domain.chat.mapper.SysChatInformationDao;
+import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.service.UserService;
 import com.chat.toolkit.utils.CommonPageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author xxl
@@ -21,10 +25,25 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
     private final UserService userService;
 
     public Page<SysChatInformation> getChatInformationByRoomId(String roomId) {
+        //优化查询熟读对象缓存池
+        final Map<String, SysUser> cachePool = new HashMap<>();
         Page<SysChatInformation> page = this.lambdaQuery().eq(SysChatInformation::getRoomId, roomId).page(CommonPageRequestUtils.defaultPage());
+
         page.getRecords().forEach(t -> {
-            t.setUser(userService.getById(t.getSendUserId(),false));
+            String sendUserId = t.getSendUserId();
+
+            if (cachePool.containsKey(sendUserId)) {
+                //如果存在则从对象池中取
+                t.setUser(cachePool.get(sendUserId));
+                return;
+            }
+
+            //不在则从数据库中取
+            SysUser user = userService.getById(sendUserId, false);
+            cachePool.putIfAbsent(sendUserId,user);
+            t.setUser(user);
         });
+
         return page;
     }
 

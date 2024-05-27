@@ -15,6 +15,8 @@ import {
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
 import {HOME_SEARCH} from "@/router/index.jsx";
+import {UserInfo} from "@/component/showInfo/ShowInfo.jsx";
+import {useFetch} from "@/hook/useFetch.jsx";
 
 const { Search } = Input;
 
@@ -161,8 +163,15 @@ const InfoWindow = ({chatId}) => {
                             <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                         </div>)
                         :
-                        (<div key={getRandomId()} onClick={()=>{showDrawer()}} className='flex items-center mb-2 '>
-                            <Avatar src={message.user.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
+                        (<div key={getRandomId()}  className='flex items-center mb-2 '>
+                            <Avatar
+                                onClick={()=>{
+                                    showDrawer()
+                                    setReactNode(<UserInfo userInfo={message.user}/>)
+                                }}
+                                src={message.user.avatar}
+                                shape="square" size="large"
+                                icon={<UserOutlined/>}/>
                             <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
                         </div>)
                 ))}

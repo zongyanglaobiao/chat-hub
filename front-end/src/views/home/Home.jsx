@@ -24,7 +24,7 @@ const Home = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [reactNode, setReactNode] = useState((<><p>这是默认的</p></>))
+    const [reactNode, setReactNode] = useState((<p>这是默认的</p>))
     const showDrawer = () => {
         setOpen(true);
     };
@@ -49,7 +49,7 @@ const Home = () => {
                         <Outlet/>
                     </div>
                 </div>
-                <Drawer title="Basic Drawer" onClose={()=>{ setOpen(false)}} open={open}>
+                <Drawer   title='信息展示' onClose={()=>{ setOpen(false)}}  open={open}>
                     {reactNode}
                 </Drawer>
             </DrawerContext.Provider>
