@@ -1,7 +1,12 @@
-import {memo, useRef, useState} from "react";
-import {Avatar, Flex, Image, Modal, Space, Tag} from "antd";
+import {memo, useContext, useRef, useState} from "react";
+import {Avatar, Button, Flex, Image, Modal, Space, Tag} from "antd";
 import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {HOME_CHAT} from "@/router/index.jsx";
+import {DrawerContext} from "@/views/home/Home.jsx";
+import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 
 /**
  *  用户信息
@@ -9,6 +14,16 @@ import infoBg from '@/assets/infoBg.jpg'
 const UserInfo = memo(({userInfo}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showText = useRef({})
+    const friendInfo = useSelector(state => state.friendInfo)
+    const navigate = useNavigate()
+    const {closeDrawer} = useContext(DrawerContext)
+
+    //判断用户是否为我的好友 true 返回朋友
+    const getMyFriend = () => {
+       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  && friendInfo?.friendList?.[0]
+    }
+
+
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -31,6 +46,9 @@ const UserInfo = memo(({userInfo}) => {
                 className='relative'
                 src={infoBg}
             />
+            {/*
+                todo 把Avatar和Image叠加叠加的部分为Avatar一半的高度
+            */}
             <Flex vertical gap={"middle"} className='m-15px'>
                 <Avatar
                     size={{
@@ -43,6 +61,7 @@ const UserInfo = memo(({userInfo}) => {
                     }}
                     icon={<AntDesignOutlined/>}
                     src={userInfo.avatar}
+                    className='border-2 border-white shadow-lg'
                 />
                 <Space size={"large"}>
                     <Flex vertical gap={"middle"}>
@@ -81,10 +100,20 @@ const UserInfo = memo(({userInfo}) => {
                         </Modal>
                     </Flex>
                 </Space>
+                <div className='text-center'>
+                    {
+                        !isNullOrUndefined(getMyFriend()) ?
+                            <Button onClick={()=>{
+                                closeDrawer()
+                                navigate(HOME_CHAT,{state:getMyFriend().chatId})
+                            }}>发送信息</Button>
+                            :
+                            <Button >申请添加好友</Button>
+                    }
+                </div>
             </Flex>
         </div>
     )
 })
-
 
 export {UserInfo}

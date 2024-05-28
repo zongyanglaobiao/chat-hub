@@ -11,7 +11,6 @@ import {Avatar, Drawer, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
 import {AUTHORIZE_FAIL, authorizeAction} from "@/redux/feature/authorize.js";
-import infoBg from '@/assets/infoBg.jpg'
 
 function init(dispatch) {
     dispatch(userInfoThunk())
@@ -26,8 +25,15 @@ const Home = () => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [reactNode, setReactNode] = useState((<p>这是默认的</p>))
+
+    //开启抽屉
     const showDrawer = () => {
         setOpen(true);
+    };
+
+    //关闭抽屉
+    const closeDrawer = () => {
+        setOpen(false);
     };
 
     useEffect(() => {
@@ -43,7 +49,7 @@ const Home = () => {
 
     return (
         <div className="flex flex-col h-screen bg-gray-100 w-full">
-            <DrawerContext.Provider value={{setReactNode,showDrawer}}>
+            <DrawerContext.Provider value={{setReactNode,showDrawer,closeDrawer}}>
                 <ChatHeader/>
                 <div className="layout-center w-full h-full">
                     <div className="flex w-[70%] h-500px bg-white rounded-2xl p-2">
@@ -54,7 +60,7 @@ const Home = () => {
                            padding:'0px'
                         }}
                         title='信息展示'
-                        onClose={()=>{ setOpen(false)}}
+                        onClose={()=>{ closeDrawer()}}
                         open={open}>
                     {reactNode}
                 </Drawer>

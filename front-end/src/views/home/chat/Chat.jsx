@@ -3,7 +3,7 @@ import {useContext, useEffect, useReducer, useRef, useState} from "react";
 import {Avatar, Button, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
-import {getRandomId, isBlank} from "@/lib/toolkit/util.js";
+import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
 import {DrawerContext} from "@/views/home/Home.jsx";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
@@ -23,6 +23,14 @@ const { Search } = Input;
 function Chat() {
     const windowRef = useRef(false);
     const [window, dispatch] = useReducer(selectWindowReducer,windowRef.current,(val)=> selectWindowReducer(null,{bool:val}))
+    const location = useLocation();
+
+    useEffect(() => {
+        if (!isNullOrUndefined(location.state)) {
+            const {chatId} = location.state
+            dispatch({bool:true,chatId:chatId})
+        }
+    }, [location]);
 
     return (
         <div className="flex w-full h-full">
