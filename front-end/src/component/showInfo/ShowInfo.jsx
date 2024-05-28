@@ -1,5 +1,5 @@
-import {memo, useContext, useRef, useState} from "react";
-import {Avatar, Button, Flex, Image, Modal, Space, Tag} from "antd";
+import {memo, useContext, useEffect, useRef, useState} from "react";
+import {Avatar, Button, Flex, Image, message, Modal, Space, Tag} from "antd";
 import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
@@ -7,6 +7,8 @@ import {useNavigate} from "react-router-dom";
 import {HOME_CHAT} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DrawerContext} from "@/views/App.jsx";
+import {useFetch} from "@/hook/useFetch.jsx";
+import {doAddFriend} from "@/http/api/friend.api.js";
 
 /**
  *  用户信息
@@ -17,6 +19,16 @@ const UserInfo = memo(({userInfo}) => {
     const friendInfo = useSelector(state => state.friendInfo)
     const navigate = useNavigate()
     const {closeDrawer} = useContext(DrawerContext)
+    const {response,setProxyMethodParam} = useFetch(null,doAddFriend)
+
+    useEffect(() => {
+        if (isNullOrUndefined(response)) {
+            return
+        }
+        response.code === 200 && message.info(("添加成功"))
+        ||
+        response.code !== 200 && message.error((response.message))
+    }, [response]);
 
     //判断用户是否为我的好友 true 返回朋友
     const getMyFriend = () => {
@@ -106,7 +118,10 @@ const UserInfo = memo(({userInfo}) => {
                                 navigate(HOME_CHAT,{state:{chatId:getMyFriend().chatId}})
                             }}>发送信息</Button>
                             :
-                            <Button >申请添加好友</Button>
+                            <Button onClick={()=>{
+                                //申请添加好友
+                                setProxyMethodParam(userInfo.id)
+                            }}>申请添加好友</Button>
                     }
                 </div>
             </Flex>
@@ -114,4 +129,7 @@ const UserInfo = memo(({userInfo}) => {
     )
 })
 
+/**
+ * 群信息
+ */
 export {UserInfo}

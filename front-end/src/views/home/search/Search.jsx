@@ -130,13 +130,13 @@ const ShowSearchContent = ({users,friends,groups}) => {
                                 <div>
                                     <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                                 </div>
-                                <div>
+                                <div className='text-overflow max-w-50px'>
                                     {item.name}
                                 </div>
                                 {item.type === RESULT_USER_TYPE && (
                                     <>
-                                        <div>{item.mail}</div>
-                                        <div>{item.signature}</div>
+                                        <div className='text-overflow max-w-50px'>{item.mail}</div>
+                                        <div className='text-overflow max-w-50px'>{item.signature}</div>
                                     </>
                                 )}
                                 {
