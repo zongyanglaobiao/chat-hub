@@ -5,8 +5,8 @@ import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT} from "@/router/index.jsx";
-import {DrawerContext} from "@/views/home/Home.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
+import {DrawerContext} from "@/views/App.jsx";
 
 /**
  *  用户信息
@@ -20,10 +20,8 @@ const UserInfo = memo(({userInfo}) => {
 
     //判断用户是否为我的好友 true 返回朋友
     const getMyFriend = () => {
-       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  && friendInfo?.friendList?.[0]
+       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  && friendInfo?.friendList[0]
     }
-
-
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -105,7 +103,7 @@ const UserInfo = memo(({userInfo}) => {
                         !isNullOrUndefined(getMyFriend()) ?
                             <Button onClick={()=>{
                                 closeDrawer()
-                                navigate(HOME_CHAT,{state:getMyFriend().chatId})
+                                navigate(HOME_CHAT,{state:{chatId:getMyFriend().chatId}})
                             }}>发送信息</Button>
                             :
                             <Button >申请添加好友</Button>

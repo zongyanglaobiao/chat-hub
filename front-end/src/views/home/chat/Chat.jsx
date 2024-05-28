@@ -1,11 +1,10 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useContext, useEffect, useReducer, useRef, useState} from "react";
+import {memo, useContext, useEffect, useReducer, useRef, useState} from "react";
 import {Avatar, Button, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
-import {DrawerContext} from "@/views/home/Home.jsx";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
@@ -16,17 +15,19 @@ import {
 } from "@/http/websocket/websocket.js";
 import {HOME_SEARCH} from "@/router/index.jsx";
 import {UserInfo} from "@/component/showInfo/ShowInfo.jsx";
+import {DrawerContext} from "@/views/App.jsx";
 
 const { Search } = Input;
 
 
-function Chat() {
+const Chat = memo(() => {
     const windowRef = useRef(false);
     const [window, dispatch] = useReducer(selectWindowReducer,windowRef.current,(val)=> selectWindowReducer(null,{bool:val}))
     const location = useLocation();
 
     useEffect(() => {
         if (!isNullOrUndefined(location.state)) {
+            console.log('Chat',location)
             const {chatId} = location.state
             dispatch({bool:true,chatId:chatId})
         }
@@ -39,7 +40,7 @@ function Chat() {
             {window}
         </div>
     )
-}
+})
 
 const ChatSidebar = ({windowSelector,windowRef}) => {
     const location = useLocation();
@@ -97,7 +98,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
 /**
  *  聊天信息窗
  */
-const InfoWindow = ({chatId}) => {
+const InfoWindow = memo(({chatId}) => {
     const [chatMessages, setChatMessage] = useState([])
     const lastTextRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
@@ -202,7 +203,7 @@ const InfoWindow = ({chatId}) => {
             </div>
         </main>
     );
-};
+})
 
 /**
  *  公告窗
