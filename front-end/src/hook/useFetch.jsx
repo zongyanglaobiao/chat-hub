@@ -20,18 +20,21 @@ const useFetch = (defaultValue,requestMethod,isDebug = false) =>{
 
     //如果传NULL表示代理的方法不需要参数
     const setProxyMethodParam = (...param) => {
-        setRequestMethodParam(param.length === 0 && isNullOrUndefined(param[0]) ? null : [...param])
+        setRequestMethodParam(param.length === 0 ? null : [...param])
     }
 
     useEffect(() => {
         try {
+            isDebug && console.log('useFetch requestMethodParam', requestMethodParam)
+            //避免初次渲染出现
+            if (!isNullOrUndefined(requestMethodParam) && requestMethodParam.length === 0) {
+              return
+            }
             (async () => {
                 const resp = isNullOrUndefined(requestMethodParam) ? await requestMethod() : await requestMethod(...requestMethodParam);
                 setResponse(resp)
-                if (isDebug) {
-                    console.log('useFetch requestMethodParam', requestMethodParam)
-                    console.log('useFetch response', resp)
-                }
+                isDebug && console.log('useFetch requestMethodParam', requestMethodParam)
+                isDebug && console.log('useFetch response', resp)
             })()
         } catch (e) {
             isDebug && console.log('useFetch method error', e)

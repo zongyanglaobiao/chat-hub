@@ -32,7 +32,7 @@ const UserInfo = memo(({userInfo}) => {
 
     //判断用户是否为我的好友 true 返回朋友
     const getMyFriend = () => {
-       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  && friendInfo?.friendList[0]
+       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  ?  null : friendInfo?.friendList[0]
     }
 
     const closeModal = () => {
@@ -112,16 +112,16 @@ const UserInfo = memo(({userInfo}) => {
                 </Space>
                 <div className='text-center'>
                     {
-                        !isNullOrUndefined(getMyFriend()) ?
-                            <Button onClick={()=>{
-                                closeDrawer()
-                                navigate(HOME_CHAT,{state:{chatId:getMyFriend().chatId}})
-                            }}>发送信息</Button>
-                            :
+                        isNullOrUndefined(getMyFriend()) ?
                             <Button onClick={()=>{
                                 //申请添加好友
                                 setProxyMethodParam(userInfo.id)
                             }}>申请添加好友</Button>
+                            :
+                            <Button onClick={()=>{
+                                closeDrawer()
+                                navigate(HOME_CHAT,{state:{chatId:getMyFriend()?.chatId}})
+                            }}>发送信息</Button>
                     }
                 </div>
             </Flex>
@@ -129,7 +129,12 @@ const UserInfo = memo(({userInfo}) => {
     )
 })
 
+const GroupInfo = () => {
+    return <div>群信息</div>
+}
+
+
 /**
  * 群信息
  */
-export {UserInfo}
+export {UserInfo,GroupInfo}

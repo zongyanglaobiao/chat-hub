@@ -1,10 +1,12 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {Avatar, Button, Input, List, message, Select, Space, Tag} from "antd";
 import {LeftCircleTwoTone, UserOutlined} from "@ant-design/icons";
 import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {doSearch} from "@/http/api/common.api.js";
 import {useSelector} from "react-redux";
+import {DrawerContext} from "@/views/App.jsx";
+import {UserInfo} from "@/component/showInfo/ShowInfo.jsx";
 
 const { Search } = Input;
 
@@ -88,6 +90,7 @@ const RESULT_GROUP_TYPE = "群";
 const ShowSearchContent = ({users,friends,groups}) => {
     const userInfo = useSelector(state => state.userInfo)
     const friendInfo = useSelector(state => state.friendInfo)
+    const {showDrawer} = useContext(DrawerContext)
 
     //将数组中重复的项去重
     const uniqueArray = (array) =>{
@@ -125,18 +128,20 @@ const ShowSearchContent = ({users,friends,groups}) => {
                     return (
                         <div>
                             <List.Item key={item.id}  className='hover:cursor-pointer' onClick={()=>{
-
+                                if (item.type === RESULT_USER_TYPE) {
+                                    showDrawer( <UserInfo userInfo={item}/>)
+                                }
                             }}>
                                 <div>
                                     <Avatar src={item.avatar} shape="square" size="large" icon={<UserOutlined/>}/>
                                 </div>
-                                <div className='text-overflow max-w-50px'>
+                                <div className='text-overflow '>
                                     {item.name}
                                 </div>
                                 {item.type === RESULT_USER_TYPE && (
                                     <>
-                                        <div className='text-overflow max-w-50px'>{item.mail}</div>
-                                        <div className='text-overflow max-w-50px'>{item.signature}</div>
+                                        <div className='text-overflow '>{item.mail}</div>
+                                        <div className='text-overflow '>{item.signature}</div>
                                     </>
                                 )}
                                 {

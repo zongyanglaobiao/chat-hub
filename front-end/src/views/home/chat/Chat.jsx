@@ -27,7 +27,6 @@ const Chat = memo(() => {
 
     useEffect(() => {
         if (!isNullOrUndefined(location.state)) {
-            console.log('Chat',location)
             const {chatId} = location.state
             dispatch({bool:true,chatId:chatId})
         }
@@ -103,7 +102,7 @@ const InfoWindow = memo(({chatId}) => {
     const lastTextRef = useRef();
     const userInfo = useSelector(state => state.userInfo);
     const [sendText, setSendText] = useState('')
-    const {setReactNode,showDrawer} = useContext(DrawerContext)
+    const {showDrawer} = useContext(DrawerContext)
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -174,8 +173,7 @@ const InfoWindow = memo(({chatId}) => {
                         (<div key={getRandomId()}  className='flex items-center mb-2 '>
                             <Avatar
                                 onClick={()=>{
-                                    showDrawer()
-                                    setReactNode(<UserInfo userInfo={message.user}/>)
+                                    showDrawer(<UserInfo userInfo={message.user}/>)
                                 }}
                                 src={message.user.avatar}
                                 shape="square" size="large"

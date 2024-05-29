@@ -14,8 +14,9 @@ export  default  function App() {
     const [reactNode, setReactNode] = useState((<p>无内容</p>))
 
     //开启抽屉
-    const showDrawer = () => {
+    const showDrawer = (reactNode) => {
         setOpen(true);
+        setReactNode(reactNode)
     };
 
     //关闭抽屉
@@ -24,7 +25,7 @@ export  default  function App() {
     };
 
     return (
-        <DrawerContext.Provider value={{setReactNode,showDrawer,closeDrawer}}>
+        <DrawerContext.Provider value={{showDrawer,closeDrawer}}>
             <Suspense fallback={<Loading/>}>
                 <Provider store={store}>
                     {router}

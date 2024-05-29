@@ -57,7 +57,10 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     }
 
     public Boolean doAddFriend(String friendId, String userId) {
-        AssertUtils.assertTrue(!isMyFriend(userId, friendId),"已经是好友");
+        SysUser user = userService.getById(friendId, false);
+        AssertUtils.notNull(user,"用户不存在");
+        SysFriend one = this.lambdaQuery().eq(SysFriend::getUserId, userId).eq(SysFriend::getFriendId, friendId).one();
+        AssertUtils.isNull(one,"存在申请记录了");
         SysFriend sysFriend = new SysFriend();
         sysFriend.setUserId(userId);
         sysFriend.setFriendId(friendId);
