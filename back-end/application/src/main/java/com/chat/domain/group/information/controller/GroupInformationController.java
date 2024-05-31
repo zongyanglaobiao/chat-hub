@@ -32,8 +32,7 @@ public class GroupInformationController extends Controller {
         return RespEntity.success(groupInformationService.doCreate(information, LoginUser.getUserId()));
     }
 
-
-    //4. 修改群信息/把群主的位置让出去
+    //修改群信息/把群主的位置让出去
     @PostMapping("/information/doModify")
     public RespEntity<Boolean> doModify(@RequestBody @Validated(Entity.UPDATE.class) @JsonView(Entity.UPDATE.class) SysGroupInformation information) {
         return RespEntity.success(groupInformationService.doModify(information));
@@ -59,10 +58,17 @@ public class GroupInformationController extends Controller {
         return RespEntity.success(groupInformationService.doDeleteMember(groupId,userId,LoginUser.getUserId()));
     }
 
-    //添加成员/申请
-    @PostMapping("/member/doAddMember")
-    public RespEntity<Boolean> doAddMember(@RequestBody @Validated(Entity.INSERT.class) @JsonView(Entity.INSERT.class) SysGroupMember groupMember) {
-        return RespEntity.success(groupInformationService.doAddMember(groupMember,LoginUser.getUserId()));
+    //群主同意用户入群
+
+    //获取待待审批的人员
+    //群主拉人
+    //用户拉人
+    //用户申请入群
+
+    //群主/成员添加用户 、用户申请入群
+    @PostMapping("/member/doAddOrApplyMember")
+    public RespEntity<Boolean> doAddOrApplyMember(@RequestBody @Validated(Entity.INSERT.class) @JsonView(Entity.INSERT.class) SysGroupMember groupMember) {
+        return RespEntity.success(groupInformationService.doAddOrApplyMember(groupMember,LoginUser.getUserId()));
     }
 
     //查看我是否在某个群

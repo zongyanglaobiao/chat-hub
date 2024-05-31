@@ -46,7 +46,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return this.updateById(entity);
     }
 
-    public Boolean doAddMember(SysGroupMember groupMember, String userId) {
+    public Boolean doAddOrApplyMember(SysGroupMember groupMember, String userId) {
         List<SysGroupMember> members = memberService.getMemberByGroupId(groupMember.getGroupId());
         AssertUtils.assertTrue(members.stream().noneMatch(t -> groupMember.getUserId().equals(t.getUserId())),"邀请用户已经在群中,无法重复邀请");
         AssertUtils.assertTrue(members.stream().anyMatch(t -> t.getUserId().equals(userId)),"当前用户不在群中,无法邀请");
