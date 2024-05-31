@@ -6,12 +6,16 @@ package com.chat.domain.group.information.enums;
  */
 public enum GetType {
     /**
-     * 我自己的群聊
+     * 我自己的群聊（群主是我）
      */
     MY,
     /**
      * 我所在的群聊(不包括群主是自己的群聊)
      */
-    IN
+    IN,
+    /**
+     * 我参与的群聊（群主是我 + 我是群成员）
+     */
+    ALL
     ;
 }

@@ -16,6 +16,7 @@ import com.common.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,10 +80,13 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                         filter(t -> IdentityType.MEMBER.equals(t.getIdentity())).
                         map(SysGroupMember::getGroupId).
                         toList();
-                return groupIds.isEmpty() ?
-                        Collections.emptyList() :
-                        //获取所有群信息
-                        fillGroupInfo(this.listByIds(groupIds)) ;
+                //获取所有群信息
+                return fillGroupInfo(this.listByIds(groupIds)) ;
+
+            }
+            case ALL -> {
+                List<String> list = memberService.lambdaQuery().eq(SysGroupMember::getUserId, userId).list().stream().map(SysGroupMember::getGroupId).toList();
+                return fillGroupInfo(this.listByIds(list));
             }
             default -> throw new ChatException("类型错误");
         }
@@ -153,7 +157,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     private List<SysGroupInformation> fillGroupInfo(List<SysGroupInformation> list) {
-        return  list.stream().
+        return list.isEmpty() ? new ArrayList<>() :  list.stream().
                 peek(t -> {
                     t.setMembers(memberService.getMemberByGroupId(t.getId()));
                     t.setAnnouncements(announcementService.doQueryAnnouncementByGroupId(t.getId()));
