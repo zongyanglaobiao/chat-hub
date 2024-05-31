@@ -32,7 +32,7 @@ const UserInfo = memo(({userInfo}) => {
 
     //判断用户是否为我的好友 true 返回朋友
     const getMyFriend = () => {
-       return  friendInfo?.friendList.filter(t => t.id === userInfo.id).length === 0  ?  null : friendInfo?.friendList[0]
+       return  friendInfo?.friendList.filter(t => t.friendId === userInfo.id).length === 0  ?  null : friendInfo?.friendList[0]
     }
 
     const closeModal = () => {
