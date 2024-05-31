@@ -40,9 +40,9 @@ public class GroupInformationController extends Controller {
     }
 
     //查询信息
-    @GetMapping("/information/getGroup")
-    public RespEntity<List<SysGroupInformation>> getMyGroup(@RequestParam GetType getType) {
-        return RespEntity.success(groupInformationService.getMyGroup(LoginUser.getUserId(),getType));
+    @GetMapping("/information/doGetGroup")
+    public RespEntity<List<SysGroupInformation>> doGetGroup(@RequestParam GetType getType) {
+        return RespEntity.success(groupInformationService.doGetGroup(LoginUser.getUserId(),getType));
     }
 
     //解散群

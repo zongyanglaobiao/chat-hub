@@ -11,16 +11,20 @@ import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
 import {AUTHORIZE_FAIL, authorizeAction} from "@/redux/feature/authorize.js";
+import {groupInfoThunk} from "@/redux/feature/group.thunk.js";
 
 function init(dispatch) {
     dispatch(userInfoThunk())
     dispatch(friendListInfoThunk())
+    dispatch(groupInfoThunk())
 }
 
-const Home = () => {
+const Home = memo(() => {
     const authorize = useSelector(state => state.authorize)
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+
 
     useEffect(() => {
         //存在token则不判断
@@ -43,7 +47,7 @@ const Home = () => {
             </div>
         </div>
     );
-}
+})
 
 const ChatHeader = memo(() => {
     const navigate = useNavigate();

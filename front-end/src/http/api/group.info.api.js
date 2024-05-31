@@ -14,11 +14,10 @@ export const IN = "IN";
 export const ALL = "ALL";
 
 /**
- * getMyGroup
- * @param {string} getType 可用值:MY,IN
+ * doGetGroup
+ * @param {string} getType 可用值:MY,IN,ALL
  * @returns
  */
-export function getMyGroup(getType) {
-    return request.get(`/group/information/getGroup?getType=${getType}`);
+export function doGetGroup(getType) {
+    return request.get(`/group/information/doGetGroup?getType=${getType}`);
 }
-

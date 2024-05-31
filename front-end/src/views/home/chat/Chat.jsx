@@ -45,23 +45,28 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
     const location = useLocation();
     const navigate = useNavigate();
     const friendInfo = useSelector(state => state.friendInfo);
-    const [friends, setFriends] = useState([])
+    const groupInfo = useSelector(state => state.groupInfo);
+    const [renderList, setRenderList] = useState([])
+
     const onSearch = (value) => navigate({pathname:HOME_SEARCH,search:value},{state:location.pathname})
 
-    const getFriendWithChatId = (data) => {
-        //因为聊天室ID只会存在朋友列表身上
-        return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t => t.friendId === item.id)[0].chatId}))
-    }
-
     useEffect(() => {
+        const getFriendWithChatId = (data) => {
+            //因为聊天室ID只会存在朋友列表身上
+            return  data.map((item)=> ({...item,chatId:friendInfo.friendList.filter(t => t.friendId === item.id)[0].chatId}))
+        }
+
         //请求朋友信息
         (async ()=>{
             const resp = await doQueryUserInfos(friendInfo.friendList.map(item => item.friendId))
             if (resp.code === 200) {
-                setFriends(getFriendWithChatId(resp.data))
+                setRenderList(prevState => {
+                    const ls = [...getFriendWithChatId(resp.data).map(t => ({...t,name:t.nickname})),...groupInfo.map(t => ({...t,chatId:t.id}))];
+                    return ls.length === prevState.length ? prevState : ls
+                })
             }
         })()
-    }, [friendInfo.friendList]);
+    }, [friendInfo.friendList,groupInfo]);
 
     return (
         <div className='flex flex-col w-40% h-full'>
@@ -70,7 +75,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
             </div>
             <div className="bg-white overflow-y-scroll remove-the-scroll">
                 {
-                    friends.length > 0 ? friends.map((item)=>{
+                    renderList.length > 0 ? renderList.map((item)=>{
                             return (
                                 <div key={getRandomId()} className='flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
                                     //通过改变是显示公告还是聊天界面
@@ -79,7 +84,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                                 }}>
                                     <Avatar src={item.avatar} shape="square" size={50}  icon={<UserOutlined />} />
                                     <div className='ml-4px'>
-                                        {item.nickname}
+                                        {item.name}
                                     </div>
                                 </div>
                             )
@@ -106,9 +111,11 @@ const InfoWindow = memo(({chatId}) => {
 
     //初始化加载如websocket初始化
     useEffect(() => {
+
+        console.log('chatID',chatId);
         //查询聊天信息
         (async ()=>{
-            const resp = await getChatInfo(chatId,2)
+            const resp = await getChatInfo(chatId,1)
             if (resp.code === 200) {
                 const records = resp.data.records;
                 //防止一直重新渲染

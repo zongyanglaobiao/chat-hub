@@ -66,7 +66,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return memberService.save(groupMember);
     }
 
-    public List<SysGroupInformation> getMyGroup(String userId, GetType getType) {
+    public List<SysGroupInformation> doGetGroup(String userId, GetType getType) {
         switch (getType) {
             case MY -> {
                 return fillGroupInfo(this.lambdaQuery().eq(SysGroupInformation::getCreateUserId, userId).list());

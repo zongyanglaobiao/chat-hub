@@ -18,7 +18,7 @@ const Login = () => {
             //跳转到首页
             navigate(HOME);
         }
-    }, [authorize]);
+    }, [authorize, navigate]);
 
     return (
         <div className='w-full h-[100vh] layout-center'>
@@ -44,13 +44,12 @@ const LoginPage = ({setLogin}) => {
             return
         }
 
-        //todo token在何时更新
         if (code === 200) {
             setToken(resp.data.token)
             dispatch(authorizeAction(AUTHORIZE_SUCCESS))
             navigate(HOME)
         }
-    }, [navigate]);
+    }, [dispatch, navigate]);
 
     return (
         <div>
@@ -63,6 +62,7 @@ const LoginPage = ({setLogin}) => {
                         <label htmlFor="email"
                                className="block  text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Email</label>
                         <input type="text" ref={mail} id="mail"
+                               autoComplete={"email"}
                                className="h-[20px] ounded border border-gray-200 text-sm w-full font-normal leading-[18px] text-black tracking-[0px] appearance-none block m-0 p-[11px] focus:ring-2 ring-offset-2  ring-gray-900 outline-0"/>
 
                     </div>
@@ -70,6 +70,7 @@ const LoginPage = ({setLogin}) => {
                         <label htmlFor="password"
                                className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Password</label>
                         <input type="password" ref={pwd} id="password"
+                               autoComplete={"current-password"}
                                className="h-[20px] rounded border border-gray-200 text-sm w-full font-normal leading-[18px] text-black tracking-[0px] appearance-none block  m-0 p-[11px] focus:ring-2 ring-offset-2 ring-gray-900 outline-0"/>
 
                     </div>
@@ -118,7 +119,7 @@ const RegisterPage = ({setLogin}) => {
             message.success("注册成功")
             setLogin(true)
         }
-    }, []);
+    }, [setLogin]);
 
     return (
         <div>
