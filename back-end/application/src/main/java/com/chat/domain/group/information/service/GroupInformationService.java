@@ -16,8 +16,8 @@ import com.common.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,8 +38,8 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return this.save(information) && memberService.save(information.getId(), userId, IdentityType.LORD, SysGroupMember.AGREE);
     }
 
-    public Boolean doModify(SysGroupInformation information) {
-        SysGroupInformation entity = getById(information.getId());
+    public Boolean doModify(SysGroupInformation information, String userId) {
+        SysGroupInformation entity = getById(information.getId(),userId,true);
         entity.setGroupName(information.getGroupName());
         entity.setAvatar(information.getAvatar());
         entity.setCreateUserId(information.getCreateUserId());
@@ -97,9 +97,8 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     public Boolean doDelete(String groupId, String userId) {
-        SysGroupInformation group = getMyGroupByGroupId(groupId, userId);
-        AssertUtils.notNull(group, "群不存在/你无权删除");
-        return this.removeById(groupId);
+        SysGroupInformation group = getById(groupId,userId,true);
+        return this.removeById(group.getId());
     }
 
 
@@ -118,7 +117,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     public Boolean doAddAnnouncement(SysGroupAnnouncement announcement, String userId) {
-        SysGroupInformation information = getMyGroupByGroupId(announcement.getGroupId(), userId);
+        SysGroupInformation information = getById(announcement.getGroupId(), userId,true);
         AssertUtils.notNull(information, "群不存在/你无权添加公告");
         announcement.setUserId(userId);
 
@@ -130,9 +129,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     public Boolean doModifyAnnouncement(SysGroupAnnouncement announcement, String userId) {
         SysGroupAnnouncement groupAnnouncement = announcementService.getById(announcement.getId());
-        SysGroupInformation information = getMyGroupByGroupId(groupAnnouncement.getGroupId(), userId);
-        AssertUtils.notNull(information, "你无权修改公告");
-
+        getById(groupAnnouncement.getGroupId(), userId,true);
         //设置更新的值
         groupAnnouncement.setAnnouncement(announcement.getAnnouncement());
         groupAnnouncement.setEnableTop(announcement.getEnableTop());
@@ -144,8 +141,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     public Boolean doDeleteAnnouncement(String announcementId, String userId) {
         SysGroupAnnouncement groupAnnouncement = announcementService.getById(announcementId);
-        SysGroupInformation information = getMyGroupByGroupId(groupAnnouncement.getGroupId(), userId);
-        AssertUtils.notNull(information, "你无权删除公告");
+        getById(groupAnnouncement.getGroupId(), userId,true);
         return this.announcementService.removeById(announcementId);
     }
 
@@ -165,7 +161,12 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                 toList();
     }
 
-    private SysGroupInformation getMyGroupByGroupId(String groupId, String userId) {
-        return this.lambdaQuery().eq(SysGroupInformation::getId, groupId).eq(SysGroupInformation::getCreateUserId, userId).one();
+    public SysGroupInformation getById(Serializable id,String userId,boolean security) {
+        SysGroupInformation information = super.getById(id, false);
+        AssertUtils.notNull(information, "群不存在");
+        if (security && !information.getCreateUserId().equals(userId)) {
+            throw new ChatException("你无权操作");
+        }
+        return information;
     }
 }
