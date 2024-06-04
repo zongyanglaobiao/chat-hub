@@ -31,6 +31,10 @@ function SearchPage() {
     });
 
     const search = useCallback((searchType,keyword,size = 10,current = 1) => {
+        if (isBlank(keyword)) {
+            return
+        }
+        
         (async ()=>{
             const resp =  await doSearch({searchType:searchType,keyword:keyword},current,size);
             if (resp.code !== 200) {
@@ -43,12 +47,9 @@ function SearchPage() {
 
     //跳转过来时搜索
     useEffect(() => {
-        if (isNullOrUndefined(location?.search)) {
-            return
-        }
         //去除传递参数中的?
         search(searchType.current,location.search.slice(1))
-    }, [location.search, search]);
+    }, [location, location.search, search]);
 
     return (
         <div className=' w-full text-center relative'>

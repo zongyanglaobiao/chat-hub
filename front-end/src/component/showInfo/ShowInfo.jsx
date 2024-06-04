@@ -4,7 +4,7 @@ import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {HOME_CHAT} from "@/router/index.jsx";
+import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
@@ -20,6 +20,7 @@ const UserInfo = memo(({userInfo}) => {
     const navigate = useNavigate()
     const {closeDrawer} = useContext(DrawerContext)
     const {response,setProxyMethodParam} = useFetch(null,doAddFriend)
+    const userInfoState = useSelector(state => state.userInfo)
 
     useEffect(() => {
         if (isNullOrUndefined(response)) {
@@ -112,14 +113,21 @@ const UserInfo = memo(({userInfo}) => {
                 </Space>
                 <div className='text-center'>
                     {
-                        isNullOrUndefined(getMyFriend()) ?
+                        isNullOrUndefined(getMyFriend()) ? userInfoState.id === userInfo.id ?
+                            <Button onClick={()=>{
+                                closeDrawer()
+                                navigate(HOME_PERSON_SETTING)
+                            }}>
+                                个人信息设置
+                            </Button>
+                            :
                             <Button onClick={()=>{
                                 //申请添加好友
                                 setProxyMethodParam(userInfo.id)
                             }}>申请添加好友</Button>
                             :
                             <Button onClick={()=>{
-                                closeDrawer()
+
                                 navigate(HOME_CHAT,{state:{chatId:getMyFriend()?.chatId}})
                             }}>发送信息</Button>
                     }

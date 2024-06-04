@@ -1,10 +1,10 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {memo, useContext, useEffect, useReducer, useRef, useState} from "react";
+import {memo, useContext, useEffect, useRef, useState} from "react";
 import {Avatar, Button, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
-import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, PlusCircleOutlined, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
@@ -21,27 +21,28 @@ const { Search } = Input;
 
 
 const Chat = memo(() => {
-    const windowRef = useRef(false);
-    const [window, dispatch] = useReducer(selectWindowReducer,windowRef.current,(val)=> selectWindowReducer(null,{bool:val}))
     const location = useLocation();
+    const [showInfoWindows, setShowInfoWindows] = useState({isShow:false,chatId:null})
 
     useEffect(() => {
         if (!isNullOrUndefined(location.state)) {
             const {chatId} = location.state
-            dispatch({bool:true,chatId:chatId})
+            setShowInfoWindows({isShow:true,chatId})
         }
     }, [location]);
 
     return (
         <div className="flex w-full h-full">
-            <ChatSidebar windowSelector={dispatch} windowRef={windowRef}/>
+            <ChatSidebar setShowInfoWindows={setShowInfoWindows}/>
             <div className='w-0px h-full border-l rounded-md border-solid border-[#14141525]'></div>
-            {window}
+            {
+                showInfoWindows.isShow ? <InfoWindow chatId={showInfoWindows.chatId} /> : <AnnouncementWindow/>
+            }
         </div>
     )
 })
 
-const ChatSidebar = ({windowSelector,windowRef}) => {
+const ChatSidebar = ({setShowInfoWindows}) => {
     const location = useLocation();
     const navigate = useNavigate();
     const friendInfo = useSelector(state => state.friendInfo);
@@ -61,7 +62,7 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
             const resp = await doQueryUserInfos(friendInfo.friendList.map(item => item.friendId))
             if (resp.code === 200) {
                 setRenderList(prevState => {
-                    const ls = [...getFriendWithChatId(resp.data).map(t => ({...t,name:t.nickname})),...groupInfo.map(t => ({...t,chatId:t.id}))];
+                    const ls = [...getFriendWithChatId(resp.data).map(t => ({...t,name:t.nickname})),...groupInfo.map(t => ({...t,chatId:t.id,name:t.groupName}))];
                     return ls.length === prevState.length ? prevState : ls
                 })
             }
@@ -77,10 +78,8 @@ const ChatSidebar = ({windowSelector,windowRef}) => {
                 {
                     renderList.length > 0 ? renderList.map((item)=>{
                             return (
-                                <div key={getRandomId()} className='flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
-                                    //通过改变是显示公告还是聊天界面
-                                    windowRef.current = !windowRef.current
-                                    windowSelector({bool:windowRef.current,chatId:item.chatId})
+                                <div key={getRandomId()} className='mt-1 flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
+                                    setShowInfoWindows({isShow:true,chatId:item.chatId})
                                 }}>
                                     <Avatar src={item.avatar} shape="square" size={50}  icon={<UserOutlined />} />
                                     <div className='ml-4px'>
@@ -193,11 +192,20 @@ const InfoWindow = memo(({chatId}) => {
             {/* 消息输入区域 */}
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
+                    <div className=' w-40px h-40px bg-amber '>
+
+                    </div>
+                    <PlusSquareTwoTone
+                        onClick={()=>{
+
+                        }}
+                        style={{fontSize:40}}
+                        className='cursor-pointer'/>
                     <Input
                         type="text"
                         value={sendText}
                         placeholder="输入消息..."
-                        className="w-[80%] p-2 border border-gray-300 rounded"
+                        className="w-[80%] ml-2 p-2 border border-gray-300 rounded"
                         onChange={(e) => setSendText(e.target.value)}
                         onPressEnter={sendTextHandler}
                     />
