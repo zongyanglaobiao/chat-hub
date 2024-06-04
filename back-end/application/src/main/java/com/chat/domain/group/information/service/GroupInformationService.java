@@ -81,7 +81,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                         map(SysGroupMember::getGroupId).
                         toList();
                 //获取所有群信息
-                return fillGroupInfo(this.listByIds(groupIds)) ;
+                return groupIds.isEmpty() ? new ArrayList<>() : fillGroupInfo(this.listByIds(groupIds)) ;
 
             }
             case ALL -> {
