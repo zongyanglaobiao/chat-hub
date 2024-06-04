@@ -1,5 +1,6 @@
 package com.chat.domain.chat.entity;
 
+import com.chat.domain.chat.model.MsgType;
 import lombok.Data;
 
 import java.io.Serial;
@@ -23,4 +24,6 @@ public class MsgContent implements Serializable {
 
     //发送信息的用户ID
     private String userId;
+
+    private MsgType msgType;
 }

@@ -50,7 +50,7 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
     public Boolean saveInfo(MsgContent context) {
         String roomId = context.getRoomId();
         Integer latestNumber = findLatestNumber(roomId);
-        SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText());
+        SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText(), context.getMsgType());
         return this.save(information);
     }
 

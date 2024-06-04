@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.chat.domain.base.entity.Entity;
+import com.chat.domain.chat.model.MsgType;
 import com.chat.domain.user.entity.SysUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,18 +42,21 @@ public class SysChatInformation extends Entity {
     //序号
     private Integer serialNumber;
 
+    private MsgType msgType;
+
     @TableField(exist = false)
     private SysUser user;
 
     private SysChatInformation() {}
 
-    public static SysChatInformation create(Integer serialNumber, String roomId, String  sendUserId, String information) {
+    public static SysChatInformation create(Integer serialNumber, String roomId, String  sendUserId, String information,MsgType msgType) {
         SysChatInformation chatInformation = new SysChatInformation();
         chatInformation.setRoomId(roomId);
         chatInformation.setSendUserId(sendUserId);
         chatInformation.setSerialNumber(serialNumber);
         chatInformation.setSendTime(new Date());
         chatInformation.setInformation(information);
+        chatInformation.setMsgType(msgType);
         return chatInformation;
     }
 

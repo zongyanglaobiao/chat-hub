@@ -1,11 +1,12 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useContext, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Input, message, Timeline} from "antd";
+import {Avatar, Button, Dropdown, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
-import {ClockCircleOutlined, PlusCircleOutlined, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
+import githubIcon from '@/assets/github.svg';
 import {
     closeWebsocket,
     createMsgContent,
@@ -110,8 +111,6 @@ const InfoWindow = memo(({chatId}) => {
 
     //初始化加载如websocket初始化
     useEffect(() => {
-
-        console.log('chatID',chatId);
         //查询聊天信息
         (async ()=>{
             const resp = await getChatInfo(chatId,1)
@@ -166,6 +165,31 @@ const InfoWindow = memo(({chatId}) => {
         setSendText('')
     }
 
+    const items = [
+        {
+            key: '1',
+            label: (
+                <div>发送图片</div>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+                    2nd menu item
+                </a>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                    3rd menu item
+                </a>
+            ),
+        },
+    ];
+
     return (
         <main className="w-full relative h-full">
             <div className="p-4 h-400px overflow-y-scroll remove-the-scroll">
@@ -192,15 +216,20 @@ const InfoWindow = memo(({chatId}) => {
             {/* 消息输入区域 */}
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
-                    <div className=' w-40px h-40px bg-amber '>
 
-                    </div>
-                    <PlusSquareTwoTone
-                        onClick={()=>{
-
+                    <Dropdown
+                        placement="top"
+                        arrow
+                        destroyPopupOnHide={true}
+                        menu={{
+                            items
                         }}
-                        style={{fontSize:40}}
-                        className='cursor-pointer'/>
+                        trigger="click"
+                    >
+                        <PlusSquareTwoTone
+                            style={{fontSize: 40}}
+                            className='cursor-pointer relative'/>
+                    </Dropdown>
                     <Input
                         type="text"
                         value={sendText}
