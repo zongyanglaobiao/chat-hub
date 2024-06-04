@@ -27,7 +27,7 @@ public class SysGroupMember extends Entity {
      */
     public static final int REFUSE = 0;
     /**
-     * 审核中
+     * 群主审核
      */
     public static final int WAITING = -1;
 

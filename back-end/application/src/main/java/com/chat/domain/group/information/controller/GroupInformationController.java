@@ -11,6 +11,7 @@ import com.common.resp.RespEntity;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,17 +59,35 @@ public class GroupInformationController extends Controller {
         return RespEntity.success(groupInformationService.doDeleteMember(groupId,userId,LoginUser.getUserId()));
     }
 
-    //群主同意用户入群
-    //获取待待审批的人员
     //群主拉人
-    //用户拉人
-    //用户申请入群
+    @GetMapping("/member/doLordInviteJoinGroup")
+    public RespEntity<Boolean> doLordInviteJoinGroup(@RequestParam @NotBlank(message = "群ID不能为空") String groupId,@RequestParam @NotBlank(message = "用户ID不能为空") String userId) {
+        return RespEntity.success(groupInformationService.doLordInviteJoinGroup(groupId,userId,LoginUser.getUserId()));
+    }
 
-    /*//群主/成员添加用户 、用户申请入群
-    @PostMapping("/member/doAddOrApplyMember")
-    public RespEntity<Boolean> doAddOrApplyMember(@RequestBody @Validated(Entity.INSERT.class) @JsonView(Entity.INSERT.class) SysGroupMember groupMember) {
-        return RespEntity.success(groupInformationService.doAddOrApplyMember(groupMember,LoginUser.getUserId()));
-    }*/
+    //用户拉人
+    @GetMapping("/member/doMemberInviteJoinGroup")
+    public RespEntity<Boolean> doMemberInviteJoinGroup(@RequestParam @NotBlank(message = "群ID不能为空") String groupId,@RequestParam @NotBlank(message = "用户ID不能为空") String userId) {
+        return RespEntity.success(groupInformationService.doMemberInviteJoinGroup(groupId,userId,LoginUser.getUserId()));
+    }
+
+    //用户申请入群
+    @GetMapping("/member/doApplyJoinGroup")
+    public RespEntity<Boolean> doApplyJoinGroup(@RequestParam @NotBlank(message = "群ID不能为空") String groupId) {
+        return RespEntity.success(groupInformationService.doApplyJoinGroup(groupId,LoginUser.getUserId()));
+    }
+
+    //待处理列表
+    @GetMapping("/member/doGetPendingList")
+    public RespEntity<List<SysGroupInformation>> doGetPendingList() {
+        return RespEntity.success(groupInformationService.doGetPendingList(LoginUser.getUserId()));
+    }
+
+    //群主同意用户入群
+    @GetMapping("/member/doAgree")
+    public RespEntity<Boolean> doAgree(@RequestParam String groupMember) {
+        return RespEntity.success(groupInformationService.doAgree(groupMember,LoginUser.getUserId()));
+    }
 
     //查看我是否在某个群
     @GetMapping("/member/doIsInGroup")

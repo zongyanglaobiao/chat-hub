@@ -39,7 +39,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     public Boolean doModify(SysGroupInformation information, String userId) {
-        SysGroupInformation entity = getById(information.getId(),userId,true);
+        SysGroupInformation entity = getByIdAndCheck(information.getId(),userId);
         entity.setGroupName(information.getGroupName());
         entity.setAvatar(information.getAvatar());
         entity.setCreateUserId(information.getCreateUserId());
@@ -97,7 +97,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     public Boolean doDelete(String groupId, String userId) {
-        SysGroupInformation group = getById(groupId,userId,true);
+        SysGroupInformation group = getByIdAndCheck(groupId,userId);
         return this.removeById(group.getId());
     }
 
@@ -117,7 +117,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
     }
 
     public Boolean doAddAnnouncement(SysGroupAnnouncement announcement, String userId) {
-        SysGroupInformation information = getById(announcement.getGroupId(), userId,true);
+        SysGroupInformation information = getByIdAndCheck(announcement.getGroupId(), userId);
         AssertUtils.notNull(information, "群不存在/你无权添加公告");
         announcement.setUserId(userId);
 
@@ -129,7 +129,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     public Boolean doModifyAnnouncement(SysGroupAnnouncement announcement, String userId) {
         SysGroupAnnouncement groupAnnouncement = announcementService.getById(announcement.getId());
-        getById(groupAnnouncement.getGroupId(), userId,true);
+        getByIdAndCheck(groupAnnouncement.getGroupId(), userId);
         //设置更新的值
         groupAnnouncement.setAnnouncement(announcement.getAnnouncement());
         groupAnnouncement.setEnableTop(announcement.getEnableTop());
@@ -141,7 +141,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     public Boolean doDeleteAnnouncement(String announcementId, String userId) {
         SysGroupAnnouncement groupAnnouncement = announcementService.getById(announcementId);
-        getById(groupAnnouncement.getGroupId(), userId,true);
+        getByIdAndCheck(groupAnnouncement.getGroupId(), userId);
         return this.announcementService.removeById(announcementId);
     }
 
@@ -152,6 +152,43 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         return page;
     }
 
+    public Boolean doAgree(String groupMember, String userId) {
+        SysGroupMember groupMemberInfo = memberService.getById(groupMember);
+        getByIdAndCheck(groupMemberInfo.getGroupId(),userId);
+        groupMemberInfo.setState(SysGroupMember.AGREE);
+        return memberService.updateById(groupMemberInfo);
+    }
+
+    public boolean doApplyJoinGroup(String groupId, String userId) {
+        SysGroupInformation groupInfo = getById(groupId);
+        AssertUtils.notNull(groupInfo, "群不存在");
+        AssertUtils.assertTrue(!doIsInGroup(groupId, userId), "已经在群里了");
+        return memberService.save(groupId, userId, IdentityType.MEMBER, SysGroupMember.WAITING);
+    }
+
+    public List<SysGroupInformation> doGetPendingList(String userId) {
+        return doGetGroup(userId, GetType.MY).parallelStream().peek(t -> t.setMembers(t.getMembers().parallelStream().filter(t1 -> t1.getState() == SysGroupMember.WAITING).toList())).toList();
+    }
+
+    public boolean doMemberInviteJoinGroup(String groupId, String invitees, String invitePeople) {
+        SysGroupInformation groupInfo = getById(groupId);
+        AssertUtils.notNull(groupInfo, "群不存在");
+        AssertUtils.assertTrue(doIsInGroup(groupId, invitePeople), "不在群里不可以邀请人");
+        AssertUtils.assertTrue(!doIsInGroup(groupId, invitees), "已经在群里了不可以重复邀请");
+        return memberService.lambdaUpdate().eq( SysGroupMember::getGroupId, groupId).eq(SysGroupMember::getUserId, invitePeople).set(SysGroupMember::getState, SysGroupMember.WAITING).update();
+    }
+
+    public boolean doLordInviteJoinGroup(String groupId, String invitees, String invitePeople) {
+        SysGroupInformation groupInfo = getByIdAndCheck(groupId, invitePeople);
+        return memberService.lambdaUpdate().eq(SysGroupMember::getGroupId, groupInfo.getId()).eq(SysGroupMember::getUserId, invitees).set(SysGroupMember::getState, SysGroupMember.AGREE).update();
+    }
+
+
+    /**
+     * 填充组信息的成员信息和公告信息
+     * @param list  组
+     * @return List<SysGroupInformation>
+     */
     private List<SysGroupInformation> fillGroupInfo(List<SysGroupInformation> list) {
         return list.isEmpty() ? new ArrayList<>() :  list.stream().
                 peek(t -> {
@@ -161,10 +198,16 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
                 toList();
     }
 
-    public SysGroupInformation getById(Serializable id,String userId,boolean security) {
+    /**
+     * 带校验的获取组信息
+     * @param id id
+     * @param userId 用户id
+     * @return 组信息
+     */
+    private SysGroupInformation getByIdAndCheck(Serializable id,String userId) {
         SysGroupInformation information = super.getById(id, false);
         AssertUtils.notNull(information, "群不存在");
-        if (security && !information.getCreateUserId().equals(userId)) {
+        if (!information.getCreateUserId().equals(userId)) {
             throw new ChatException("你无权操作");
         }
         return information;
