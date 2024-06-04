@@ -24,8 +24,6 @@ const Home = memo(() => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-
-
     useEffect(() => {
         //存在token则不判断
         if (!authorize) {

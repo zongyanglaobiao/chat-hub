@@ -4,9 +4,8 @@ import {Avatar, Button, Dropdown, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
-import {ClockCircleOutlined, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
+import Icon, {ClockCircleOutlined, FileImageTwoTone, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
-import githubIcon from '@/assets/github.svg';
 import {
     closeWebsocket,
     createMsgContent,
@@ -79,10 +78,10 @@ const ChatSidebar = ({setShowInfoWindows}) => {
                 {
                     renderList.length > 0 ? renderList.map((item)=>{
                             return (
-                                <div key={getRandomId()} className='mt-1 flex cursor-pointer hover:cursor-pointer ' onClick={()=>{
+                                <div key={getRandomId()} className='m-5px bg-gray-100 flex cursor-pointer hover:shadow-md hover:rounded-md rounded-md' onClick={()=>{
                                     setShowInfoWindows({isShow:true,chatId:item.chatId})
                                 }}>
-                                    <Avatar src={item.avatar} shape="square" size={50}  icon={<UserOutlined />} />
+                                    <Avatar src={item.avatar} shape="square" size={60}  icon={<UserOutlined />} />
                                     <div className='ml-4px'>
                                         {item.name}
                                     </div>
@@ -108,6 +107,10 @@ const InfoWindow = memo(({chatId}) => {
     const userInfo = useSelector(state => state.userInfo);
     const [sendText, setSendText] = useState('')
     const {showDrawer} = useContext(DrawerContext)
+
+    useEffect(() => {
+        console.log('render',chatMessages,chatId)
+    });
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -139,6 +142,7 @@ const InfoWindow = memo(({chatId}) => {
         return () => {
             //关闭连接
             closeWebsocket()
+            setChatMessage([])
         }
     }, [chatId]);
 
@@ -169,23 +173,19 @@ const InfoWindow = memo(({chatId}) => {
         {
             key: '1',
             label: (
-                <div>发送图片</div>
+                <FileImageTwoTone style={{fontSize:30}} />
             ),
         },
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    2nd menu item
-                </a>
+                <Icon component={MoreInfoIcon} style={{fontSize:30}}/>
             ),
         },
         {
             key: '3',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                    3rd menu item
-                </a>
+                <Icon component={GithubIcon} style={{fontSize:30}} onClick={()=>window.open('https://github.com/zongyanglaobiao/chat-hub')}/>
             ),
         },
     ];
@@ -203,10 +203,12 @@ const InfoWindow = memo(({chatId}) => {
                         (<div key={getRandomId()}  className='flex items-center mb-2 '>
                             <Avatar
                                 onClick={()=>{
+                                    console.log('点击')
                                     showDrawer(<UserInfo userInfo={message.user}/>)
                                 }}
                                 src={message.user.avatar}
                                 shape="square" size="large"
+                                className=" cursor-pointer"
                                 icon={<UserOutlined/>}/>
                             <div className="ml-2 p-2 bg-green-300 rounded">{message.information}</div>
                         </div>)
@@ -216,7 +218,6 @@ const InfoWindow = memo(({chatId}) => {
             {/* 消息输入区域 */}
             <div className="p-4 bottom-0 absolute w-90% gap-1 ">
                 <div className="layout-center w-full">
-
                     <Dropdown
                         placement="top"
                         arrow
@@ -299,16 +300,37 @@ const AnnouncementWindow = () => {
     );
 }
 
-/**
- * 页面选择框
- */
-const selectWindowReducer = (state,action) => {
-    const {bool,chatId} = action
-    if (bool) {
-        return <InfoWindow chatId={chatId}/>;
-    }else {
-        return <AnnouncementWindow/>
-    }
+const GithubIcon = () => {
+    return (
+        <svg d="1717490035250" className="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg"
+             p-id="2297" fill="#1677ff" width="1em" height="1em">
+            <path
+                d="M512 42.666667A464.64 464.64 0 0 0 42.666667 502.186667 460.373333 460.373333 0 0 0 363.52 938.666667c23.466667 4.266667 32-9.813333 32-22.186667v-78.08c-130.56 27.733333-158.293333-61.44-158.293333-61.44a122.026667 122.026667 0 0 0-52.053334-67.413333c-42.666667-28.16 3.413333-27.733333 3.413334-27.733334a98.56 98.56 0 0 1 71.68 47.36 101.12 101.12 0 0 0 136.533333 37.973334 99.413333 99.413333 0 0 1 29.866667-61.44c-104.106667-11.52-213.333333-50.773333-213.333334-226.986667a177.066667 177.066667 0 0 1 47.36-124.16 161.28 161.28 0 0 1 4.693334-121.173333s39.68-12.373333 128 46.933333a455.68 455.68 0 0 1 234.666666 0c89.6-59.306667 128-46.933333 128-46.933333a161.28 161.28 0 0 1 4.693334 121.173333A177.066667 177.066667 0 0 1 810.666667 477.866667c0 176.64-110.08 215.466667-213.333334 226.986666a106.666667 106.666667 0 0 1 32 85.333334v125.866666c0 14.933333 8.533333 26.88 32 22.186667A460.8 460.8 0 0 0 981.333333 502.186667 464.64 464.64 0 0 0 512 42.666667"
+                p-id="2298">
+            </path>
+        </svg>
+    )
+}
+
+const MoreInfoIcon = () => {
+   return (
+       <svg d="1717491140707" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            p-id="3293" fill="#1677ff" width="1em" height="1em">
+           <path
+               d="M512 940.6c-57.8 0-114-11.3-166.8-33.7-51-21.6-96.9-52.5-136.2-91.8s-70.2-85.2-91.8-136.2C94.8 626 83.4 569.8 83.4 512c0-57.8 11.3-114 33.7-166.8 21.6-51 52.5-96.9 91.8-136.2s85.2-70.2 136.2-91.8C398 94.8 454.2 83.4 512 83.4c57.8 0 114 11.3 166.8 33.7 51 21.6 96.9 52.5 136.2 91.8s70.2 85.2 91.8 136.2c22.4 52.9 33.7 109 33.7 166.8 0 57.8-11.3 114-33.7 166.8-21.6 51-52.5 96.9-91.8 136.2s-85.2 70.2-136.2 91.8c-52.8 22.5-109 33.9-166.8 33.9z m0-800c-99.2 0-192.5 38.6-262.6 108.8-70.2 70.1-108.8 163.4-108.8 262.6 0 99.2 38.6 192.5 108.8 262.6 70.2 70.2 163.4 108.8 262.6 108.8 99.2 0 192.5-38.6 262.6-108.8S883.4 611.2 883.4 512c0-99.2-38.6-192.5-108.8-262.6-70.1-70.2-163.4-108.8-262.6-108.8z"
+               fill="#1677ff" p-id="3294"></path>
+           <path d="M340.6 512m-57.1 0a57.1 57.1 0 1 0 114.2 0 57.1 57.1 0 1 0-114.2 0Z"
+                 fill="#1677ff"
+                 p-id="3295"></path>
+           <path d="M512 512m-57.1 0a57.1 57.1 0 1 0 114.2 0 57.1 57.1 0 1 0-114.2 0Z"
+                 fill="#1677ff"
+                 p-id="3296"></path>
+           <path d="M683.4 512m-57.1 0a57.1 57.1 0 1 0 114.2 0 57.1 57.1 0 1 0-114.2 0Z"
+                 fill="#1677ff"
+                 p-id="3297"></path>
+       </svg>
+   )
 }
 
 export default Chat
