@@ -143,7 +143,7 @@ const UserInfo = memo(({userInfo}) => {
                                     navigate(HOME_CHAT,{state:{chatId:getMyFriend()?.chatId}})
                                 }}>发送信息</Button>
                                 <Button onClick={()=>{
-                                    deleteFriend('1212233')
+                                    deleteFriend(userInfo.id)
                                 }}>删除好友</Button>
                             </Space>
                     }
