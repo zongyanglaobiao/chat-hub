@@ -1,17 +1,14 @@
 import {Image} from "antd";
-import {useEffect, useState} from "react";
 
-export function DisplayImage({imgUrl,visible}) {
-    const [visible_, setVisible_] = useState(visible)
-
+export function DisplayNoneImage({setVisible,visible,imgUrl}) {
     return (
         <Image
             style={{display: 'none'}}
             src={imgUrl}
             preview={{
-                visible:visible_,
+                visible:visible,
                 destroyOnClose:true,
-                onVisibleChange:()=> setVisible_(false)
+                onVisibleChange:()=> setVisible((prev)=>!prev)
             }}
         />
     )

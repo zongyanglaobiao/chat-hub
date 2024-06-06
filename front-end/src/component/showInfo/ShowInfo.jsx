@@ -9,7 +9,7 @@ import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
-import {DisplayImage} from "@/component/image/DisplayImage.jsx";
+import {DisplayNoneImage} from "@/component/image/DisplayImage.jsx";
 
 /**
  *  用户信息
@@ -64,7 +64,7 @@ const UserInfo = memo(({userInfo}) => {
 
     return (
         <div className='relative w-full'>
-            <DisplayImage imgUrl={userInfo.avatar} visible={visible}/>
+            <DisplayNoneImage setVisible={setVisible} visible={visible} imgUrl={userInfo.avatar}/>
             <Image
                 width={'100%'}
                 height={200}
@@ -84,7 +84,7 @@ const UserInfo = memo(({userInfo}) => {
                     }}
                     icon={<AntDesignOutlined/>}
                     src={userInfo.avatar}
-                    onClick={()=>setVisible(true)}
+                    onClick={()=>setVisible((prevState)=>!prevState)}
                     className='cursor-pointer border-2 border-white shadow-lg'
                 />
                 <Space size={"large"}>

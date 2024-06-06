@@ -7,6 +7,7 @@ import {getToken} from "@/http/http.request.js";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {UploadOutlined} from "@ant-design/icons";
 import {getUploadUrl} from "@/http/api/file.api.js";
+import {DisplayNoneImage} from "@/component/image/DisplayImage.jsx";
 
 
 const PersonSetting = () => {
@@ -15,6 +16,7 @@ const PersonSetting = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const downloadUrl = useRef();
+    const [visible, setVisible] = useState(false)
 
     useEffect(() => {
         //重置表格的字段值否则更新之后它不会动
@@ -60,6 +62,7 @@ const PersonSetting = () => {
 
     return (
         <div className="flex items-center flex-row w-full h-full gap-5">
+            <DisplayNoneImage imgUrl={userInfo.avatar} visible={visible} setVisible={setVisible}/>
             <div className=" w-[40%] ml-25px">
                 <Form
                     form={form} initialValues={{...userInfo}} layout="vertical">
@@ -87,7 +90,7 @@ const PersonSetting = () => {
                 </Button>
             </div>
             <div className="flex flex-col items-center w-full">
-                <Avatar size={200} src={userInfo.avatar}>
+                <Avatar className=' cursor-pointer' size={200} src={userInfo.avatar} onClick={()=>setVisible(!visible)}>
                 </Avatar>
                 <Upload
                     {...props}
