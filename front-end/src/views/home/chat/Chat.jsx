@@ -14,8 +14,9 @@ import {
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
 import {HOME_SEARCH} from "@/router/index.jsx";
-import {UserInfo} from "@/component/showInfo/ShowInfo.jsx";
+import {GroupInfo, UserInfo} from "@/component/showInfo/ShowInfo.jsx";
 import {DrawerContext} from "@/views/App.jsx";
+import {useFetch} from "@/hook/useFetch.jsx";
 
 const { Search } = Input;
 
@@ -107,6 +108,13 @@ const InfoWindow = memo(({chatId}) => {
     const userInfo = useSelector(state => state.userInfo);
     const [sendText, setSendText] = useState('')
     const {showDrawer} = useContext(DrawerContext)
+    const [doGetInfoResp,doGetInfoProxy] = useFetch(doGetInfo)
+    const {friendList} = useSelector(state => state.friendInfo)
+    const groupInfo = useSelector(state => state.groupInfo);
+
+    useEffect(() => {
+        !isNullOrUndefined(doGetInfoResp?.data) && showDrawer(<UserInfo userInfo={doGetInfoResp.data}/>)
+    }, [doGetInfoResp]);
 
     //初始化加载如websocket初始化
     useEffect(() => {
@@ -178,7 +186,15 @@ const InfoWindow = memo(({chatId}) => {
             key: '2',
             label: (
                 <Icon component={MoreInfoIcon} style={{fontSize:30}} onClick={()=>{
-                    message.warning("正在开发中")
+                    if (isNullOrUndefined(chatId) || isBlank(chatId)){
+                        return
+                    }
+
+                    if (chatId.length > 19) {
+                        doGetInfoProxy(friendList.filter(t => t.chatId === chatId)[0].friendId)
+                    }else {
+                        showDrawer(<GroupInfo groupInfo={groupInfo.filter(t => t.id === chatId)[0]}/>)
+                    }
                 }}/>
             ),
         },

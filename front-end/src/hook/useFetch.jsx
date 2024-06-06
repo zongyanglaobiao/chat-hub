@@ -11,7 +11,7 @@ import {debounce} from "@/lib/toolkit/debounce.js";
  * @returns error 请求的错误
  * @returns setProxyMethodParam  设置代理请求方法的参数
  */
-const useFetch = (defaultValue,requestMethod,debounceTime = 300) =>{
+const useFetch = (requestMethod,defaultValue = null,debounceTime = 300) =>{
     //请求返回值
     const [response, setResponse] = useState(defaultValue)
     //代理方法的请求参数
