@@ -8,7 +8,7 @@ import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
-import {doAddFriend} from "@/http/api/friend.api.js";
+import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
 
 /**
  *  用户信息
@@ -19,7 +19,8 @@ const UserInfo = memo(({userInfo}) => {
     const friendInfo = useSelector(state => state.friendInfo)
     const navigate = useNavigate()
     const {closeDrawer} = useContext(DrawerContext)
-    const {response,setProxyMethodParam} = useFetch(null,doAddFriend)
+    const [response,setProxyMethodParam] = useFetch(null,doAddFriend)
+    const [deleteFriendResp,deleteFriend] = useFetch(null,doDeleteFriend)
     const userInfoState = useSelector(state => state.userInfo)
 
     useEffect(() => {
@@ -30,6 +31,16 @@ const UserInfo = memo(({userInfo}) => {
         ||
         response.code !== 200 && message.error((response.message))
     }, [response]);
+
+    useEffect(() => {
+        if (isNullOrUndefined(deleteFriendResp)) {
+            return
+        }
+        deleteFriendResp.code === 200 && message.info(("删除成功"))
+        ||
+        deleteFriendResp.code !== 200 && message.error((deleteFriendResp.message))
+
+    }, [deleteFriendResp]);
 
     //判断用户是否为我的好友 true 返回朋友
     const getMyFriend = () => {
@@ -126,10 +137,15 @@ const UserInfo = memo(({userInfo}) => {
                                 setProxyMethodParam(userInfo.id)
                             }}>申请添加好友</Button>
                             :
-                            <Button onClick={()=>{
-
-                                navigate(HOME_CHAT,{state:{chatId:getMyFriend()?.chatId}})
-                            }}>发送信息</Button>
+                            <Space>
+                                <Button onClick={()=>{
+                                    closeDrawer()
+                                    navigate(HOME_CHAT,{state:{chatId:getMyFriend()?.chatId}})
+                                }}>发送信息</Button>
+                                <Button onClick={()=>{
+                                    deleteFriend('1212233')
+                                }}>删除好友</Button>
+                            </Space>
                     }
                 </div>
             </Flex>

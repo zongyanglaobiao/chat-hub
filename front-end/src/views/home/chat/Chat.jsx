@@ -108,10 +108,6 @@ const InfoWindow = memo(({chatId}) => {
     const [sendText, setSendText] = useState('')
     const {showDrawer} = useContext(DrawerContext)
 
-    useEffect(() => {
-        console.log('render',chatMessages,chatId)
-    });
-
     //初始化加载如websocket初始化
     useEffect(() => {
         //查询聊天信息
@@ -173,13 +169,17 @@ const InfoWindow = memo(({chatId}) => {
         {
             key: '1',
             label: (
-                <FileImageTwoTone style={{fontSize:30}} />
+                <FileImageTwoTone style={{fontSize:30}} onClick={()=>{
+                    message.warning("正在开发中")
+                }}/>
             ),
         },
         {
             key: '2',
             label: (
-                <Icon component={MoreInfoIcon} style={{fontSize:30}}/>
+                <Icon component={MoreInfoIcon} style={{fontSize:30}} onClick={()=>{
+                    message.warning("正在开发中")
+                }}/>
             ),
         },
         {
@@ -203,7 +203,6 @@ const InfoWindow = memo(({chatId}) => {
                         (<div key={getRandomId()}  className='flex items-center mb-2 '>
                             <Avatar
                                 onClick={()=>{
-                                    console.log('点击')
                                     showDrawer(<UserInfo userInfo={message.user}/>)
                                 }}
                                 src={message.user.avatar}
