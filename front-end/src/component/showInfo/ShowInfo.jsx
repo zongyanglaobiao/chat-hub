@@ -5,11 +5,11 @@ import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
-import {isNullOrUndefined} from "@/lib/toolkit/util.js";
+import {getRandomId, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
-import {DisplayNoneImage} from "@/component/image/DisplayImage.jsx";
+import {doGetInfo} from "@/http/api/user.api.js";
 
 /**
  *  用户信息
@@ -155,6 +155,14 @@ const UserInfo = memo(({userInfo}) => {
 
 const GroupInfo = memo(({groupInfo}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
+    const [closeOrOpenModal, setCloseOrOpenModel] = useState(false)
+    const [doGetInfoResp,doGetInfoProxy] = useFetch(doGetInfo)
+    const [membersInfo, setMembersInfo] = useState([])
+
+
+    useEffect(() => {
+
+    }, [doGetInfoResp]);
 
     return (
         <div className='relative w-full'>
@@ -179,6 +187,32 @@ const GroupInfo = memo(({groupInfo}) => {
                     onClick={()=>openOrCloseImage(groupInfo.avatar)}
                     className='cursor-pointer border-2 border-white shadow-lg'
                 />
+                <Space size={"large"}>
+                    <Flex vertical gap={"middle"}>
+                        <strong>群名称</strong>
+                        <strong>群成员</strong>
+                    </Flex>
+                    <Flex vertical gap={"middle"} >
+                        <Tag color={"blue"}
+                             onClick={()=> setCloseOrOpenModel(true)}
+                             className='max-w-15rem text-overflow cursor-pointer'>
+                            {groupInfo.groupName}
+                        </Tag>
+                        <Tag
+                            className='max-w-15rem text-overflow cursor-pointer'
+                            color={"blue"}>
+                            {groupInfo.members.length}...
+                        </Tag>
+
+                        {/* <Modal open={closeOrOpenModal}
+                               title='群名称'
+                               centered
+                               onCancel={()=>setCloseOrOpenModel(false)}
+                               onOk={()=>setCloseOrOpenModel(false)}>
+                            <p> {groupInfo.groupName}</p>
+                        </Modal>*/}
+                    </Flex>
+                </Space>
             </Flex>
         </div>
     )
@@ -187,4 +221,4 @@ const GroupInfo = memo(({groupInfo}) => {
 /**
  * 群信息
  */
-export {UserInfo,GroupInfo}
+export {UserInfo, GroupInfo}
