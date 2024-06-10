@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
-import {DrawerContext} from "@/views/App.jsx";
+import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
 import {DisplayNoneImage} from "@/component/image/DisplayImage.jsx";
@@ -23,7 +23,7 @@ const UserInfo = memo(({userInfo}) => {
     const [response,setProxyMethodParam] = useFetch(doAddFriend)
     const [deleteFriendResp,deleteFriend] = useFetch(doDeleteFriend)
     const userInfoState = useSelector(state => state.userInfo)
-    const [visible, setVisible] = useState(false);
+    const {openOrCloseImage} = useContext(DisplayNoneImageContext)
 
     useEffect(() => {
         if (isNullOrUndefined(response)) {
@@ -64,7 +64,6 @@ const UserInfo = memo(({userInfo}) => {
 
     return (
         <div className='relative w-full'>
-            <DisplayNoneImage setVisible={setVisible} visible={visible} imgUrl={userInfo.avatar}/>
             <Image
                 width={'100%'}
                 height={200}
@@ -84,7 +83,7 @@ const UserInfo = memo(({userInfo}) => {
                     }}
                     icon={<AntDesignOutlined/>}
                     src={userInfo.avatar}
-                    onClick={()=>setVisible((prevState)=>!prevState)}
+                    onClick={()=>openOrCloseImage(userInfo.avatar)}
                     className='cursor-pointer border-2 border-white shadow-lg'
                 />
                 <Space size={"large"}>
@@ -156,11 +155,10 @@ const UserInfo = memo(({userInfo}) => {
 })
 
 const GroupInfo = memo(({groupInfo}) => {
-    const [visible, setVisible] = useState(false)
+    const {openOrCloseImage} = useContext(DisplayNoneImageContext)
 
     return (
         <div className='relative w-full'>
-            <DisplayNoneImage setVisible={setVisible} visible={visible} imgUrl={groupInfo.avatar}/>
             <Image
                 width={'100%'}
                 height={200}
@@ -180,7 +178,7 @@ const GroupInfo = memo(({groupInfo}) => {
                     }}
                     icon={<AntDesignOutlined/>}
                     src={groupInfo.avatar}
-                    onClick={()=>setVisible((prevState)=>!prevState)}
+                    onClick={()=>openOrCloseImage(groupInfo.avatar)}
                     className='cursor-pointer border-2 border-white shadow-lg'
                 />
             </Flex>
