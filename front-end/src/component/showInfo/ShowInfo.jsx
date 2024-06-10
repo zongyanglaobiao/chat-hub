@@ -9,7 +9,7 @@ import {getRandomId, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
-import {doGetInfo} from "@/http/api/user.api.js";
+import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 
 /**
  *  用户信息
@@ -156,13 +156,11 @@ const UserInfo = memo(({userInfo}) => {
 const GroupInfo = memo(({groupInfo}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
     const [closeOrOpenModal, setCloseOrOpenModel] = useState(false)
-    const [doGetInfoResp,doGetInfoProxy] = useFetch(doGetInfo)
-    const [membersInfo, setMembersInfo] = useState([])
-
+    const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos,[])
 
     useEffect(() => {
-
-    }, [doGetInfoResp]);
+        doQueryUserInfosProxy(groupInfo.members.map(t => t.userId))
+    }, []);
 
     return (
         <div className='relative w-full'>
@@ -190,7 +188,6 @@ const GroupInfo = memo(({groupInfo}) => {
                 <Space size={"large"}>
                     <Flex vertical gap={"middle"}>
                         <strong>群名称</strong>
-                        <strong>群成员</strong>
                     </Flex>
                     <Flex vertical gap={"middle"} >
                         <Tag color={"blue"}
@@ -198,21 +195,13 @@ const GroupInfo = memo(({groupInfo}) => {
                              className='max-w-15rem text-overflow cursor-pointer'>
                             {groupInfo.groupName}
                         </Tag>
-                        <Tag
-                            className='max-w-15rem text-overflow cursor-pointer'
-                            color={"blue"}>
-                            {groupInfo.members.length}...
-                        </Tag>
-
-                        {/* <Modal open={closeOrOpenModal}
-                               title='群名称'
-                               centered
-                               onCancel={()=>setCloseOrOpenModel(false)}
-                               onOk={()=>setCloseOrOpenModel(false)}>
-                            <p> {groupInfo.groupName}</p>
-                        </Modal>*/}
                     </Flex>
                 </Space>
+                <div>
+                    <strong>
+                        群成员
+                    </strong>
+                </div>
             </Flex>
         </div>
     )
