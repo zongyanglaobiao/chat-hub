@@ -1,16 +1,10 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useContext, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Dropdown, Input, message, Space, Timeline} from "antd";
+import {Avatar, Button, Dropdown, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
-import Icon, {
-    ClockCircleOutlined,
-    FileImageTwoTone,
-    PlusCircleTwoTone,
-    PlusSquareTwoTone,
-    UserOutlined
-} from "@ant-design/icons";
+import Icon, {ClockCircleOutlined, FileImageTwoTone, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
