@@ -156,11 +156,6 @@ const UserInfo = memo(({userInfo}) => {
 const GroupInfo = memo(({groupInfo}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
     const [closeOrOpenModal, setCloseOrOpenModel] = useState(false)
-    const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos,[])
-
-    useEffect(() => {
-        doQueryUserInfosProxy(groupInfo.members.map(t => t.userId))
-    }, []);
 
     return (
         <div className='relative w-full'>
@@ -188,6 +183,7 @@ const GroupInfo = memo(({groupInfo}) => {
                 <Space size={"large"}>
                     <Flex vertical gap={"middle"}>
                         <strong>群名称</strong>
+                        <strong>群成员</strong>
                     </Flex>
                     <Flex vertical gap={"middle"} >
                         <Tag color={"blue"}
@@ -195,13 +191,23 @@ const GroupInfo = memo(({groupInfo}) => {
                              className='max-w-15rem text-overflow cursor-pointer'>
                             {groupInfo.groupName}
                         </Tag>
+                        <Tag
+                            onClick={()=>{
+                                //todo 跳转群成员哪里
+                            }}
+                            className='max-w-15rem text-overflow cursor-pointer'
+                            color={"blue"}>
+                            更多信息...
+                        </Tag>
                     </Flex>
+                    <Modal open={closeOrOpenModal}
+                           title='群信息'
+                           centered
+                           onCancel={()=>setCloseOrOpenModel(false)}
+                           onOk={()=>setCloseOrOpenModel(false)}>
+                        <p>{groupInfo.groupName}</p>
+                    </Modal>
                 </Space>
-                <div>
-                    <strong>
-                        群成员
-                    </strong>
-                </div>
             </Flex>
         </div>
     )

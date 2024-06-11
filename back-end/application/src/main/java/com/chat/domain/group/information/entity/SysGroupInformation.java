@@ -49,7 +49,5 @@ public class SysGroupInformation extends Entity {
     @TableField(exist = false)
     @JsonView(IGNORE.class)
     private List<SysGroupMember> members;
-
-
 }
 
