@@ -74,6 +74,7 @@ const ChatSidebar = ({setShowInfoWindows}) => {
         <div className='flex flex-col w-40% h-full'>
             <div className='layout-center w-full mb-2'>
                 <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
+                <PlusSquareTwoTone />
             </div>
             <div className="bg-white overflow-y-scroll remove-the-scroll">
                 {
