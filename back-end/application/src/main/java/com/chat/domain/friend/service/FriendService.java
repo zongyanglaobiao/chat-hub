@@ -45,14 +45,15 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     private final UserService userService;
 
     public Object doQueryFriend(String userId) {
-        return Map.of(FRIEND_LIST,
+        return Map.of(
                 //朋友列表
+                FRIEND_LIST,
                 this.lambdaQuery().eq(SysFriend::getUserId, userId).eq(SysFriend::getStatus, SysFriend.STATUS_YES).list(),
-                APPLICATION_LIST,
                 //所有的申请记录
+                APPLICATION_LIST,
                 this.lambdaQuery().eq(SysFriend::getUserId, userId).eq(SysFriend::getSponsorId, userId).list(),
-                UNPROCESSED_LIST,
                 //谁申请加我好友待处理
+                UNPROCESSED_LIST,
                 this.lambdaQuery().eq(SysFriend::getFriendId, userId).eq(SysFriend::getStatus, SysFriend.STATUS_NOT_HANDLER).list());
     }
 

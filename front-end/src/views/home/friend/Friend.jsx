@@ -1,7 +1,8 @@
-import {Avatar, Divider, Flex, List, Tabs} from "antd";
+import {Avatar, Button, Divider, Flex, List, Space, Tabs} from "antd";
 import {useSelector} from "react-redux";
 import ChatTable from "@/component/table/ChatTable.jsx";
 import {useEffect} from "react";
+import {ChatList} from "@/component/list/ChatList.jsx";
 
 // 封装Tab内容为函数
 const RenderTabContent = (data, isStatusVisible = false) => (
@@ -54,8 +55,8 @@ const Friend = () => {
 
     const data = () => {
         const arr = []
-        for (let i = 0; i < 5; i++) {
-            arr.push("desc =====" + i)
+        for (let i = 0; i < 30; i++) {
+            arr.push({avatarIndex:i,title:'title index' + i,desc:'desc index' + i})
         }
 
         return arr;
@@ -67,25 +68,19 @@ const Friend = () => {
             label: '好友列表',
             key: '1',
             children: (
-                <div className=" overflow-y-hidden">
-                    <List
-                        itemLayout="horizontal"
-                        dataSource={data()}
-                        pagination={{
-                            position:"bottom",
-                            align:"center",
-                        }}
-                        renderItem={(item) => (
-                            <List.Item>
-                                <List.Item.Meta
-                                    avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=1`} />}
-                                    title={<a href="https://ant.design">{item}</a>}
-                                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                                />
-                            </List.Item>
-                        )}
-                    />
-                </div>
+                <ChatList data={data()} pageSize={6} renderItem={(item) => (
+                    <List.Item>
+                        <List.Item.Meta
+                            avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${item.avatarIndex}`} />}
+                            title={<a href="https://ant.design">{item.title}</a>}
+                            description={item.desc}
+                        />
+                       <Space>
+                           <Button>删除</Button>
+                           <Button>发送信息</Button>
+                       </Space>
+                    </List.Item>
+                )}/>
             ),
         },
         {
