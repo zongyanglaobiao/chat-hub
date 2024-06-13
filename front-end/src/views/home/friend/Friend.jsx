@@ -1,5 +1,7 @@
-import {Avatar, Divider, List, Tabs} from "antd";
+import {Avatar, Divider, Flex, List, Tabs} from "antd";
 import {useSelector} from "react-redux";
+import ChatTable from "@/component/table/ChatTable.jsx";
+import {useEffect} from "react";
 
 // 封装Tab内容为函数
 const RenderTabContent = (data, isStatusVisible = false) => (
@@ -17,7 +19,7 @@ const RenderTabContent = (data, isStatusVisible = false) => (
     />
 );
 
-export const Friend_ = () => {
+/*export const Friend_ = () => {
     const friendInfo =  useSelector(state => state.friendInfo)
 
 
@@ -37,35 +39,71 @@ export const Friend_ = () => {
         { id: 2, name: 'Nibbles', avatar: 'https://joeschmoe.io/api/v1/random', status: '已拒绝' },
     ];
 
+
+
+    return (
+        <Tabs items={items} />
+    );
+};*/
+
+const Friend = () => {
+
+    const onChange = (key) => {
+        console.log(key)
+    }
+
+    const data = () => {
+        const arr = []
+        for (let i = 0; i < 5; i++) {
+            arr.push("desc =====" + i)
+        }
+
+        return arr;
+    }
+
     // 使用items属性配置每个Tab页
     const items = [
         {
             label: '好友列表',
             key: '1',
-            children: RenderTabContent(friends),
+            children: (
+                <div className=" overflow-y-hidden">
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={data()}
+                        pagination={{
+                            position:"bottom",
+                            align:"center",
+                        }}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=1`} />}
+                                    title={<a href="https://ant.design">{item}</a>}
+                                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </div>
+            ),
         },
         {
             label: '申请列表',
             key: '2',
-            children: RenderTabContent(applications, true),
+            children:(<div>申请列表</div>),
         },
         {
-            label: '被申请列表',
+            label: '待处理好友申请',
             key: '3',
-            children: RenderTabContent(applied, true),
+            children: (<div>待处理好友申请</div>),
         },
     ];
 
-    return (
-        <Tabs items={items} />
-    );
-};
 
-const Friend = () => {
+
     return (
-        <div>
-            好友列表
-        </div>
+        <ChatTable onChange={onChange} items={items} />
     )
 }
 

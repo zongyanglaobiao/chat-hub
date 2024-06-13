@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useContext, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Dropdown, Input, message, Space, Timeline} from "antd";
+import {Avatar, Button, Dropdown, Flex, Input, message, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
@@ -78,11 +78,11 @@ const ChatSidebar = ({setShowInfoWindows}) => {
 
     return (
         <div className='flex flex-col w-40% h-full'>
-            <Space>
+            <Flex gap={"small"}  className=' p-5px' >
                 <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
-                <PlusCircleTwoTone style={{fontSize:40}}  className='cursor-pointer' />
-            </Space>
-            <div className="bg-white overflow-y-scroll remove-the-scroll">
+                <PlusCircleTwoTone style={{fontSize:30}}  className=' cursor-pointer' />
+            </Flex>
+            <div className="bg-white overflow-y-scroll remove-the-scroll ">
                 {
                     renderList.length > 0 ? renderList.map((item)=>{
                             return (
