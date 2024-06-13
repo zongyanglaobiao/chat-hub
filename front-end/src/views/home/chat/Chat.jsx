@@ -1,10 +1,16 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useContext, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Dropdown, Input, message, Timeline} from "antd";
+import {Avatar, Button, Dropdown, Input, message, Space, Timeline} from "antd";
 import {useSelector} from "react-redux";
 import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 import {getRandomId, isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
-import Icon, {ClockCircleOutlined, FileImageTwoTone, PlusSquareTwoTone, UserOutlined} from "@ant-design/icons";
+import Icon, {
+    ClockCircleOutlined,
+    FileImageTwoTone,
+    PlusCircleTwoTone,
+    PlusSquareTwoTone,
+    UserOutlined
+} from "@ant-design/icons";
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
@@ -72,10 +78,10 @@ const ChatSidebar = ({setShowInfoWindows}) => {
 
     return (
         <div className='flex flex-col w-40% h-full'>
-            <div className='layout-center w-full mb-2'>
+            <Space>
                 <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
-                <PlusSquareTwoTone />
-            </div>
+                <PlusCircleTwoTone style={{fontSize:40}}  className='cursor-pointer' />
+            </Space>
             <div className="bg-white overflow-y-scroll remove-the-scroll">
                 {
                     renderList.length > 0 ? renderList.map((item)=>{

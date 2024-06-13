@@ -5,11 +5,10 @@ import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
-import {getRandomId, isNullOrUndefined} from "@/lib/toolkit/util.js";
+import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doAddFriend, doDeleteFriend} from "@/http/api/friend.api.js";
-import {doGetInfo, doQueryUserInfos} from "@/http/api/user.api.js";
 
 /**
  *  用户信息
