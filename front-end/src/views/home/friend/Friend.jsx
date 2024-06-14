@@ -24,28 +24,31 @@ const Friend = () => {
     const navigate = useNavigate();
 
     const fetchFriendInfo = async (friendIds,hook) => {
+        if (friendIds.length === 0) {
+            return []
+        }
         const resp = await doQueryUserInfos(friendIds)
         resp.code === 200 ?  hook(resp.data) :  message.error(resp.message)
     }
 
     //查询好友列表
     useEffect(() => {
-        friendList.map(t => t.friendId).length !== 0 && fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)
+        fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)
     }, [friendList]);
 
     //查询处理列表
     useEffect(() => {
-        applicationList.length !== 0 && fetchFriendInfo(applicationList.map(t => t.friendId),setApplicationInfo)
+        fetchFriendInfo(applicationList.map(t => t.friendId),setApplicationInfo)
     }, [applicationList]);
 
     //查询待处理列表
     useEffect(() => {
-        unprocessedList.length !== 0 && fetchFriendInfo(unprocessedList.map(t => t.userId),setUnprocessInfo)
+        console.log('unprocessedList',unprocessedList)
+        fetchFriendInfo(unprocessedList.map(t => t.userId),setUnprocessInfo)
     }, [unprocessedList]);
 
     //更新好友列表
     useEffect(() => {
-        console.log('render')
         dispatch(friendListInfoThunk())
     }, [doDeleteFriendResp,doYesAgreeFriendResp,doNoAgreeFriendResp]);
 
@@ -87,7 +90,6 @@ const Friend = () => {
                     return (
                         <>
                             <Button onClick={()=>{
-                                console.log('unprocessedList.filter(t => t.userId === item.id),',unprocessedList.filter(t => t.userId === item.id))
                                 doYesAgreeFriendProxy(unprocessedList.filter(t => t.userId === item.id)[0].id)
                             }}>同意</Button>
                             <Button onClick={()=>{
@@ -114,7 +116,9 @@ const Friend = () => {
                 <ChatFriendList data={applicationInfo} renderButton={(item)=>{
                     return (
                         <>
-                            <Button>删除</Button>
+                            <Button onClick={()=>{
+                                doDeleteFriendProxy(item.id)
+                            }}>删除</Button>
                         </>
                     )
                 }}/>
@@ -123,7 +127,9 @@ const Friend = () => {
     ];
 
     return (
-        <ChatTable items={items} />
+        <ChatTable items={items} onChange={()=>{
+            dispatch(friendListInfoThunk())
+        }}/>
     )
 }
 

@@ -5,9 +5,12 @@ import com.chat.domain.base.service.AbstractService;
 import com.chat.domain.chat.entity.MsgContent;
 import com.chat.domain.chat.entity.SysChatInformation;
 import com.chat.domain.chat.mapper.SysChatInformationDao;
+import com.chat.domain.friend.entity.SysFriend;
+import com.chat.domain.friend.service.FriendService;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.service.UserService;
 import com.chat.toolkit.utils.CommonPageRequestUtils;
+import com.common.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,8 @@ import java.util.Map;
 public class ChatInformationService extends AbstractService<SysChatInformationDao, SysChatInformation> {
 
     private final UserService userService;
+
+    private final FriendService friendService;
 
     public Page<SysChatInformation> getChatInformationByRoomId(String roomId) {
         //优化查询熟读对象缓存池
@@ -49,6 +54,10 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
 
     public Boolean saveInfo(MsgContent context) {
         String roomId = context.getRoomId();
+
+        //发送信息之前校验一下 roomId大于20表示是好友之间聊天
+        AssertUtils.assertTrue(roomId.length() > 20 && friendService.lambdaQuery().eq(SysFriend::getChatId,roomId).exists(),"聊天对象不存在");
+
         Integer latestNumber = findLatestNumber(roomId);
         SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText(), context.getMsgType());
         return this.save(information);

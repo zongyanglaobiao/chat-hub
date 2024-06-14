@@ -64,6 +64,10 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
         SysFriend one = this.lambdaQuery().eq(SysFriend::getUserId, userId).eq(SysFriend::getFriendId, friendId).one();
 
         //当用户拒绝申请好友的时候还可以重新申请
+        if (Objects.nonNull(one) && one.getStatus().equals(SysFriend.STATUS_NO)) {
+            one.setStatus(SysFriend.STATUS_NOT_HANDLER);
+            return this.updateById(one);
+        }
 
         AssertUtils.isNull(one,"存在申请记录了");
         SysFriend sysFriend = new SysFriend();
@@ -104,6 +108,7 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     }
 
     public Boolean doDeleteFriend(String friendId, String userId) {
+        //todo 这里应该是逻辑删除
         //这里查询不看申请状态
         boolean exists = this.lambdaQuery().
                 eq(SysFriend::getUserId, userId).
