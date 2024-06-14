@@ -1,10 +1,15 @@
-import {Avatar, Button, List, message, Space} from "antd";
+import {Avatar, Button, List, message, Popover, Space} from "antd";
 import ChatTable from "@/component/table/ChatTable.jsx";
 import {ChatList} from "@/component/list/ChatList.jsx";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
 import {useContext, useEffect, useState} from "react";
 import {DisplayNoneImageContext} from "@/views/App.jsx";
+import {useFetch} from "@/hook/useFetch.jsx";
+import {doDeleteFriend, doNoAgreeFriend, doYesAgreeFriend} from "@/http/api/friend.api.js";
+import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
+import {useNavigate} from "react-router-dom";
+import {HOME_CHAT} from "@/router/index.jsx";
 
 const Friend = () => {
     //好友信息
@@ -12,65 +17,118 @@ const Friend = () => {
     const [friendInfo, setFriendInfo] = useState([])
     const [unprocessInfo, setUnprocessInfo] = useState([])
     const [applicationInfo, setApplicationInfo] = useState([])
+    const [doDeleteFriendResp,doDeleteFriendProxy] = useFetch(doDeleteFriend)
+    const [doYesAgreeFriendResp,doYesAgreeFriendProxy] = useFetch(doYesAgreeFriend)
+    const [doNoAgreeFriendResp,doNoAgreeFriendProxy] = useFetch(doNoAgreeFriend)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const fetchFriendInfo = async (friendIds,hook) => {
         const resp = await doQueryUserInfos(friendIds)
         resp.code === 200 ?  hook(resp.data) :  message.error(resp.message)
     }
 
+    //查询好友列表
     useEffect(() => {
         friendList.map(t => t.friendId).length !== 0 && fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)
     }, [friendList]);
 
-    useEffect(() => {
-        unprocessedList.length !== 0 && fetchFriendInfo(unprocessedList.map(t => t.friendId),setUnprocessInfo)
-    }, [unprocessedList]);
-
+    //查询处理列表
     useEffect(() => {
         applicationList.length !== 0 && fetchFriendInfo(applicationList.map(t => t.friendId),setApplicationInfo)
     }, [applicationList]);
-    
+
+    //查询待处理列表
+    useEffect(() => {
+        unprocessedList.length !== 0 && fetchFriendInfo(unprocessedList.map(t => t.userId),setUnprocessInfo)
+    }, [unprocessedList]);
+
+    //更新好友列表
+    useEffect(() => {
+        console.log('render')
+        dispatch(friendListInfoThunk())
+    }, [doDeleteFriendResp,doYesAgreeFriendResp,doNoAgreeFriendResp]);
+
     // 使用items属性配置每个Tab页
     const items = [
         {
             label: '好友列表',
             key: 1,
             children:  (
-                <ChatFriendList data={friendInfo}>
-                    <Button>删除</Button>
-                    <Button>发送信息</Button>
-                </ChatFriendList>
-            )   ,
+                <ChatFriendList data={friendInfo} renderButton={(item)=>{
+                    return (
+                        <>
+                            <Button onClick={()=>{
+                                doDeleteFriendProxy(item.id)
+                            }}>删除</Button>
+                            <Button onClick={()=>{
+                                navigate(HOME_CHAT,{state:{chatId:friendList.filter(t => t.friendId === item.id)[0].chatId}})
+                            }}>发送信息</Button>
+                        </>
+                    )
+                }}/>
+
+            ),
         },
         {
-            label: '待处理申请列表',
+            label: (
+                <Popover
+                    content={(
+                        <p>
+                            别人申请成为我的好友
+                        </p>
+                    )} >
+                    待处理列表
+                </Popover>
+            ),
             key: 2,
             children:  (
-                <ChatFriendList data={unprocessInfo}>
-                    <Button>同意</Button>
-                    <Button>拒绝</Button>
-                </ChatFriendList>
+                <ChatFriendList data={unprocessInfo} renderButton={(item)=>{
+                    return (
+                        <>
+                            <Button onClick={()=>{
+                                console.log('unprocessedList.filter(t => t.userId === item.id),',unprocessedList.filter(t => t.userId === item.id))
+                                doYesAgreeFriendProxy(unprocessedList.filter(t => t.userId === item.id)[0].id)
+                            }}>同意</Button>
+                            <Button onClick={()=>{
+                                doNoAgreeFriendProxy(unprocessedList.filter(t => t.userId === item.id)[0].id)
+                            }}>拒绝</Button>
+                        </>
+                    )
+                }}/>
             ) ,
         },
         {
-            label: '申请列表',
+            label: (
+                <Popover
+                    content={(
+                        <p>
+                            我申请成为好友
+                        </p>
+                    )}>
+                    申请列表
+                </Popover>
+            ),
             key: 3,
             children:  (
-                <ChatFriendList data={applicationInfo}>
-                    <Button>删除</Button>
-                </ChatFriendList>
+                <ChatFriendList data={applicationInfo} renderButton={(item)=>{
+                    return (
+                        <>
+                            <Button>删除</Button>
+                        </>
+                    )
+                }}/>
             )
-        },
+        }
     ];
 
     return (
-        <ChatTable  items={items} />
+        <ChatTable items={items} />
     )
 }
 
-const ChatFriendList = ({data,children}) => {
+const ChatFriendList = ({data,renderButton}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
-    console.log(data)
     return (
         data.length !== 0
             ?
@@ -86,7 +144,7 @@ const ChatFriendList = ({data,children}) => {
                         className="text-overflow"
                     />
                     <Space className="ml-3">
-                        {children}
+                        {renderButton(item)}
                     </Space>
                 </List.Item>
             )}/>

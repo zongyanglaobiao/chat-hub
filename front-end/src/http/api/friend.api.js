@@ -35,6 +35,15 @@ export function doYesOrNoAgreeFriend(id, type) {
     return request.get(`/user/friend/doYesOrNoAgreeFriend/${id}?type=${type}`);
 }
 
+export function doYesAgreeFriend(id) {
+    return doYesOrNoAgreeFriend(id,'AGREE_YES');
+}
+
+export function doNoAgreeFriend(id) {
+    return doYesOrNoAgreeFriend(id,'AGREE_NO');
+}
+
+
 /**
  * doIsMyFriend
  * @param {string} friendId

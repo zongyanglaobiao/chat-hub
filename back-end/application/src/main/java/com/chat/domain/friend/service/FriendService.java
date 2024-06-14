@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xxl
@@ -61,6 +62,9 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
         SysUser user = userService.getById(friendId, false);
         AssertUtils.notNull(user,"用户不存在");
         SysFriend one = this.lambdaQuery().eq(SysFriend::getUserId, userId).eq(SysFriend::getFriendId, friendId).one();
+
+        //当用户拒绝申请好友的时候还可以重新申请
+
         AssertUtils.isNull(one,"存在申请记录了");
         SysFriend sysFriend = new SysFriend();
         sysFriend.setUserId(userId);
@@ -100,7 +104,11 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     }
 
     public Boolean doDeleteFriend(String friendId, String userId) {
-        AssertUtils.assertTrue(isMyFriend(userId, friendId),"不是你的好友");
+        //这里查询不看申请状态
+        boolean exists = this.lambdaQuery().
+                eq(SysFriend::getUserId, userId).
+                eq(SysFriend::getFriendId, friendId).exists();
+        AssertUtils.assertTrue(exists,"不存在记录");
         //从你的列表删除 && 从好友列表删除
         return this.lambdaUpdate().eq(SysFriend::getUserId, userId).eq(SysFriend::getFriendId, friendId).remove()
                 && this.lambdaUpdate().eq(SysFriend::getUserId, friendId).eq(SysFriend::getFriendId, userId).remove();
