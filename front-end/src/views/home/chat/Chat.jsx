@@ -14,7 +14,7 @@ import Icon, {
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
-    createMsgContent, errorOfWebsocket,
+    createMsgContent,
     newWebSocket,
     receiveOfWebsocket,
     sendOfWebsocket
@@ -134,11 +134,17 @@ const InfoWindow = memo(({chatId}) => {
                 setChatMessage(prevState => prevState.length === records.length ? prevState : records)
             }
         })()
-
+        //todo 如果是500需要刷新列表
+        //toto 同意之后列表不刷新
         //如果进入这个页面表示需要聊天则进行websocket连接
         newWebSocket(chatId);
         //如果接收到websocket的信息
         receiveOfWebsocket((data)=>{
+            if (data.code === 500) {
+                message.error(data.msg)
+                return
+            }
+
             (async ()=>{
                 //通过websocket传递的数据查询用户信息
                 const resp = await doGetInfo(data.userId)
@@ -149,10 +155,6 @@ const InfoWindow = memo(({chatId}) => {
                     }])
                 }
             })()
-        })
-
-        errorOfWebsocket((error)=>{
-            message.error(error)
         })
 
         return () => {

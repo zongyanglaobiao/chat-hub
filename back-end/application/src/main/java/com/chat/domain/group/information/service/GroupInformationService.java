@@ -86,7 +86,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
             }
             case ALL -> {
                 List<String> list = memberService.lambdaQuery().eq(SysGroupMember::getUserId, userId).list().stream().map(SysGroupMember::getGroupId).toList();
-                return fillGroupInfo(this.listByIds(list));
+                return list.isEmpty() ? new ArrayList<>() : fillGroupInfo(this.listByIds(list));
             }
             default -> throw new ChatException("类型错误");
         }

@@ -21,18 +21,13 @@ export function newWebSocket(roomId) {
     socket =  new WebSocket(WEBSOCKET_URL.concat(roomId));
 }
 
-export function errorOfWebsocket(fun) {
-    socket.onerror = function(error) {
-        fun(error)
-    }
-}
-
 export function createMsgContent(text, roomId, userId, msgType = MSG_TYPE_TEXT) {
     return {
         text: text,
         roomId: roomId,
         userId: userId,
-        msgType:msgType
+        msgType:msgType,
+        code: 200
     }
 }
 

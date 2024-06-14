@@ -79,7 +79,11 @@ public class ChatController {
         MsgContent context = JSONUtil.toBean(json, MsgContent.class);
 
         //保存聊天信息
-        chatInformationService.saveInfo(context);
+        try {
+            chatInformationService.saveInfo(context);
+        } catch (Exception e) {
+            MsgContent.errorMsg(e.getMessage());
+        }
 
         if (!ON_LINE_USERS.containsKey(context.getRoomId())) {
             return;

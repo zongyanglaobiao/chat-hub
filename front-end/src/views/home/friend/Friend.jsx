@@ -6,11 +6,10 @@ import {doQueryUserInfos} from "@/http/api/user.api.js";
 import {useContext, useEffect, useState} from "react";
 import {DisplayNoneImageContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
-import {doDeleteFriend, doNoAgreeFriend, doQueryFriendInfoByUserId, doYesAgreeFriend} from "@/http/api/friend.api.js";
+import {doDeleteFriend, doNoAgreeFriend, doYesAgreeFriend} from "@/http/api/friend.api.js";
 import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT} from "@/router/index.jsx";
-import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 
 /**
  * 未同意
@@ -130,10 +129,10 @@ const Friend = () => {
             children:  (
                 <ChatFriendList data={applicationInfo} render={(item)=>{
                     return (
-                        <Tag color={"cyan"}>
+                        <Tag color={"gold"}>
                             {
                                 (()=>{
-                                    switch (4){
+                                    switch (applicationList.filter(t => t.friendId === item.id)[0].status){
                                         case STATUS_NO.state:{
                                             return STATUS_NO.desc
                                         }

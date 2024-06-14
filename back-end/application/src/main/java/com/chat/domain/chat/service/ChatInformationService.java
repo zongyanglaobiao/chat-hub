@@ -7,6 +7,8 @@ import com.chat.domain.chat.entity.SysChatInformation;
 import com.chat.domain.chat.mapper.SysChatInformationDao;
 import com.chat.domain.friend.entity.SysFriend;
 import com.chat.domain.friend.service.FriendService;
+import com.chat.domain.group.information.entity.SysGroupInformation;
+import com.chat.domain.group.information.service.GroupInformationService;
 import com.chat.domain.user.entity.SysUser;
 import com.chat.domain.user.service.UserService;
 import com.chat.toolkit.utils.CommonPageRequestUtils;
@@ -28,6 +30,8 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
     private final UserService userService;
 
     private final FriendService friendService;
+
+    private final GroupInformationService groupInformationService;
 
     public Page<SysChatInformation> getChatInformationByRoomId(String roomId) {
         //优化查询熟读对象缓存池
@@ -57,6 +61,7 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
 
         //发送信息之前校验一下 roomId大于20表示是好友之间聊天
         AssertUtils.assertTrue(roomId.length() > 20 && friendService.lambdaQuery().eq(SysFriend::getChatId,roomId).exists(),"聊天对象不存在");
+        AssertUtils.assertTrue(roomId.length() < 20 && groupInformationService.doIsInGroup(roomId,context.getUserId()),"聊天对象不存在");
 
         Integer latestNumber = findLatestNumber(roomId);
         SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText(), context.getMsgType());

@@ -26,4 +26,13 @@ public class MsgContent implements Serializable {
     private String userId;
 
     private MsgType msgType;
+
+    private int code;
+
+    public static MsgContent errorMsg(String text) {
+        MsgContent msgContent = new MsgContent();
+        msgContent.setText(text);
+        msgContent.setCode(500);
+        return msgContent;
+    }
 }
