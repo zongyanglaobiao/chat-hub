@@ -1,4 +1,4 @@
-import {Avatar, Button, List, message, Popover, Space} from "antd";
+import {Avatar, Button, List, message, Popover, Space, Tag} from "antd";
 import ChatTable from "@/component/table/ChatTable.jsx";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -6,10 +6,25 @@ import {doQueryUserInfos} from "@/http/api/user.api.js";
 import {useContext, useEffect, useState} from "react";
 import {DisplayNoneImageContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
-import {doDeleteFriend, doNoAgreeFriend, doYesAgreeFriend} from "@/http/api/friend.api.js";
+import {doDeleteFriend, doNoAgreeFriend, doQueryFriendInfoByUserId, doYesAgreeFriend} from "@/http/api/friend.api.js";
 import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
 import {useNavigate} from "react-router-dom";
 import {HOME_CHAT} from "@/router/index.jsx";
+import {isNullOrUndefined} from "@/lib/toolkit/util.js";
+
+/**
+ * 未同意
+ */
+const  STATUS_NO = {state:0,desc:'未同意'};
+/**
+ * 同意
+ */
+const STATUS_YES = {state:1,desc:'已同意'};
+
+/**
+ * 未处理
+ */
+const STATUS_NOT_HANDLER = {state:-1,desc:'未处理'};
 
 const Friend = () => {
     //好友信息
@@ -58,7 +73,7 @@ const Friend = () => {
             label: '好友列表',
             key: 1,
             children:  (
-                <ChatFriendList data={friendInfo} renderButton={(item)=>{
+                <ChatFriendList data={friendInfo} render={(item)=>{
                     return (
                         <>
                             <Button onClick={()=>{
@@ -86,7 +101,7 @@ const Friend = () => {
             ),
             key: 2,
             children:  (
-                <ChatFriendList data={unprocessInfo} renderButton={(item)=>{
+                <ChatFriendList data={unprocessInfo} render={(item)=>{
                     return (
                         <>
                             <Button onClick={()=>{
@@ -113,13 +128,27 @@ const Friend = () => {
             ),
             key: 3,
             children:  (
-                <ChatFriendList data={applicationInfo} renderButton={(item)=>{
+                <ChatFriendList data={applicationInfo} render={(item)=>{
                     return (
-                        <>
-                            <Button onClick={()=>{
-                                doDeleteFriendProxy(item.id)
-                            }}>删除</Button>
-                        </>
+                        <Tag color={"cyan"}>
+                            {
+                                (()=>{
+                                    switch (4){
+                                        case STATUS_NO.state:{
+                                            return STATUS_NO.desc
+                                        }
+                                        case STATUS_YES.state:{
+                                            return STATUS_YES.desc
+                                        }
+                                        case STATUS_NOT_HANDLER.state:
+                                        {
+                                            return STATUS_NOT_HANDLER.desc
+                                        }
+                                        default: return "状态描述"
+                                    }
+                                })()
+                            }
+                        </Tag>
                     )
                 }}/>
             )
@@ -133,7 +162,7 @@ const Friend = () => {
     )
 }
 
-const ChatFriendList = ({data,renderButton}) => {
+const ChatFriendList = ({data,render}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
     return (
         data.length !== 0
@@ -150,7 +179,7 @@ const ChatFriendList = ({data,renderButton}) => {
                         className="text-overflow"
                     />
                     <Space className="ml-3">
-                        {renderButton(item)}
+                        {render(item)}
                     </Space>
                 </List.Item>
             )}/>

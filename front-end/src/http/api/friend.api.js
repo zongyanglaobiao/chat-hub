@@ -52,3 +52,12 @@ export function doNoAgreeFriend(id) {
 export function doIsMyFriend(friendId) {
     return request.get(`/user/friend/doIsMyFriend/${friendId}`);
 }
+
+/**
+ * doQueryFriendInfoByUserId
+ * @param {string} userId
+ * @returns
+ */
+export function doQueryFriendInfoByUserId(userId) {
+    return request.get(`/user/friend/doQueryFriendInfoByUserId/${userId}`);
+}

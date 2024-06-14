@@ -1,6 +1,7 @@
 package com.chat.domain.friend.controller;
 
 import com.chat.controller.Controller;
+import com.chat.domain.friend.entity.SysFriend;
 import com.chat.domain.friend.enums.AgreeType;
 import com.chat.domain.user.entity.LoginUser;
 import com.common.resp.RespEntity;
@@ -46,5 +47,11 @@ public class FriendController extends Controller {
     @GetMapping("doIsMyFriend/{friendId}")
     public RespEntity<Boolean> doIsMyFriend(@PathVariable("friendId") String friendId) {
         return RespEntity.success(friendService.doIsMyFriend(friendId,LoginUser.getUserId()));
+    }
+
+    //根据用户ID查询好友信息
+    @GetMapping("doQueryFriendInfoByUserId/{userId}")
+    public RespEntity<SysFriend> doQueryFriendInfoByUserId(@PathVariable("userId") String userId) {
+        return RespEntity.success(friendService.doQueryFriendInfoByUserId(userId,LoginUser.getUserId()));
     }
 }

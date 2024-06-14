@@ -160,5 +160,7 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
     }
 
 
-
+    public SysFriend doQueryFriendInfoByUserId(String friendId, String userId) {
+        return this.lambdaQuery().eq(SysFriend::getUserId,userId).eq(SysFriend::getFriendId,friendId).one();
+    }
 }

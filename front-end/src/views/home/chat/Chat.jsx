@@ -14,7 +14,7 @@ import Icon, {
 import {getChatInfo} from "@/http/api/chat.info.api.js";
 import {
     closeWebsocket,
-    createMsgContent,
+    createMsgContent, errorOfWebsocket,
     newWebSocket,
     receiveOfWebsocket,
     sendOfWebsocket
@@ -150,6 +150,11 @@ const InfoWindow = memo(({chatId}) => {
                 }
             })()
         })
+
+        errorOfWebsocket((error)=>{
+            message.error(error)
+        })
+
         return () => {
             //关闭连接
             closeWebsocket()
