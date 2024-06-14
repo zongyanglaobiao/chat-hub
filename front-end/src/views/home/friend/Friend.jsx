@@ -1,23 +1,34 @@
-import {Avatar, Button, List, Space} from "antd";
+import {Avatar, Button, List, message, Space} from "antd";
 import ChatTable from "@/component/table/ChatTable.jsx";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useSelector} from "react-redux";
-import {useFetch} from "@/hook/useFetch.jsx";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
 import {useEffect, useState} from "react";
 
 const Friend = () => {
     //好友信息
     const {friendList,unprocessedList,applicationList} = useSelector(state => state.friendInfo)
-    const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos,[])
     const [friendInfo, setFriendInfo] = useState([])
 
+    const fetchFriendInfo = async (friendIds) => {
+        const resp = await doQueryUserInfos(friendIds)
+
+        if (resp.code === 200) {
+            return resp.data
+        }
+
+        message.error(resp.message)
+        return []
+    }
+
     useEffect(() => {
-        console.log('doQueryUserInfosResp',doQueryUserInfosResp)
-        // doQueryUserInfosProxy(friendList.map(t => t.friendId)) && setFriendInfo(doQueryUserInfosResp)
-    }, [doQueryUserInfosResp]);
+        friendList.map(t => t.friendId).length !== 0 && setFriendInfo(fetchFriendInfo(friendList.map(t => t.friendId)))
+    }, [friendList]);
 
-
+    // useEffect(() => {
+    //     doQueryUserInfosResp.length !== 0 && setFriendInfo(doQueryUserInfosResp.data)
+    // }, [doQueryUserInfosResp]);
+    
     // 使用items属性配置每个Tab页
     const items = [
         {
@@ -43,21 +54,28 @@ const Friend = () => {
 }
 
 const ChatFriendList = ({data}) => {
-  return (
-      <ChatList data={data} pageSize={6} renderItem={(item) => (
-          <List.Item>
-              <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={item.nickname}
-                  description={item.signature}
-              />
-              <Space>
-                  <Button>删除</Button>
-                  <Button>发送信息</Button>
-              </Space>
-          </List.Item>
-      )}/>
-  )
+    return (
+        data.length !== 0
+            ?
+            <ChatList data={data} pageSize={6} renderItem={(item) => (
+                <List.Item>
+                    <List.Item.Meta
+                        avatar={<Avatar src={item.avatar} />}
+                        title={item.nickname}
+                        description={item.signature}
+                        className="text-overflow"
+                    />
+                    <Space>
+                        <Button>删除</Button>
+                        <Button>发送信息</Button>
+                    </Space>
+                </List.Item>
+            )}/>
+            :
+            <div>
+                暂无好友
+            </div>
+    )
 }
 
 export default Friend
