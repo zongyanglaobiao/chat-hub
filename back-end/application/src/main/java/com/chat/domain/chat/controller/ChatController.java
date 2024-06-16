@@ -81,8 +81,12 @@ public class ChatController {
         //保存聊天信息
         try {
             chatInformationService.saveInfo(context);
-        } catch (Exception e) {
-            MsgContent.errorMsg(e.getMessage());
+        } catch (RuntimeException e) {
+            //如果发送错误则通知这个房间的任务并且通知这个人
+            context.setCode(500);
+            context.setText(e.getMessage());
+            noticeErrorOfUser(session, context);
+            return;
         }
 
         if (!ON_LINE_USERS.containsKey(context.getRoomId())) {
@@ -102,5 +106,16 @@ public class ChatController {
     @OnError
     public void whenSomethingGoesWrong(Throwable t) {
         log.error("websocket连接错误: ", t);
+    }
+
+    private void noticeErrorOfUser(Session session, MsgContent content) {
+        CopyOnWriteArrayList<Session> sessions = ON_LINE_USERS.get(content.getRoomId());
+        for (Session tS : sessions) {
+            if (tS.getId().equals(session.getId())) {
+                session.getAsyncRemote().sendText(JSONUtil.toJsonStr(content));
+                //通知这个用户之后立马退出循环
+                return;
+            }
+        }
     }
 }

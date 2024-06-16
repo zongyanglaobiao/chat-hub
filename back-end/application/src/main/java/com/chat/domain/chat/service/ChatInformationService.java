@@ -14,6 +14,7 @@ import com.chat.domain.user.service.UserService;
 import com.chat.toolkit.utils.CommonPageRequestUtils;
 import com.common.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatInformationService extends AbstractService<SysChatInformationDao, SysChatInformation> {
 
     private final UserService userService;
@@ -59,9 +61,11 @@ public class ChatInformationService extends AbstractService<SysChatInformationDa
     public Boolean saveInfo(MsgContent context) {
         String roomId = context.getRoomId();
 
-        //发送信息之前校验一下 roomId大于20表示是好友之间聊天
-        AssertUtils.assertTrue(roomId.length() > 20 && friendService.lambdaQuery().eq(SysFriend::getChatId,roomId).exists(),"聊天对象不存在");
-        AssertUtils.assertTrue(roomId.length() < 20 && groupInformationService.doIsInGroup(roomId,context.getUserId()),"聊天对象不存在");
+        AssertUtils.assertTrue(
+                (roomId.length() > 20 && friendService.lambdaQuery().eq(SysFriend::getChatId,roomId).exists())
+                        ||
+                        (roomId.length() < 20 && groupInformationService.doIsInGroup(roomId,context.getUserId()))
+                ,"聊天对象不存在");
 
         Integer latestNumber = findLatestNumber(roomId);
         SysChatInformation information = SysChatInformation.create(latestNumber, roomId, context.getUserId(), context.getText(), context.getMsgType());

@@ -19,7 +19,7 @@ import {
     receiveOfWebsocket,
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
-import {HOME_SEARCH} from "@/router/index.jsx";
+import {HOME, HOME_CHAT, HOME_SEARCH} from "@/router/index.jsx";
 import {GroupInfo, UserInfo} from "@/component/showInfo/ShowInfo.jsx";
 import {DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
@@ -125,6 +125,7 @@ const InfoWindow = memo(({chatId}) => {
     const [doGetInfoResp,doGetInfoProxy] = useFetch(doGetInfo)
     const {friendList} = useSelector(state => state.friendInfo)
     const groupInfo = useSelector(state => state.groupInfo);
+    const navigate = useNavigate();
 
     useEffect(() => {
         !isNullOrUndefined(doGetInfoResp?.data) && showDrawer(<UserInfo userInfo={doGetInfoResp.data}/>)
@@ -141,14 +142,18 @@ const InfoWindow = memo(({chatId}) => {
                 setChatMessage(prevState => prevState.length === records.length ? prevState : records)
             }
         })()
-        //todo 如果是500需要刷新列表
-        //toto 同意之后列表不刷新
+
         //如果进入这个页面表示需要聊天则进行websocket连接
         newWebSocket(chatId);
         //如果接收到websocket的信息
         receiveOfWebsocket((data)=>{
             if (data.code === 500) {
-                message.error(data.msg)
+                message.error(data.text)
+                const timeout = setTimeout(()=>{
+                    //刷新页面
+                    navigate(HOME)
+                    clearTimeout(timeout)
+                },300);
                 return
             }
 

@@ -30,5 +30,10 @@ public class ChatException extends RuntimeException{
     public ChatException(String message) {
         this(message, 500);
     }
+
+    @Override
+    public String getMessage() {
+        return this.getMsg();
+    }
 }
 
