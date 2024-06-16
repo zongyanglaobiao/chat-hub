@@ -31,6 +31,8 @@ function SearchPage() {
     });
 
     const search = useCallback((searchType,keyword,size = 10,current = 1) => {
+        keyword = decodeURIComponent(keyword).trim()
+        console.log(keyword)
         if (isBlank(keyword)) {
             return
         }

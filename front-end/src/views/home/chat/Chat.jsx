@@ -56,7 +56,9 @@ const ChatSidebar = ({setShowInfoWindows}) => {
     const groupInfo = useSelector(state => state.groupInfo);
     const [renderList, setRenderList] = useState([])
 
-    const onSearch = (value) => navigate({pathname:HOME_SEARCH,search:value},{state:location.pathname})
+    const onSearch = (value) => {
+        navigate({pathname:HOME_SEARCH,search:encodeURIComponent(value)},{state:location.pathname})
+    };
 
     useEffect(() => {
         const getFriendWithChatId = (data) => {
@@ -66,7 +68,12 @@ const ChatSidebar = ({setShowInfoWindows}) => {
 
         //请求朋友信息
         (async ()=>{
-            const resp = await doQueryUserInfos(friendInfo.friendList.map(item => item.friendId))
+            const friendIds = friendInfo.friendList.map(item => item.friendId)
+            if (friendIds.length === 0) {
+                setRenderList([...groupInfo.map(t => ({...t,chatId:t.id,name:t.groupName}))])
+                return
+            }
+            const resp = await doQueryUserInfos(friendIds)
             if (resp.code === 200) {
                 setRenderList(prevState => {
                     const ls = [...getFriendWithChatId(resp.data).map(t => ({...t,name:t.nickname})),...groupInfo.map(t => ({...t,chatId:t.id,name:t.groupName}))];

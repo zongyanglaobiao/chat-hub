@@ -57,7 +57,6 @@ const Friend = () => {
 
     //查询待处理列表
     useEffect(() => {
-        console.log('unprocessedList',unprocessedList)
         fetchFriendInfo(unprocessedList.map(t => t.userId),setUnprocessInfo)
     }, [unprocessedList]);
 
