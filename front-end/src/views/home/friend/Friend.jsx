@@ -36,6 +36,12 @@ const Friend = () => {
     const [doNoAgreeFriendResp,doNoAgreeFriendProxy] = useFetch(doNoAgreeFriend)
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [items, setItems] = useState([])
+
+
+    useEffect(() => {
+
+    }, []);
 
     const fetchFriendInfo = async (friendIds,hook) => {
         if (friendIds.length === 0) {
@@ -47,7 +53,7 @@ const Friend = () => {
 
     //查询好友列表
     useEffect(() => {
-        fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)
+        fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)``
     }, [friendList]);
 
     //查询处理列表
