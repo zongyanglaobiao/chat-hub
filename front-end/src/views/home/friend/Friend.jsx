@@ -36,12 +36,6 @@ const Friend = () => {
     const [doNoAgreeFriendResp,doNoAgreeFriendProxy] = useFetch(doNoAgreeFriend)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [items, setItems] = useState([])
-
-
-    useEffect(() => {
-
-    }, []);
 
     const fetchFriendInfo = async (friendIds,hook) => {
         if (friendIds.length === 0) {
@@ -134,7 +128,7 @@ const Friend = () => {
             children:  (
                 <ChatFriendList data={applicationInfo} render={(item)=>{
                     return (
-                        <Tag color={"gold"}>
+                        <Tag color={"blue"}>
                             {
                                 (()=>{
                                     switch (applicationList.filter(t => t.friendId === item.id)[0].status){
@@ -160,7 +154,7 @@ const Friend = () => {
     ];
 
     return (
-        <ChatTable items={items} onChange={()=>{
+        <ChatTable items={items}  onChange={()=>{
             dispatch(friendListInfoThunk())
         }}/>
     )
