@@ -39,7 +39,7 @@ const Friend = () => {
 
     const fetchFriendInfo = async (friendIds,hook) => {
         if (friendIds.length === 0) {
-            return []
+            return hook([])
         }
         const resp = await doQueryUserInfos(friendIds)
         resp.code === 200 ?  hook(resp.data) :  message.error(resp.message)
@@ -47,7 +47,7 @@ const Friend = () => {
 
     //查询好友列表
     useEffect(() => {
-        fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)``
+        fetchFriendInfo(friendList.map(t => t.friendId),setFriendInfo)
     }, [friendList]);
 
     //查询处理列表
@@ -64,6 +64,7 @@ const Friend = () => {
     useEffect(() => {
         dispatch(friendListInfoThunk())
     }, [doDeleteFriendResp,doYesAgreeFriendResp,doNoAgreeFriendResp]);
+
 
     // 使用items属性配置每个Tab页
     const items = [
