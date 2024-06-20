@@ -9,12 +9,13 @@ on:
     branches:
     - main
     
-jobs:
+jobs: 
   job1:
-    #选择系统运行
-    runs-on: ubuntu-latest
-    #步骤运行命令
-    steps:
-      #运行的命令
-      - run: mvn -version
-      - run: node --version
+    javabuild:
+      #选择系统运行
+      runs-on: ubuntu-latest
+      #步骤运行命令
+      steps:
+        #运行的命令
+        - run: mvn -version
+        - run: node --version
