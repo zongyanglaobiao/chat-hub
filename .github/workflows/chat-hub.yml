@@ -23,7 +23,7 @@ jobs:
       - name: 下载JDK 17 
         uses: actions/setup-java@v3
         with:
-          distribution: 'opnejdk' # 发布版本
+          distribution: 'oracle' # 发布版本
           java-version: '17'
       
       # - name: maven构建Jar包并运行
