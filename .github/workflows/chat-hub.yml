@@ -16,4 +16,5 @@ jobs:
     #步骤运行命令
     steps:
       #运行的命令
-      - run: ifconfig
+      - run: mvn -version
+      - run: node -version
