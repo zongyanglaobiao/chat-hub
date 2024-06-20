@@ -1,0 +1,35 @@
+#测试环境
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #用于连接本地数据库测试是否能正确运行
+    url: mpw:p4fArsWMpc2SnWO2PM4QE2rw8Ti61v8srF9T6H0eY/LEpbymeGDDjTdXw89mUq3ZPT11V+uvy0jef+9Dls+h/s5DNiKvd98HON11SiqdMMndgHKsBrMQkLHo48TN1wh3LMJ6k67xatT7wmIQUQcwBmETerG/QYLxAutCYiicwXU=
+    username: mpw:oN2F9CZuEk9EA2XZ3kDXVg==
+    password: mpw:qZ7IjFvZbsLOrDpZnUE0PQ==
+    hikari:
+      # 连接池最大连接数，默认是 10
+      maximum-pool-size: 60
+      # 链接超时时间，默认 30000(30 秒)
+      connection-timeout: 60000
+      # 空闲连接存活最大时间，默认 600000(10 分钟)
+      idle-timeout: 60000
+      # 连接将被测试活动的最大时间量
+      validation-timeout: 3000
+      # 此属性控制池中连接的最长生命周期，值 0 表示无限生命周期，默认 1800000(30 分钟)
+      max-lifetime: 60000
+      # 连接到数据库时等待的最长时间(秒)
+      login-timeout: 5
+      # 池中维护的最小空闲连接数
+      minimum-idle: 10
+      #连接测试SQL
+      connection-test-query: "SELECT 1"
+    # 以下为解决 No operations allowed after connection closed 的主要配置
+    dbcp2:
+      # 验证连接是否有效
+      validation-query: SELECT 1
+      # 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+      test-on-borrow: false
+      # 指明连接是否被空闲连接回收器(如果有)进行检验；如果检测失败,则连接将被从池中去除。
+      test-while-idle: true
+      # 指定空闲连接检查、废弃连接清理、空闲连接池大小调整之间的操作时间间隔
+      time-between-eviction-runs-millis: 18800
