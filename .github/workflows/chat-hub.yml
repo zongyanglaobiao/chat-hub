@@ -12,6 +12,12 @@ on:
 jobs:
   chat-hub-build:
     name: chathub构建
+
+    # 权限
+    permissions:
+      contents: read
+      packages: write
+
     # 选择系统运行
     runs-on: ubuntu-latest
     #步骤运行命令
@@ -26,11 +32,18 @@ jobs:
           distribution: 'oracle' # 发布版本
           java-version: '17'
       
-      - name: maven构建Jar包并运行
+      - name: maven构建Jar包
         run:  |
-          apt-fast install tree
-          cd ${{github.workspace}}
-          tree -L 3 ./
+          cd ${{ github.workspace }}
           mvn -B package -DskipTests --file ./back-end/pom.xml
-          tree -L 3 ./
+
+      - name: 把推送到目标服务器
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ./back-end/application/target/application-1.0.0.jar
+          remote: /home/server/chat-hub/
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PWD }}
+
           
