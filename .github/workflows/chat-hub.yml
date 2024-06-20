@@ -17,7 +17,8 @@ jobs:
     #步骤运行命令
     steps:
       - name: 拉取我们的仓库 # -name相当于一种注释
-        users: actions/checkout@v4
+        # 必须使用这个命令才行
+        uses: actions/checkout@v4
 
       - name: 下载JDK 17 并设置环境变量
       - run: apt update & apt install openjdk-17-jdk & java -version
