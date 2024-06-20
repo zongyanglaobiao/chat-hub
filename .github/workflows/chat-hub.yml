@@ -10,9 +10,10 @@ on:
     - main
     
 jobs: 
-  javabuild:
-      #选择系统运行
+  sysbuild:
+     #选择系统运行
       runs-on: ubuntu-latest
+  javabuild:
       #步骤运行命令
       steps:
         #运行的命令
