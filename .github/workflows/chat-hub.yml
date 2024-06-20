@@ -41,7 +41,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar
-          remote: /home/server/chat-hub/
+          remote: /home/server/chat-hub/application-1.0.0.jar
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
