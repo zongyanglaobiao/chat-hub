@@ -3,10 +3,11 @@ import {userInfoThunk} from "@/redux/feature/user.thunk.js";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
-import {HOME_CHAT, HOME_FRIEND, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
+import {HOME_CHAT, HOME_FRIEND, HOME_GROUP_LIST, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
+import GroupChat from '@/assets/groupChat.svg'
 import {Avatar, Dropdown} from "antd";
 import {DownOutlined} from "@ant-design/icons";
 import {removeToken} from "@/http/http.request.js";
@@ -84,10 +85,10 @@ const ChatHeader = memo(() => {
                     <img src={Friend} alt="friends" className="w-[20px]"/>
                     <span>我的好友</span>
                 </div>
-                {/*<div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_GROUP,hash:IS_JUMP})}>
+                <div className='flex items-center cursor-pointer' onClick={() => navigate({pathname:HOME_GROUP_LIST})}>
                     <img src={GroupChat} alt="groupChat" className="w-[20px]"/>
                     <span>我的群聊</span>
-                </div>*/}
+                </div>
             </div>
             <div className="flex items-center mr-5">
                 <span className="mr-3">{user.nickname}</span>

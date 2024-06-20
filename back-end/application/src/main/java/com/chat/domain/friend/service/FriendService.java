@@ -109,6 +109,7 @@ public class FriendService extends AbstractService<SysFriendDao, SysFriend> impl
 
     public Boolean doDeleteFriend(String friendId, String userId) {
         //todo 这里应该是逻辑删除
+        //todo 这里是否吧聊天信息删除
         //这里查询不看申请状态
         boolean exists = this.lambdaQuery().
                 eq(SysFriend::getUserId, userId).
