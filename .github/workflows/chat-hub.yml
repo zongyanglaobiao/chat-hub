@@ -10,8 +10,7 @@ on:
     - main
     
 jobs: 
-  job1:
-    javabuild:
+  javabuild:
       #选择系统运行
       runs-on: ubuntu-latest
       #步骤运行命令
@@ -19,3 +18,4 @@ jobs:
         #运行的命令
         - run: mvn -version
         - run: node --version
+    
