@@ -62,7 +62,13 @@ authorization:
   token-name: auth
 
 # 图床服务
-
+file:
+  upload:
+    url: mpw:39HFZ7JpJyERXyN3IdfvI2f8UQblX/Nj7JXchkxr5HvDKaXbZAEUsa6e/W4V3AaG
+  download:
+    url: mpw:39HFZ7JpJyERXyN3IdfvI2f8UQblX/Nj7JXchkxr5Hum07kGTKU0vNp0APxclKTr
+  signature: ChatHub
+  cipher-text: mpw:keYAqHvkflCYPqEjIvMD+6wY+/wdjMIkVtB3F7A7+Nw1joOZ4AwkWujJKio2plzr
 
 #日志文件存储位置
 log:

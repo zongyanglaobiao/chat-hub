@@ -167,9 +167,6 @@
                 <log.path>D:\Temp\2024\logs</log.path>
                 <knife4j.enable>false</knife4j.enable>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
         <profile>
             <id>prod</id>
@@ -179,6 +176,9 @@
                 <log.path>/home/server/secure-chat-hub/logs</log.path>
                 <knife4j.enable>true</knife4j.enable>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 </project>
