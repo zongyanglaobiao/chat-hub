@@ -10,6 +10,9 @@ on:
     - main
     
 jobs:
+  repobuild:
+    users: actions/checkout@v4
+  #构建java
   javabuild:
     #选择系统运行
     runs-on: ubuntu-latest
