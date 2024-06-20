@@ -19,6 +19,11 @@ jobs:
       - name: 拉取仓库 # -name相当于一种注释
         # 必须使用这个命令才行
         uses: actions/checkout@v4
+        run: apt-fast update && apt-fast install tree 
+        run: tree /home/runner/work/chat-hub/chat-hub
+
+      - name: 创建工作区域
+        run: mkdir /home/github/server/chathub/backend & cd /home/github/server/chathub/backend  & pwd
 
       - name: 下载JDK 17 并设置环境变量
         run: apt-fast update && apt-fast install openjdk-17-jdk && java -version
