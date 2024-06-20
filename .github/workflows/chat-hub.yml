@@ -27,11 +27,12 @@ jobs:
           sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
           sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
       
-      - name: maven 打包
+      - name: maven构建Jar包并运行
         run:  |
           apt-fast install tree
           cd ${{github.workspace}}
           tree -L 3 ./
-          mvn -B package -DskipTests --file ./pom.xml
+          mvn -B package -DskipTests --file ./back-end/pom.xml
           tree -L 3 ./
+        #java -jar 
           
