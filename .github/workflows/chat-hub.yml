@@ -20,8 +20,8 @@ jobs:
         # 必须使用这个命令才行
         uses: actions/checkout@v4
 
-      - name: 创建工作区域
-        run: sudo chmod 777 -R /home && apt-fast update && apt-fast install openjdk-17-jdk && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
+      #- name: 创建工作区域
+        #run: sudo chmod 777 -R /home && apt-fast update && apt-fast install openjdk-17-jdk && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
 
       - name: 执行命令
-        run:  pwd && java -version
+        run:  apt-fast update && apt-fast install tree && tree -L 2 /home
