@@ -29,6 +29,9 @@ jobs:
       
       - name: maven 打包
         run:  |
-          cd  ${{github.workspace}}
-          pwd
+          apt-fast install tree
+          cd ${{github.workspace}}
+          tree -L 3 ./
+          mvn -B package -DskipTests --file ./pom.xml
+          tree -L 3 ./
           
