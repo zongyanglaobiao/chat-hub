@@ -17,4 +17,4 @@ jobs:
     steps:
       #运行的命令
       - run: mvn -version
-      - run: node -version
+      - run: node --version
