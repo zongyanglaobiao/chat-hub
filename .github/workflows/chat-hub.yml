@@ -3,7 +3,7 @@
 
 name: chathub的部署于运行
 
-#什么事件触发
+#推送事件触发
 on:
   push:
     branches:
@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 创建工作区域
-        run:  apt-fast update && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend & cd /home/github/server/chathub/backend  & pwd 
+        run: apt-fast update && apt-fast install openjdk-17-jdk && java -version  && apt-fast update && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
 
       - name: 下载JDK 17 并设置环境变量
-        run: sudo rm -f /tmp/apt-fast.lock && apt-fast update && apt-fast install openjdk-17-jdk && java -version
+        run:  pwd
