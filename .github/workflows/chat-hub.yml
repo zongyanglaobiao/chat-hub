@@ -29,5 +29,6 @@ jobs:
       
       - name: maven 打包
         run:  |
-          cd {{github.workspace}}
+          cd  ${{github.workspace}}
           pwd
+          
