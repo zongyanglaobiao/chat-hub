@@ -20,9 +20,12 @@ const removeToken = () => {
 
 // 创建 axios 请求实例
 const serviceAxios = axios.create({
-	baseURL:URL, // 基础请求地址
-	timeout: 10000, // 请求超时设置
-	withCredentials: false, // 跨域请求是否需要携带 cookie
+	// 基础请求地址
+	baseURL:URL,
+	// 请求超时设置
+	timeout: 10000,
+	// 跨域请求是否需要携带 cookie
+	withCredentials: false,
 });
 
 // 创建请求拦截
