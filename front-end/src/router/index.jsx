@@ -17,7 +17,7 @@ const PersonSetting = lazy(() => import('@/views/home/setting/PersonSetting.jsx'
 const Chat = lazy(() => import('@/views/home/chat/Chat.jsx'))
 const Search = lazy(() => import('@/views/home/search/Search.jsx'))
 const Friend = lazy(() => import('@/views/home/friend/Friend.jsx'))
-const GroupList = lazy(() => import('@/views/home/group/Group.jsx'))
+const GroupList = lazy(() => import('@/views/home/group/GroupList.jsx'))
 
 export default function routes() {
     return [
