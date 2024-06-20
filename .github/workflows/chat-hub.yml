@@ -26,14 +26,11 @@ jobs:
           distribution: 'oracle' # 发布版本
           java-version: '17'
       
-      # - name: maven构建Jar包并运行
-      #   run:  |
-      #     apt-fast install tree
-      #     cd ${{github.workspace}}
-      #     tree -L 3 ./
-      #     mvn -B package -DskipTests --file ./back-end/pom.xml
-      #     tree -L 3 ./
-      
-      - name: 执行命令
-        run: java -version    
+      - name: maven构建Jar包并运行
+        run:  |
+          apt-fast install tree
+          cd ${{github.workspace}}
+          tree -L 3 ./
+          mvn -B package -DskipTests --file ./back-end/pom.xml
+          tree -L 3 ./
           
