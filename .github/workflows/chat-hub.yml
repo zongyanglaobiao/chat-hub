@@ -24,4 +24,4 @@ jobs:
         #run: sudo chmod 777 -R /home && apt-fast update && apt-fast install openjdk-17-jdk && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
 
       - name: 执行命令
-        run:  apt-fast update && apt-fast install tree && sudo tree -L 2 /home
+        run:  apt-fast update && apt-fast install tree && sudo tree -L 2 /home/runner/work/chat-hub/chat-hub && sudo mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
