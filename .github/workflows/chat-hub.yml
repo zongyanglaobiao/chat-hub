@@ -10,16 +10,14 @@ on:
     - main
     
 jobs:
-  repobuild:
-    users: actions/checkout@v4
-  #构建java
-  javabuild:
-    #选择系统运行
+  backend-build:
+    name: 后端模块构建
+    # 选择系统运行
     runs-on: ubuntu-latest
     #步骤运行命令
     steps:
-      #运行的命令
-      - run: mvn -version
-      - run: node --version
-      - run: java -version
-    
+      - name: 拉取我们的仓库 # -name相当于一种注释
+        users: actions/checkout@v4
+
+      - name: 下载JDK 17 并设置环境变量
+      - run: apt update & apt install openjdk-17-jdk & java -version
