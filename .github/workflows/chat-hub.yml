@@ -24,4 +24,4 @@ jobs:
         run:  apt-fast update && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend & cd /home/github/server/chathub/backend  & pwd 
 
       - name: 下载JDK 17 并设置环境变量
-        run: rm -f /tmp/apt-fast.lock && apt-fast update && apt-fast install openjdk-17-jdk && java -version
+        run: sudo rm -f /tmp/apt-fast.lock && apt-fast update && apt-fast install openjdk-17-jdk && java -version
