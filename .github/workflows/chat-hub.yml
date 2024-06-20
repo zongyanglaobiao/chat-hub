@@ -1,7 +1,7 @@
 # This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
 
-name: chathub的部署于运行
+name: chathub的部署与运行
 
 #推送事件触发
 on:
@@ -10,8 +10,8 @@ on:
     - main
     
 jobs:
-  backend-build:
-    name: 后端模块构建
+  chat-hub-build:
+    name: chathub构建
     # 选择系统运行
     runs-on: ubuntu-latest
     #步骤运行命令
@@ -20,14 +20,14 @@ jobs:
         # 必须使用这个命令才行
         uses: actions/checkout@v4
 
-      #- name: 创建工作区域
-        #run: sudo chmod 777 -R /home && apt-fast update && apt-fast install openjdk-17-jdk && apt-fast install tree &&  tree /home/runner/work/chat-hub/chat-hub && mkdir /home/github/server/chathub/backend && cd /home/github/server/chathub/backend 
-        #run:  apt-fast update && apt-fast install tree && sudo tree -L 2 /home/runner/work/chat-hub/chat-hub &&  cd /home/github/server/chathub/backend
-
-      - name: 下载JDK 并设置环境变量
+      - name: 下载JDK 17 并设置环境变量
         run: |
           apt-fast update 
           apt-fast install openjdk-17-jdk
           sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
           sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-          java -version
+      
+      - name: maven 打包
+        run:  |
+          cd {{github.workspace}}
+          pwd
