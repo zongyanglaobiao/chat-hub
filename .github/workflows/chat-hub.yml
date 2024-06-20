@@ -37,7 +37,7 @@ jobs:
           cd ${{ github.workspace }}
           mvn -B package -DskipTests --file ./back-end/pom.xml
 
-      - name: 把推送到目标服务器
+      - name: 把JAR包推送到目标服务器
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar  
