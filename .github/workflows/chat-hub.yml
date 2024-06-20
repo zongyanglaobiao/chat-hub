@@ -40,8 +40,8 @@ jobs:
       - name: 把推送到目标服务器
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar
-          remote: /home/server/chat-hub/application-1.0.0.jar
+          local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar  
+          remote: /home/server/chat-hub/application-1.0.0.jar   #传送给目标服务器的必须要是文件，如果没有则创建
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
