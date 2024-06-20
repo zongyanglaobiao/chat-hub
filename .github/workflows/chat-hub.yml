@@ -5,7 +5,8 @@ name: chathub的部署于运行
 
 #什么事件触发
 on:
-  branches:
+  push:
+    branches:
     - main
     
 jobs:
