@@ -1,33 +1,13 @@
 import  { useState } from 'react';
 import { List, Avatar, Typography } from 'antd';
+import {useSelector} from "react-redux";
 
 const { Text, Title } = Typography;
 
 const ChatGroupList = () => {
     const [selectedGroup, setSelectedGroup] = useState(null);
+    useSelector(state => state.group.groups)
 
-    const groups = (()=>{
-        const group = []
-        for (let i = 0; i < 30; i++) {
-            group.push({
-                id: i,
-                name: '群' + i,
-                avatar: 'https://example.com/group1.png',
-                members: (()=>{
-                    const member = []
-                    for (let j = 0; j < 30; j++) {
-                        member.push({
-                            id: j,
-                            name: '成员' + j,
-                            avatar: 'https://example.com/avatar.png',
-                        })
-                    }
-                    return member
-                })()
-            })
-        }
-        return group
-    })()
 
     return (
         <div className="flex w-full">
@@ -38,7 +18,8 @@ const ChatGroupList = () => {
                     renderItem={group => (
                         <List.Item key={group.id} onClick={() => setSelectedGroup(group)}>
                             <List.Item.Meta
-                                avatar={<Avatar src={group.avatar} />}
+                                className=' cursor-pointer'
+                                avatar={<Avatar size={"large"} src={group.avatar} shape={"square"} />}
                                 title={<Text>{group.name}</Text>}
                             />
                         </List.Item>
@@ -49,7 +30,7 @@ const ChatGroupList = () => {
                 {selectedGroup ? (
                     <>
                         <div className="mb-4">
-                            <Avatar size={64} src={selectedGroup.avatar} />
+                            <Avatar size={74} src={selectedGroup.avatar} shape={"square"}/>
                             <Title level={4} className="mt-2">{selectedGroup.name}</Title>
                         </div>
                         <Title level={5}>成员列表</Title>
