@@ -3,9 +3,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #用于连接本地数据库测试是否能正确运行
-    url: mpw:p4fArsWMpc2SnWO2PM4QE2rw8Ti61v8srF9T6H0eY/LEpbymeGDDjTdXw89mUq3ZPT11V+uvy0jef+9Dls+h/s5DNiKvd98HON11SiqdMMndgHKsBrMQkLHo48TN1wh3LMJ6k67xatT7wmIQUQcwBmETerG/QYLxAutCYiicwXU=
-    username: mpw:oN2F9CZuEk9EA2XZ3kDXVg==
-    password: mpw:qZ7IjFvZbsLOrDpZnUE0PQ==
+    url: mpw:GFTZU8gB7DkQoQRcWHlRmyfOTJyI9NZc0r5g+965Nn5tv8xpYvlBoItJhcUlJ5kVCRhj5qAGsLY0mbwGXDXA+CMCYnk6sG0GlbcG9PY14dC46gFpxhKa+X6kkfpX1ODhO5FxFID2IhHbrWMMGubYKWaoR0Ja6ES1kffcGodUVy0=
+    username: mpw:TtAku+MdsMUMMIxefB+TlQ==
+    password: mpw:4bSEqpgIz/lHOT2uTLpVjg==
     hikari:
       # 连接池最大连接数，默认是 10
       maximum-pool-size: 60
