@@ -1,5 +1,5 @@
 
-const WEBSOCKET_URL = "ws://127.0.0.1:8080//chat/websocket/";
+const WEBSOCKET_URL = import.meta.env.VITE_REACT_APP_WEBSOCKET_PATH;
 
 let socket = null
 
