@@ -25,10 +25,7 @@ const ChatGroupList = () => {
         memberIds.length > 0 && doQueryUserInfosProxy(memberIds)
     }
 
-    useEffect(() => {
-        console.log('groupMemberInfo',groupMemberInfo)
-    });
-
+    //todo 公告事件
     return (
         <div className="flex w-full h-full">
             <div className="w-1/4 overflow-y-auto  remove-the-scroll">
