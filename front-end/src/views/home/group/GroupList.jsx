@@ -37,19 +37,31 @@ const ChatGroupList = () => {
     const items = [
         {
             key:1,
-            label: <Title level={5}>成员列表</Title>,
+            label: <Title level={4}>成员列表</Title>,
             children: (
-                <ChatList data={groupMemberInfo} renderItem={(item)=>{
-                    return (
-                        <List.Item key={item.id}>
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.avatar} />}
-                                title={<Text>{item.nickname}</Text>}
-                            />
-                        </List.Item>
-                    )
-                }}/>
+                <div className='h-320px overflow-y-auto remove-the-scroll'>
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={groupMemberInfo}
+                        renderItem={member => {
+                            //todo 查看这个人是群主还是普通成员
+                            return (
+                                <List.Item key={member.id}>
+                                    <List.Item.Meta
+                                        avatar={<Avatar src={member.avatar}/>}
+                                        title={<Text>{member.nickname}</Text>}
+                                    />
+                                </List.Item>
+                            )
+                        }}
+                    />
+                </div>
             )
+        },
+        {
+            key:2,
+            label: <Title level={4}>公告列表</Title>,
+            children: <div>暂无数据</div>
         }
     ]
 
@@ -77,27 +89,12 @@ const ChatGroupList = () => {
             <div className="w-3/4 h-full">
                 {group ? (
                     <>
-                        <div>
-                            <Avatar size={74} src={group.avatar} shape={"square"}/>
-                            <Title level={4} className="mt-2">{group.groupName}</Title>
+                        <div className='flex gap-col-4'>
+                            <Avatar size={84} src={group.avatar} shape={"square"}/>
+                            <Title level={3}>{group.groupName}</Title>
                         </div>
-                        {/*<Title level={5}>成员列表</Title>
-                        <div className='h-320px overflow-y-auto remove-the-scroll'>
-                            <List
-                                itemLayout="horizontal"
-                                dataSource={groupMemberInfo}
-                                renderItem={member => (
-                                    <List.Item key={getRandomId()}>
-                                        <List.Item.Meta
-                                            avatar={<Avatar src={member.avatar} />}
-                                            title={<Text>{member.nickname}</Text>}
-                                        />
-                                    </List.Item>
-                                )}
-                            />
-                        </div>*/}
-                        <div>
-                            <ChatTab items={items}/>
+                        <div className='mt-10px'>
+                            <ChatTab items={items} tabPosition={"top"}/>
                         </div>
                     </>
                 ) : (
