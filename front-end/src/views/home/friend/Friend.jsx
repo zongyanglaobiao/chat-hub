@@ -1,5 +1,5 @@
 import {Avatar, Button, List, message, Popover, Space, Tag} from "antd";
-import ChatTable from "@/component/table/ChatTable.jsx";
+import ChatTab from "@/component/tab/ChatTab.jsx";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
@@ -155,7 +155,7 @@ const Friend = () => {
     ];
 
     return (
-        <ChatTable items={items}  onChange={()=>{
+        <ChatTab items={items} onChange={()=>{
             dispatch(friendListInfoThunk())
         }}/>
     )

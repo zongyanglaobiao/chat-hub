@@ -2,7 +2,7 @@ import {Tabs} from "antd";
 
 const initStyle = " w-full h-full ";
 
- const ChatTable = ({items,onChange = () => {},tabPosition = "left",size="small",className = initStyle}) => {
+ const ChatTab = ({items,onChange = () => {},tabPosition = "left",size="small",className = initStyle}) => {
     return (
         <Tabs destroyInactiveTabPane={true}
               defaultActiveKey="1"
@@ -14,4 +14,4 @@ const initStyle = " w-full h-full ";
     )
 }
 
-export default ChatTable
+export default ChatTab
