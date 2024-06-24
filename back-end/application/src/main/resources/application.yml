@@ -42,6 +42,41 @@ mybatis-plus:
     #打印sql
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: "classpath:**/mapping/*.xml"
+#=============================================================================
+#======================== swagger 配置  =======================================
+#=============================================================================
+
+springdoc:
+  api-docs:
+    #是否开启文档功能关系到swagger-ui能否开启
+    enabled: true
+    #swagger后端请求地址，查看swagger所有配置，同时也是配置web端的接口配置,必须写
+    path: /v3/api-docs
+  swagger-ui:
+    #标签排序
+    tags-sorter: alpha
+    #操作排序
+    operations-sorter: alpha
+    #自定义swagger前端请求路径，输入http：127.0.0.1:8080/swagger会自动重定向到swagger页面注意是path不是url
+    path: /swagger
+  group-configs:
+    - group: 测试API
+      packages-to-scan:
+        - com.chat.controller
+        - com.chat.domain
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  #开启访问默认路径doc.html
+  enable: true
+  setting:
+    language: zh_cn
+    #不开启缓存请求
+    enable-request-cache: false
+  #跨域请求
+  cors: true
+  #是否是生产环境，如果设置true,doc.html就不能访问
+  production: @knife4j.enable@
 
 #=============================================================================
 #======================== 自定义配置  =========================================
