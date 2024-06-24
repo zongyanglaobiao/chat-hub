@@ -60,6 +60,14 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}    
-
+      
+      - name: 执行远程服务的命令
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: ls /home/server/chat-hub
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: 22
+          privateKey: ${{ secrets.PRIVATE_KEY}}  
 
           
