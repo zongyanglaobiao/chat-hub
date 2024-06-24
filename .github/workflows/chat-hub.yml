@@ -67,6 +67,4 @@ jobs:
           command: /bin/bash /home/server/chat-hub/start.sh 0  --mpw.key=${{secrets.START_KEY}}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
-          port: 22
-          
+          password: ${{ secrets.SSH_PWD }}         
