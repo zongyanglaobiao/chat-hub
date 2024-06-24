@@ -47,7 +47,6 @@ public class FileService {
             RespEntity resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
             logger.warn(this.getClass(),"上传文件: {}",httpResponse.body());
             AssertUtils.assertTrue(resp.getCode() == 200, "上传文件失败: " + resp.getMessage());
-            //因为返回的URL所以需要分割
             return (String) resp.getData();
         } catch (IOException e) {
             throw new ChatException("上传文件失败: " + e.getMessage());
