@@ -49,9 +49,16 @@ jobs:
       - name: 前端工程编译构建
         run: |
           cd ${{ github.workspace }}/front-end/
-          pwd
-          npm --version
-          
+          npm run build
+      
+      - name: 把前端工程推送到远程服务器
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ${{ github.workspace }}/front-end/dist
+          remote: /etc/nginx/conf.d/chat-hub   #传送给目标服务器的必须要是文件，如果没有则创建
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PWD }}    
 
       # todo 后续连接远程服务器部署项目,前端项目部署
 
