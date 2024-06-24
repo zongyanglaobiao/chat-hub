@@ -64,7 +64,7 @@ jobs:
       - name: 执行远程服务的命令
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: /bin/bash /home/server/chat-hub/start.sh 0  --mpw.key=${{secrets.START_KEY}}
+          command: /bin/bash /home/server/chat-hub/start.sh 0 ${{secrets.START_KEY}}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}         
