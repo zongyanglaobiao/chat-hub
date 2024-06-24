@@ -49,6 +49,7 @@ jobs:
       - name: 前端工程编译构建
         run: |
           cd ${{ github.workspace }}/front-end/
+          npm install 
           npm run build
       
       - name: 把前端工程推送到远程服务器
