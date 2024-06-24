@@ -1,29 +1,24 @@
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 import {Avatar, List, Typography} from 'antd';
 import {useSelector} from "react-redux";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
 import ChatTab from "@/component/tab/ChatTab.jsx";
-import {ChatList} from "@/component/list/ChatList.jsx";
 
 const { Text, Title } = Typography;
 
-const ChatGroupList = () => {
+const LORD = "LORD";
+
+const ChatGroupList = memo(() => {
+    //todo 查看这个人是群主还是普通成员
     let groupInfo = useSelector(state => state.groupInfo)
     const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
     const [groupMemberInfo, setGroupMemberInfo] = useState([])
     const [group, setGroup] = useState(null)
 
     useEffect(() => {
-        !isNullOrUndefined(doQueryUserInfosResp) && setGroupMemberInfo((()=>{
-            let  arr = doQueryUserInfosResp?.data
-            const arr_ = doQueryUserInfosResp?.data[0]
-            for (let i = 0; i < 30; i++) {
-                arr.push(arr_)
-            }
-            return arr
-        })() || [])
+        !isNullOrUndefined(doQueryUserInfosResp) && setGroupMemberInfo(doQueryUserInfosResp?.data || [])
     }, [doQueryUserInfosResp]);
 
     const queryGroupMember = (group) => {
@@ -44,7 +39,6 @@ const ChatGroupList = () => {
                         itemLayout="horizontal"
                         dataSource={groupMemberInfo}
                         renderItem={member => {
-                            //todo 查看这个人是群主还是普通成员
                             return (
                                 <List.Item key={member.id}>
                                     <List.Item.Meta
@@ -103,6 +97,6 @@ const ChatGroupList = () => {
             </div>
         </div>
     );
-};
+});
 
 export default ChatGroupList;

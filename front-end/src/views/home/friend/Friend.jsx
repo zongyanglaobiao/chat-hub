@@ -3,7 +3,7 @@ import ChatTab from "@/component/tab/ChatTab.jsx";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
-import {useContext, useEffect, useState} from "react";
+import {memo, useContext, useEffect, useState} from "react";
 import {DisplayNoneImageContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doDeleteFriend, doNoAgreeFriend, doYesAgreeFriend} from "@/http/api/friend.api.js";
@@ -25,7 +25,7 @@ const STATUS_YES = {state:1,desc:'已同意'};
  */
 const STATUS_NOT_HANDLER = {state:-1,desc:'未处理'};
 
-const Friend = () => {
+const Friend = memo(() => {
     //好友信息
     const {friendList,unprocessedList,applicationList} = useSelector(state => state.friendInfo)
     const [friendInfo, setFriendInfo] = useState([])
@@ -159,7 +159,7 @@ const Friend = () => {
             dispatch(friendListInfoThunk())
         }}/>
     )
-}
+})
 
 const ChatFriendList = ({data,render}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
