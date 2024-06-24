@@ -20,7 +20,7 @@ fi
 echo "rm docker ChatHubService success , docker id $(docker rm -f ChatHubService 2>/dev/null)"
 
 #启动
-docker run -d --name ChatHubService -u 0 -p 8080:8080 -v /home/server/chat-hub:/home/server/chat-hub openjdk:17 java -jar -Duser.timezone=GMT+08 /home/server/picture/application-1.0."$applicationVersion".jar --mpw.key="$key"
+docker run -d --name ChatHubService -u 0 -p 8080:8080 -v /home/server/chat-hub:/home/server/chat-hub openjdk:17 java -jar -Duser.timezone=GMT+08 /home/server/chat-hub/application-1.0."$applicationVersion".jar --mpw.key="$key"
 
 #输出提升
 echo "run java application-1.0."$applicationVersion".jar success"
