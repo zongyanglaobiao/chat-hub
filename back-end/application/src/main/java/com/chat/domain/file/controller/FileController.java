@@ -23,9 +23,4 @@ public class FileController extends Controller {
     public RespEntity<String> doUpload(@RequestPart @NotNull(message = "文件不能为空") MultipartFile file) {
         return  RespEntity.base(HttpCode.SUCCESS.getCode(), HttpCode.SUCCESS.getReasonPhrase(),fileService.upload(file));
     }
-
-    @GetMapping("doDownload/{downloadId}")
-    public void doDownload(@PathVariable String downloadId) {
-        fileService.download(downloadId);
-    }
 }
