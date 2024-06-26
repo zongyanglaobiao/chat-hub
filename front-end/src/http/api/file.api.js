@@ -1,15 +1,6 @@
 import request, {URL} from "@/http/http.request.js";
 
 /**
- * doDownload
- * @param {string} downloadId
- * @returns
- */
-export function doDownload(downloadId) {
-    return request.get(`/file/doDownload/${downloadId}`);
-}
-
-/**
  * doUpload
  * @param {string} file
  * @returns

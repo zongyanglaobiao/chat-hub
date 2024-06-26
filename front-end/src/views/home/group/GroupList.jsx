@@ -1,21 +1,23 @@
-import {memo, useEffect, useState} from 'react';
+import {memo, useContext, useEffect, useState} from 'react';
 import {Avatar, List, Typography} from 'antd';
 import {useSelector} from "react-redux";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
 import ChatTab from "@/component/tab/ChatTab.jsx";
+import {DisplayNoneImageContext} from "@/views/App.jsx";
 
 const { Text, Title } = Typography;
 
 const LORD = "LORD";
 
 const ChatGroupList = memo(() => {
-    //todo 查看这个人是群主还是普通成员
+    const userInfo = useSelector(state => state.userInfo)
     let groupInfo = useSelector(state => state.groupInfo)
     const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
     const [groupMemberInfo, setGroupMemberInfo] = useState([])
     const [group, setGroup] = useState(null)
+    const {openOrCloseImage} = useContext(DisplayNoneImageContext)
 
     useEffect(() => {
         !isNullOrUndefined(doQueryUserInfosResp) && setGroupMemberInfo(doQueryUserInfosResp?.data || [])
@@ -42,7 +44,7 @@ const ChatGroupList = memo(() => {
                             return (
                                 <List.Item key={member.id}>
                                     <List.Item.Meta
-                                        avatar={<Avatar src={member.avatar}/>}
+                                        avatar={<Avatar src={member.avatar} />}
                                         title={<Text>{member.nickname}</Text>}
                                     />
                                 </List.Item>
@@ -68,11 +70,13 @@ const ChatGroupList = memo(() => {
                     dataSource={groupInfo}
                     renderItem={group => (
                         <List.Item
+                            style={{padding:'3px'}}
                             key={group.id}
+                            className='cursor-pointer'
                             onClick={() => queryGroupMember(group)}>
                             <List.Item.Meta
-                                className=' cursor-pointer'
-                                avatar={<Avatar size={60} src={group.avatar} shape={"square"}/>}
+                                avatar={<Avatar size={60} src={group.avatar}
+                                                shape={"square"}/>}
                                 title={<Text>{group.groupName}</Text>}
                             />
                         </List.Item>
@@ -84,7 +88,7 @@ const ChatGroupList = memo(() => {
                 {group ? (
                     <>
                         <div className='flex gap-col-4'>
-                            <Avatar size={84} src={group.avatar} shape={"square"}/>
+                            <Avatar className=' cursor-pointer' size={84} src={group.avatar} shape={"square"} onClick={()=>openOrCloseImage(group.avatar)}/>
                             <Title level={3}>{group.groupName}</Title>
                         </div>
                         <div className='mt-10px'>
