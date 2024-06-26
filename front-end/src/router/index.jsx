@@ -1,4 +1,5 @@
-import {lazy} from "react";
+import {lazy, useEffect} from "react";
+import {useLocation} from "react-router-dom";
 
 export const LOGIN = "/login"
 export const ROOT = "/";
@@ -8,8 +9,8 @@ export const HOME_CHAT = "/home/chat"
 export const HOME_SEARCH = "/home/search"
 export const HOME_FRIEND = "/home/friend"
 export const HOME_GROUP_LIST = "/home/group/list"
+export const HOME_CREATE_GROUP = "/home/group/create"
 
-// eslint-disable-next-line react-refresh/only-export-components
 const Home = lazy(()=> import('@/views/home/Home.jsx'))
 const NotFound = lazy(() => import('@/component/404/NotFound.jsx'))
 const Login = lazy(() => import('@/views/login/Login.jsx'))
@@ -18,8 +19,10 @@ const Chat = lazy(() => import('@/views/home/chat/Chat.jsx'))
 const Search = lazy(() => import('@/views/home/search/Search.jsx'))
 const Friend = lazy(() => import('@/views/home/friend/Friend.jsx'))
 const GroupList = lazy(() => import('@/views/home/group/GroupList.jsx'))
+const CreateGroup = lazy(() => import('@/views/home/group/CreateGroup.jsx'))
 
 export default function routes() {
+
     return [
         {
             path: HOME,
@@ -45,6 +48,10 @@ export default function routes() {
                 {
                     path:HOME_GROUP_LIST,
                     element:<GroupList/>
+                },
+                {
+                    path:HOME_CREATE_GROUP,
+                    element:<CreateGroup/>
                 }
             ]
         },

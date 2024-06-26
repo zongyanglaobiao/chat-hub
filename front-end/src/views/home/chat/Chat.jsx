@@ -19,7 +19,7 @@ import {
     receiveOfWebsocket,
     sendOfWebsocket
 } from "@/http/websocket/websocket.js";
-import {HOME, HOME_SEARCH} from "@/router/index.jsx";
+import {HOME, HOME_CREATE_GROUP, HOME_SEARCH} from "@/router/index.jsx";
 import {GroupInfo, UserInfo} from "@/component/showInfo/ShowInfo.jsx";
 import {DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
@@ -84,9 +84,12 @@ const ChatSidebar = ({setShowInfoWindows}) => {
     }, [friendInfo.friendList,groupInfo]);
 
     // 添加群
-    const onPlusCircleTwoToneClick = useCallback((event) => {
-
-    }, []);
+    const onPlusCircleTwoToneClick = useCallback(() => {
+        navigate({pathname:HOME_CREATE_GROUP},{state:{
+                from:location.pathname,
+                groupInfo:null
+            }})
+    }, [location.pathname, navigate]);
 
 
     return (
