@@ -27,16 +27,10 @@ import java.util.List;
 @Tag(name = "群信息接口")
 public class GroupInformationController extends Controller {
 
-    //1. 创建群
-    @PostMapping("/information/doCreate")
-    public RespEntity<Boolean> doCreate(@RequestBody @Validated(Entity.INSERT.class) @JsonView(Entity.INSERT.class) SysGroupInformation information) {
-        return RespEntity.success(groupInformationService.doCreate(information, LoginUser.getUserId()));
-    }
-
-    //修改群信息/把群主的位置让出去
-    @PostMapping("/information/doModify")
-    public RespEntity<Boolean> doModify(@RequestBody @Validated(Entity.UPDATE.class) @JsonView(Entity.UPDATE.class) SysGroupInformation information) {
-        return RespEntity.success(groupInformationService.doModify(information,LoginUser.getUserId()));
+    //1. 创建或者修改群
+    @PostMapping("/information/doCreateOrModify")
+    public RespEntity<Boolean> doCreateOrModify(@RequestBody @JsonView(Entity.SaveOrUpdate.class)  SysGroupInformation information) {
+        return RespEntity.success(groupInformationService.doCreateOrModify(information, LoginUser.getUserId()));
     }
 
     //查询信息

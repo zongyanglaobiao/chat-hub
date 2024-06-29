@@ -20,7 +20,7 @@ public  class Entity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1067285187399247663L;
 
-    @JsonView({UPDATE.class})
+    @JsonView({UPDATE.class,SaveOrUpdate.class})
     @NotBlank(message = "id不能为空", groups = {UPDATE.class})
     private String id;
 
@@ -37,4 +37,6 @@ public  class Entity implements Serializable {
     public interface UPDATE {}
 
     public interface IGNORE {}
+
+    public interface SaveOrUpdate {}
 }

@@ -1,5 +1,6 @@
 package com.chat.domain.group.information.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chat.domain.base.search.Search;
 import com.chat.domain.base.service.AbstractService;
@@ -15,10 +16,12 @@ import com.common.exception.ChatException;
 import com.common.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xxl
@@ -32,38 +35,18 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     private final GroupMemberService memberService;
 
-    public  Boolean doCreate(SysGroupInformation information, String userId) {
-        information.setCreateUserId(userId);
-        //群信息 && 群成员添加
-        return this.save(information) && memberService.save(information.getId(), userId, IdentityType.LORD, SysGroupMember.AGREE);
-    }
-
-    public Boolean doModify(SysGroupInformation information, String userId) {
-        SysGroupInformation entity = getByIdAndCheck(information.getId(),userId);
-        entity.setGroupName(information.getGroupName());
-        entity.setAvatar(information.getAvatar());
-        entity.setCreateUserId(information.getCreateUserId());
-        return this.updateById(entity);
-    }
-
-    public Boolean doAddOrApplyMember(SysGroupMember groupMember, String userId) {
-        List<SysGroupMember> members = memberService.getMemberByGroupId(groupMember.getGroupId());
-        AssertUtils.assertTrue(members.stream().noneMatch(t -> groupMember.getUserId().equals(t.getUserId())),"邀请用户已经在群中,无法重复邀请");
-        AssertUtils.assertTrue(members.stream().anyMatch(t -> t.getUserId().equals(userId)),"当前用户不在群中,无法邀请");
-        //判断当前用户是否是群主如果是则是拉用户
-        boolean isLord = members.parallelStream().anyMatch(t -> IdentityType.LORD.equals(t.getIdentity()) && t.getUserId().equals(userId));
-
-        if (isLord) {
-            //是
-            groupMember.setState(SysGroupMember.AGREE);
-            groupMember.setIdentity(IdentityType.MEMBER);
-            return memberService.save(groupMember);
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Boolean doCreateOrModify(SysGroupInformation information, String userId) {
+        SysGroupMember member;
+        if (!StrUtil.isBlank(information.getId())) {
+            //如果不为空则需要验证修改的用户是否合法
+            AssertUtils.notNull((member = memberService.getMemberByGroupIdAndUserId(information.getId(), userId)),"用户不在群组中");
+            AssertUtils.assertTrue(Objects.equals(IdentityType.LORD, member.getIdentity()),"只有群主可以修改群信息");
+            return this.updateById(information);
         }
 
-        //不是就是申请入群
-        groupMember.setState(SysGroupMember.WAITING);
-        groupMember.setIdentity(IdentityType.MEMBER);
-        return memberService.save(groupMember);
+        //群信息 && 群成员添加
+        return this.save(information) && memberService.save(information.getId(), userId, IdentityType.LORD, SysGroupMember.AGREE);
     }
 
     public List<SysGroupInformation> doGetGroup(String userId, GetType getType) {

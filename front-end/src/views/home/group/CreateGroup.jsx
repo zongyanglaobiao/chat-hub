@@ -1,9 +1,9 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useEffect} from "react";
 import {Avatar, Button, Flex, Input, message, Upload} from "antd";
-import {UploadOutlined} from "@ant-design/icons";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
+import {AntDesignOutlined, UploadOutlined} from "@ant-design/icons";
 
 const CreateGroup = memo(() => {
     const location = useLocation();
@@ -32,17 +32,22 @@ const CreateGroup = memo(() => {
     return (
         <div className="p-4 flex flex-col items-center">
             <Flex justify={"center"} vertical>
+                <Avatar size={80}
+                        icon={<AntDesignOutlined />}
+                        shape={"square"}
+                        src={'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'} />
                 <Upload {...props} className=' cursor-pointer'>
-                    <Avatar size={80} style={{backgroundColor:'#f56a00'}}
-                            shape={"square"}
-                            src={location.state?.groupInfo?.avatar ? location.state.groupInfo.avatar : ''}>
-                        G
-                    </Avatar>
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload>
                 <Input placeholder="请输入群组名称"/>
-                <Button type={"primary"}>
-                    保存
-                </Button>
+                <Flex>
+                    <Button type={"primary"}>
+                        保存
+                    </Button>
+                    <Button type={"primary"}>
+                        返回上一步
+                    </Button>
+                </Flex>
             </Flex>
         </div>
     )

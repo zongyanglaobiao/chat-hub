@@ -26,18 +26,17 @@ public class SysGroupInformation extends Entity {
     private static final long serialVersionUID = -7772955908646840848L;
 
     //群昵称
-    @JsonView({Entity.INSERT.class, Entity.UPDATE.class})
-    @NotBlank(message = "群昵称不能为空", groups = {Entity.INSERT.class,Entity.UPDATE.class})
+    @JsonView({SaveOrUpdate.class})
+    @NotBlank(message = "群昵称不能为空", groups = {SaveOrUpdate.class})
     private String groupName;
 
     //群头像
-    @JsonView({Entity.INSERT.class, Entity.UPDATE.class})
-    @NotBlank(message = "群头像不能为空", groups = {Entity.INSERT.class,Entity.UPDATE.class})
+    @JsonView({SaveOrUpdate.class})
+    @NotBlank(message = "群头像不能为空", groups = {SaveOrUpdate.class})
     private String avatar;
 
     //群主
-    @JsonView(Entity.UPDATE.class)
-    @NotBlank(message = "群主不能为空", groups = {Entity.UPDATE.class})
+    @JsonView(IGNORE.class)
     private String createUserId;
 
     //群所有公告

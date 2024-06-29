@@ -27,6 +27,10 @@ public class GroupMemberService extends AbstractService<SysGroupMemberDao, SysGr
         return this.lambdaQuery().eq(SysGroupMember::getUserId, userId).list();
     }
 
+    public SysGroupMember getMemberByGroupIdAndUserId(String groupId, String userId) {
+        return this.lambdaQuery().eq(SysGroupMember::getGroupId, groupId).eq(SysGroupMember::getUserId, userId).one();
+    }
+
     public Boolean removeByGroupIdAndUserId(String groupId, String userId) {
         return this.lambdaUpdate().eq(SysGroupMember::getGroupId, groupId).eq(SysGroupMember::getUserId, userId).remove();
     }
