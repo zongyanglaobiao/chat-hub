@@ -22,51 +22,49 @@ jobs:
     runs-on: ubuntu-latest
     #步骤运行命令
     steps:
-      - name: node版本
-        run: node -v
-      # - name: 拉取仓库 # -name让github知道这个步骤的名字
-      #   # 必须使用这个命令才行
-      #   uses: actions/checkout@v4
+      - name: 拉取仓库 # -name让github知道这个步骤的名字
+        # 必须使用这个命令才行
+        uses: actions/checkout@v4
 
-      # - name: 下载JDK 17 
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     distribution: 'oracle' # 发布版本
-      #     java-version: '17'
+      - name: 下载JDK 17 
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle' # 发布版本
+          java-version: '17'
       
-      # - name: maven构建Jar包
-      #   run:  |
-      #     cd ${{ github.workspace }}
-      #     mvn -B package -DskipTests --file ./back-end/pom.xml
+      - name: maven构建Jar包
+        run:  |
+          cd ${{ github.workspace }}
+          mvn -B package -DskipTests --file ./back-end/pom.xml
 
-      # - name: 把JAR包推送到目标服务器
-      #   uses: garygrossgarten/github-action-scp@release
-      #   with:
-      #     local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar  
-      #     remote: /home/server/chat-hub/application-1.0.0.jar   #传送给目标服务器的必须要是文件，如果没有则创建
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     password: ${{ secrets.SSH_PWD }}
+      - name: 把JAR包推送到目标服务器
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar  
+          remote: /home/server/chat-hub/application-1.0.0.jar   #传送给目标服务器的必须要是文件，如果没有则创建
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PWD }}
       
-      # - name: 前端工程编译构建
-      #   run: |
-      #     cd ${{ github.workspace }}/front-end/
-      #     npm install 
-      #     npm run build
+      - name: 前端工程编译构建
+        run: |
+          cd ${{ github.workspace }}/front-end/
+          npm install 
+          npm run build
       
-      # - name: 把前端工程推送到远程服务器
-      #   uses: garygrossgarten/github-action-scp@release
-      #   with:
-      #     local: ${{ github.workspace }}/front-end/dist
-      #     remote: /etc/nginx/conf.d/chat-hub/dist/   #传送给目标服务器的必须要是文件，如果没有则创建
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     password: ${{ secrets.SSH_PWD }}    
+      - name: 把前端工程推送到远程服务器
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ${{ github.workspace }}/front-end/dist
+          remote: /etc/nginx/conf.d/chat-hub/dist/   #传送给目标服务器的必须要是文件，如果没有则创建
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PWD }}    
       
-      # - name: 执行远程服务的命令
-      #   uses: garygrossgarten/github-action-ssh@release
-      #   with:
-      #     command: /bin/bash /home/server/chat-hub/start.sh 0 ${{secrets.START_KEY}}
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     password: ${{ secrets.SSH_PWD }}         
+      - name: 执行远程服务的命令
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: /bin/bash /home/server/chat-hub/start.sh 0 ${{secrets.START_KEY}}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PWD }}         
