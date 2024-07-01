@@ -21,3 +21,15 @@ export const ALL = "ALL";
 export function doGetGroup(getType) {
     return request.get(`/group/information/doGetGroup?getType=${getType}`);
 }
+
+/**
+ * doCreateOrModify
+ * @param {object} data SysGroupInformation_SaveOrUpdate
+ * @param {string} data.id
+ * @param {string} data.groupName
+ * @param {string} data.avatar
+ * @returns
+ */
+export function doCreateOrModify(data) {
+    return request.post(`/group/information/doCreateOrModify`, data);
+}

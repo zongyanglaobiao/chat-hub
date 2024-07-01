@@ -31,6 +31,8 @@ const ChatGroupList = memo(() => {
         memberIds.length > 0 && doQueryUserInfosProxy(memberIds)
     }
 
+    //todo 删除群
+
     const items = [
         {
             key:1,

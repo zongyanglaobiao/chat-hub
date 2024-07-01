@@ -29,7 +29,7 @@ public class GroupInformationController extends Controller {
 
     //1. 创建或者修改群
     @PostMapping("/information/doCreateOrModify")
-    public RespEntity<Boolean> doCreateOrModify(@RequestBody @JsonView(Entity.SaveOrUpdate.class)  SysGroupInformation information) {
+    public RespEntity<Boolean> doCreateOrModify(@RequestBody @JsonView(Entity.SaveOrUpdate.class) @Validated(Entity.SaveOrUpdate.class)  SysGroupInformation information) {
         return RespEntity.success(groupInformationService.doCreateOrModify(information, LoginUser.getUserId()));
     }
 
