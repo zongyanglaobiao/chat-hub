@@ -45,7 +45,7 @@ const CreateGroup = memo(() => {
                         保存
                     </Button>
                     <Button type={"primary"}>
-                        返回上一步
+                        返回
                     </Button>
                 </Flex>
             </Flex>

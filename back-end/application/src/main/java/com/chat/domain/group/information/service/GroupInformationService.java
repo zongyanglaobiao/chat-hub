@@ -46,6 +46,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
         }
 
         //群信息 && 群成员添加
+        information.setCreateUserId(userId);
         return this.save(information) && memberService.save(information.getId(), userId, IdentityType.LORD, SysGroupMember.AGREE);
     }
 
