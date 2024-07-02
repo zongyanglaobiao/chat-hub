@@ -9,10 +9,7 @@ import {DisplayNoneImageContext} from "@/views/App.jsx";
 
 const { Text, Title } = Typography;
 
-const LORD = "LORD";
-
 const ChatGroupList = memo(() => {
-    const userInfo = useSelector(state => state.userInfo)
     let groupInfo = useSelector(state => state.groupInfo)
     const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
     const [groupMemberInfo, setGroupMemberInfo] = useState([])

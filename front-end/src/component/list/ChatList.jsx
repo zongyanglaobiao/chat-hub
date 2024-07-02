@@ -1,11 +1,14 @@
 import {List} from "antd";
 import {useState} from "react";
+import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 
-export const ChatList = ({data,renderItem,pageSize = 5,current = 1}) => {
-    const [curr, setCurr] = useState(current)
+export const ChatList = (props) => {
+    const {data,renderItem,pageSize ,current} = props
+    const [curr, setCurr] = useState(isNullOrUndefined(current) ? 1 : current)
 
     return (
         <List
+            {...props}
             itemLayout="horizontal"
             dataSource={data}
             pagination={{
@@ -14,7 +17,7 @@ export const ChatList = ({data,renderItem,pageSize = 5,current = 1}) => {
                 },
                 position:"bottom",
                 align:"center",
-                pageSize:pageSize,
+                pageSize:isNullOrUndefined(pageSize) ? 5 : pageSize,
                 current:curr
             }}
             renderItem={renderItem}
