@@ -15,7 +15,7 @@ const { Title } = Typography;
 const CreateGroup = memo(() => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [groupInfo, setGroupInfo] = useState({id:null,groupName:null,avatar:null})
+    const [groupInfo, setGroupInfo] = useState({id:null,groupName:null,avatar:null,members:[]})
     const [doCreateOrModifyResp,doCreateOrModifyProxy] = useFetch(doCreateOrModify)
     const [selectMembers, setGetSelectMembers] = useState([])
 
@@ -32,10 +32,19 @@ const CreateGroup = memo(() => {
         )
     }, [doCreateOrModifyResp]);
 
+    useEffect(() => {
+        setGroupInfo(prevState => ({...prevState,members:[...selectMembers.map(t => ({userId:t.id}))]}))
+    }, [selectMembers]);
+
+    useEffect(() => {
+        console.log(selectMembers)
+    });
+
     const updateGroupInfo = (groupName,avatar) => {
-        setGroupInfo((prev) => {
+        setGroupInfo(prev => {
             groupName = groupName || prev.groupName
             avatar = avatar || prev.avatar
+            console.log([...(selectMembers.map(t => ({userId:t.id})))])
             return  {...prev,groupName,avatar}
         })
     }
@@ -65,7 +74,7 @@ const CreateGroup = memo(() => {
             <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
                 {
                     !isNullOrUndefined(groupInfo.avatar) &&
-                    <Avatar size={140}
+                    <Avatar size={240}
                             shape={"square"}
                             src={groupInfo.avatar} />
                 }
@@ -75,7 +84,7 @@ const CreateGroup = memo(() => {
                 <Input placeholder="请输入群组名称"
                        onChange={e => updateGroupInfo(e.target.value,null)}/>
                 <Flex>
-                    <Space>
+                    <Space >
                         <Button
                             onClick={()=>navigate(location.state.from)}
                             type={"primary"}>
