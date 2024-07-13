@@ -37,6 +37,7 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean doCreateOrModify(SysGroupInformation information, String userId) {
+        //todo 创建的的是需要带成员
         SysGroupMember member;
         if (!StrUtil.isBlank(information.getId())) {
             //如果不为空则需要验证修改的用户是否合法

@@ -17,6 +17,7 @@ const CreateGroup = memo(() => {
     const navigate = useNavigate();
     const [groupInfo, setGroupInfo] = useState({id:null,groupName:null,avatar:null})
     const [doCreateOrModifyResp,doCreateOrModifyProxy] = useFetch(doCreateOrModify)
+    const [selectMembers, setGetSelectMembers] = useState([])
 
     useEffect(() => {
         const {groupInfo} = location.state
@@ -59,13 +60,8 @@ const CreateGroup = memo(() => {
         },
     };
 
-    const data = (()=>{
-        const  arr =[]
-        for (let i = 0; i < 30; i++) {
-            arr.push({name: `Ant Design Title ${i}`})
-        }
-        return arr
-    })()
+
+
     return (
         <div className="p-4 flex w-full flex-row items-center">
             <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
@@ -103,17 +99,17 @@ const CreateGroup = memo(() => {
                       header={(
                           <Flex justify={"space-between"} align={"center"}>
                               <Title level={3}>群组成员</Title>
-                              <SelectMember/>
+                              <SelectMember getSelectMembers={setGetSelectMembers}/>
                           </Flex>
                       )}
-                      data={[]}
+                      data={selectMembers}
                       renderItem={item => {
                           return (
-                              <List.Item>
+                              <List.Item className="">
                                   <List.Item.Meta
-                                      // avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
-                                      title={<a href="https://ant.design">{item.name}</a>}
-                                      description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                                      avatar={<Avatar shape={"square"} size={50} src={item.avatar} />}
+                                      title={<Title level={5}>{item.nickname}</Title>}
+                                      description={<p className='text-overflow'>{item.signature}</p>}
                                   />
                               </List.Item>
                           )
@@ -129,6 +125,7 @@ const SelectMember = memo(({getSelectMembers}) => {
     const [friendInfos, setFriendInfos] = useState([])
     const selectMemberRef = useRef([])
     const [disable, setDisable] = useState([])
+    const userInfo = useSelector(state => state.userInfo)
 
     useEffect(() => {
         !isNullOrUndefined(doQueryUserInfosResp) && setFriendInfos(doQueryUserInfosResp.data)
@@ -140,7 +137,7 @@ const SelectMember = memo(({getSelectMembers}) => {
     }, [friendList]);
 
     const handleOk = () => {
-        getSelectMembers(selectMemberRef.current)
+        getSelectMembers([...selectMemberRef.current])
         setOpen(false);
     };
 
