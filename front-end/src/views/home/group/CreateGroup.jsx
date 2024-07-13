@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {memo, useEffect, useState} from "react";
-import {Avatar, Button, Divider, Flex, Input, List, message, Space, Typography, Upload} from "antd";
+import {memo, useEffect, useRef, useState} from "react";
+import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Space, Typography, Upload} from "antd";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
 import {UploadOutlined} from "@ant-design/icons";
@@ -8,6 +8,8 @@ import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doCreateOrModify} from "@/http/api/group.info.api.js";
 import {ChatList} from "@/component/list/ChatList.jsx";
+import {useSelector} from "react-redux";
+import {doQueryUserInfos} from "@/http/api/user.api.js";
 const { Title } = Typography;
 
 const CreateGroup = memo(() => {
@@ -57,10 +59,6 @@ const CreateGroup = memo(() => {
         },
     };
 
-    useEffect(() => {
-        console.log(doCreateOrModifyResp)
-    });
-
     const data = (()=>{
         const  arr =[]
         for (let i = 0; i < 30; i++) {
@@ -102,8 +100,13 @@ const CreateGroup = memo(() => {
             <Divider type={"vertical"} className='h-full'/>
             <ChatList className="w-full"
                       bordered={true}
-                      header={<Title level={3}>群组成员</Title>}
-                      data={data}
+                      header={(
+                          <Flex justify={"space-between"} align={"center"}>
+                              <Title level={3}>群组成员</Title>
+                              <SelectMember/>
+                          </Flex>
+                      )}
+                      data={[]}
                       renderItem={item => {
                           return (
                               <List.Item>
@@ -116,6 +119,72 @@ const CreateGroup = memo(() => {
                           )
                       }}/>
         </div>
+    )
+})
+
+const SelectMember = memo(({getSelectMembers}) => {
+    const [open, setOpen] = useState(false);
+    const {friendList} = useSelector(state => state.friendInfo)
+    const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
+    const [friendInfos, setFriendInfos] = useState([])
+    const selectMemberRef = useRef([])
+    const [disable, setDisable] = useState([])
+
+    useEffect(() => {
+        !isNullOrUndefined(doQueryUserInfosResp) && setFriendInfos(doQueryUserInfosResp.data)
+    }, [doQueryUserInfosResp]);
+
+
+    useEffect(() => {
+        friendList.length > 0 && doQueryUserInfosProxy(friendList.map(t => t.friendId))
+    }, [friendList]);
+
+    const handleOk = () => {
+        getSelectMembers(selectMemberRef.current)
+        setOpen(false);
+    };
+
+    return (
+        <>
+            <Button onClick={()=>setOpen(true)}>
+                选择成员
+            </Button>
+            <Modal
+                title="Title"
+                open={open}
+                onOk={handleOk}
+                onCancel={()=>setOpen(false)}
+            >
+                <List
+                    itemLayout="horizontal"
+                    dataSource={friendInfos}
+                    renderItem={(item) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar size={"large"} src={item.avatar}/>}
+                                title={<p>{item.nickname}</p>}
+                            />
+                            {
+                                isNullOrUndefined(disable.find(t => t === item.id)) ?
+                                    <Button  onClick={()=>{
+                                        selectMemberRef.current.push(item)
+                                        setDisable(prevState => [...prevState,item.id])
+                                    }}>
+                                        添加
+                                    </Button>
+                                    :
+                                    <Button danger onClick={()=>{
+                                        selectMemberRef.current = selectMemberRef.current.filter(t => t.id !== item.id)
+                                        setDisable(prevState => prevState.filter(t => t !== item.id))
+                                    }}>
+                                        删除
+                                    </Button>
+                            }
+                        </List.Item>
+                    )}
+                />
+            </Modal>
+        </>
     )
 })
 
