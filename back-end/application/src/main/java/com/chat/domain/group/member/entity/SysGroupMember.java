@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.Serial;
 
@@ -40,8 +41,8 @@ public class SysGroupMember extends Entity {
     private String groupId;
 
     //用户
-    @JsonView({Entity.INSERT.class})
-    @NotBlank(message = "用户ID不能为空",groups = INSERT.class)
+    @JsonView({Entity.INSERT.class,SaveOrUpdate.class})
+    @NotBlank(message = "用户ID不能为空",groups = {INSERT.class,SaveOrUpdate.class})
     private String userId;
 
     //身份{成员|群主}

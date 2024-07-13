@@ -5,9 +5,11 @@ import com.chat.domain.base.entity.Entity;
 import com.chat.domain.group.announcement.entity.SysGroupAnnouncement;
 import com.chat.domain.group.member.entity.SysGroupMember;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.Serial;
 import java.util.List;
@@ -41,7 +43,7 @@ public class SysGroupInformation extends Entity {
 
     //群所有公告
     @TableField(exist = false)
-    @JsonView(SaveOrUpdate.class)
+    @JsonView(IGNORE.class)
     private List<SysGroupAnnouncement> announcements;
 
     //所有群成员{正式|未同意|审核中}

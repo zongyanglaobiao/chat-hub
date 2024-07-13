@@ -60,8 +60,6 @@ const CreateGroup = memo(() => {
         },
     };
 
-
-
     return (
         <div className="p-4 flex w-full flex-row items-center">
             <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
@@ -108,7 +106,7 @@ const CreateGroup = memo(() => {
                               <List.Item className="">
                                   <List.Item.Meta
                                       avatar={<Avatar shape={"square"} size={50} src={item.avatar} />}
-                                      title={<Title level={5}>{item.nickname}</Title>}
+                                      title={item.nickname}
                                       description={<p className='text-overflow'>{item.signature}</p>}
                                   />
                               </List.Item>
@@ -137,7 +135,7 @@ const SelectMember = memo(({getSelectMembers}) => {
     }, [friendList]);
 
     const handleOk = () => {
-        getSelectMembers([...selectMemberRef.current])
+        getSelectMembers([...selectMemberRef.current,userInfo])
         setOpen(false);
     };
 
