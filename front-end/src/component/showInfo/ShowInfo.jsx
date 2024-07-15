@@ -199,7 +199,7 @@ const GroupInfo = memo(({groupInfo}) => {
                             color={"blue"}>
                             更多信息...
                         </Tag>
-                        <Tag>
+                        <Tag color={"blue"}>
                             {/*TODO 增加公告*/}
                             群公告
                         </Tag>
