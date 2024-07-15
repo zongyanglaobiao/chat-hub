@@ -183,6 +183,7 @@ const GroupInfo = memo(({groupInfo}) => {
                     <Flex vertical gap={"middle"}>
                         <strong>群名称</strong>
                         <strong>群成员</strong>
+                        <strong>群公告</strong>
                     </Flex>
                     <Flex vertical gap={"middle"} >
                         <Tag color={"blue"}
@@ -197,6 +198,10 @@ const GroupInfo = memo(({groupInfo}) => {
                             className='max-w-15rem text-overflow cursor-pointer'
                             color={"blue"}>
                             更多信息...
+                        </Tag>
+                        <Tag>
+                            {/*TODO 增加公告*/}
+                            群公告
                         </Tag>
                     </Flex>
                     <Modal open={closeOrOpenModal}
