@@ -200,7 +200,7 @@ const GroupInfo = memo(({groupInfo}) => {
                             更多信息...
                         </Tag>
                         <Tag color={"blue"}>
-                            {/*TODO 增加公告*/}
+                            {/* TODO 增加公告 */}
                             群公告
                         </Tag>
                     </Flex>
