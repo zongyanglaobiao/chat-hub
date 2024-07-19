@@ -47,12 +47,8 @@ jobs:
           password: ${{ secrets.SSH_PWD }}
 
       - name: 删除前端文件夹
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          rmRemote: /etc/nginx/conf.d/chat-hub/*
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
+        run: |
+            sshpass -p ${{ secrets.SSH_PWD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'rm -rf /etc/nginx/conf.d/chat-hub/*'
 
       - name: 前端工程编译构建
         run: |

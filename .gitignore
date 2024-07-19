@@ -73,3 +73,6 @@ test/*
 /front-end/package-lock.json
 /.idea/shelf/在进行更新之前于_2024_5_16_下午9_31_取消提交了更改_[更改]/shelved.patch
 /.idea/shelf/在进行更新之前于_2024_5_16_下午9_31_取消提交了更改_[更改]/shelved.patch
+/front-end/dist/
+/.idea/dataSources/c1cacfc0-45b0-4db4-9fa8-2e3ec7cc18e6/storage_v2/_src_/schema/picture_bed.wFkqtA.meta
+/.idea/shelf/_2024_6_21_9_07____.xml
