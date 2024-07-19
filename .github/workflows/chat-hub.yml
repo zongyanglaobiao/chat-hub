@@ -52,7 +52,7 @@ jobs:
           npm install 
           npm run build
       
-      - name: 把前端工程推送到远程服务器
+      - name:  删除前端文件夹
         uses: garygrossgarten/github-action-scp@release
         with:
           command: rm -rf /etc/nginx/conf.d/chat-hub/*
@@ -60,7 +60,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}    
 
-      - name: 删除前端文件夹
+      - name: 把前端工程推送到远程服务器
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ${{ github.workspace }}/front-end/dist  #把整个文件夹下的所有东西发送到远程服务器
