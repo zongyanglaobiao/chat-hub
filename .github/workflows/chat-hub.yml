@@ -46,14 +46,14 @@ jobs:
 #          username: ${{ secrets.SSH_USER }}
 #          password: ${{ secrets.SSH_PWD }}
 
-      - name: 前端工程编译构建
+      - name: 构建前端工程
         run: |
           cd ${{ github.workspace }}/front-end/
           npm install 
           npm run build
           ls ${{ github.workspace }}/front-end/dist
 
-      - name: 把前端工程推送到远程服务器
+      - name: 前端文件推送到远程服务器
         uses: appleboy/scp-action@v0.1.7
         with:
           source: ${{ github.workspace }}/front-end/dist/*  #把整个文件夹下的所有东西发送到远程服务器
@@ -62,8 +62,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }} 
+          strip_components: 4
 
-      - name: 执行远程服务的命令
+      - name: 执行远程服务器命令
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: /bin/bash /home/server/chat-hub/start.sh 0 ${{secrets.START_KEY}}
