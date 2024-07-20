@@ -54,7 +54,7 @@ jobs:
           ls ${{ github.workspace }}/front-end/dist
 
       - name: 把前端工程推送到远程服务器
-        uses: appleboy/scp-action@release
+        uses: appleboy/scp-action@v0.1.7
         with:
           source: ${{ github.workspace }}/front-end/dist/*  #把整个文件夹下的所有东西发送到远程服务器
           target: /etc/nginx/conf.d/chat-hub/dist/   #传送到这个文件下
