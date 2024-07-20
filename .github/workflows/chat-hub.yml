@@ -26,25 +26,25 @@ jobs:
         # 必须使用这个命令才行
         uses: actions/checkout@v4
 
-      - name: 下载JDK 17 
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'oracle' # 发布版本
-          java-version: '17'
-      
-      - name: maven构建Jar包
-        run:  |
-          cd ${{ github.workspace }}
-          mvn -B package -DskipTests --file ./back-end/pom.xml
-
-      - name: 把JAR包推送到目标服务器
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar  
-          remote: /home/server/chat-hub/application-1.0.0.jar   #传送给目标服务器的必须要是文件，如果没有则创建
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
+#      - name: 下载JDK 17
+#        uses: actions/setup-java@v3
+#        with:
+#          distribution: 'oracle' # 发布版本
+#          java-version: '17'
+#
+#      - name: maven构建Jar包
+#        run:  |
+#          cd ${{ github.workspace }}
+#          mvn -B package -DskipTests --file ./back-end/pom.xml
+#
+#      - name: 把JAR包推送到目标服务器
+#        uses: garygrossgarten/github-action-scp@release
+#        with:
+#          local: ${{ github.workspace }}/back-end/application/target/application-1.0.0.jar
+#          remote: /home/server/chat-hub/application-1.0.0.jar   #传送给目标服务器的必须要是文件，如果没有则创建
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          password: ${{ secrets.SSH_PWD }}
 
       - name: 删除前端文件夹
         run: |
