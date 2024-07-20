@@ -3,13 +3,14 @@ import {memo, useEffect, useRef, useState} from "react";
 import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Space, Typography, Upload} from "antd";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
-import {UploadOutlined} from "@ant-design/icons";
+import {LeftCircleTwoTone, UploadOutlined} from "@ant-design/icons";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doCreateOrModify} from "@/http/api/group.info.api.js";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useSelector} from "react-redux";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
+
 const { Title } = Typography;
 
 const CreateGroup = memo(() => {
@@ -72,6 +73,8 @@ const CreateGroup = memo(() => {
     return (
         <div className="p-4 flex w-full flex-row items-center">
             <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
+                <LeftCircleTwoTone style={{fontSize:30}}/>
+
                 {
                     !isNullOrUndefined(groupInfo.avatar) &&
                     <Avatar size={240}

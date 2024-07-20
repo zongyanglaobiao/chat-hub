@@ -60,7 +60,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ${{ github.workspace }}/front-end/dist  #把整个文件夹下的所有东西发送到远程服务器
-          remote: /etc/nginx/conf.d/chat-hub   #传送到这个文件下
+          remote: /etc/nginx/conf.d/chat-hub/dist/   #传送到这个文件下
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }} 

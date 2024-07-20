@@ -57,7 +57,6 @@ function SearchPage() {
         <div className=' w-full text-center relative'>
             <header className='relative top-15px mb-20px'>
                <Space>
-                   <LeftCircleTwoTone style={{fontSize:30}} onClick={() =>  navigate(location.state)}/>
                    <Search placeholder="input search text"
                            onSearch={(value)=> {
                                if (isBlank(value)) {
