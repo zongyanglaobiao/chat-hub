@@ -55,6 +55,7 @@ jobs:
           cd ${{ github.workspace }}/front-end/
           npm install 
           npm run build
+          ls ${{ github.workspace }}/front-end/dist
 
       - name: 把前端工程推送到远程服务器
         uses: garygrossgarten/github-action-scp@release
