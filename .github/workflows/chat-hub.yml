@@ -46,10 +46,6 @@ jobs:
 #          username: ${{ secrets.SSH_USER }}
 #          password: ${{ secrets.SSH_PWD }}
 
-      - name: 删除前端文件夹
-        run: |
-            sshpass -p ${{ secrets.SSH_PWD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'rm -rf /etc/nginx/conf.d/chat-hub/*'
-
       - name: 前端工程编译构建
         run: |
           cd ${{ github.workspace }}/front-end/
@@ -58,11 +54,11 @@ jobs:
           ls ${{ github.workspace }}/front-end/dist
 
       - name: 把前端工程推送到远程服务器
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/scp-action@release
         with:
-          local: ${{ github.workspace }}/front-end/dist  #把整个文件夹下的所有东西发送到远程服务器
-          remote: /etc/nginx/conf.d/chat-hub/dist/   #传送到这个文件下
-          concurrency: 3
+          source: ${{ github.workspace }}/front-end/dist/*  #把整个文件夹下的所有东西发送到远程服务器
+          target: /etc/nginx/conf.d/chat-hub/dist/   #传送到这个文件下
+          rm: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }} 
