@@ -3,7 +3,7 @@ import {memo, useEffect, useRef, useState} from "react";
 import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Space, Typography, Upload} from "antd";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
-import {LeftCircleTwoTone, UploadOutlined} from "@ant-design/icons";
+import {UploadOutlined} from "@ant-design/icons";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doCreateOrModify} from "@/http/api/group.info.api.js";
@@ -18,12 +18,32 @@ const CreateGroup = memo(() => {
     const navigate = useNavigate();
     const [groupInfo, setGroupInfo] = useState({id:null,groupName:null,avatar:null,members:[]})
     const [doCreateOrModifyResp,doCreateOrModifyProxy] = useFetch(doCreateOrModify)
+    const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
     const [selectMembers, setGetSelectMembers] = useState([])
+    const [textValue, setTextValue] = useState('')
 
     useEffect(() => {
-        const {groupInfo} = location.state
-        !isNullOrUndefined(groupInfo) && setGroupInfo(groupInfo)
+        updateGroupInfo(textValue,null)
+    }, [textValue]);
+
+    useEffect(() => {
+        const {group} = location.state
+        //初始化如果数据存在
+        if (!isNullOrUndefined(group)) {
+            //群信息
+            setGroupInfo(group);
+            //群名称
+            setTextValue(group.groupName);
+            //成员信息
+            //todo 群信息不能直接跳转过来
+            doQueryUserInfosProxy(group.members.map(t => t.userId))
+        }
+
     }, [location]);
+
+    useEffect(() => {
+        !isNullOrUndefined(doQueryUserInfosResp) && setGetSelectMembers(doQueryUserInfosResp.data)
+    }, [doQueryUserInfosResp]);
 
     useEffect(() => {
         !isNullOrUndefined(doCreateOrModifyResp) &&
@@ -38,14 +58,13 @@ const CreateGroup = memo(() => {
     }, [selectMembers]);
 
     useEffect(() => {
-        console.log(selectMembers)
+        console.log('doQueryUserInfosResp',doQueryUserInfosResp)
     });
 
     const updateGroupInfo = (groupName,avatar) => {
         setGroupInfo(prev => {
             groupName = groupName || prev.groupName
             avatar = avatar || prev.avatar
-            console.log([...(selectMembers.map(t => ({userId:t.id})))])
             return  {...prev,groupName,avatar}
         })
     }
@@ -83,7 +102,8 @@ const CreateGroup = memo(() => {
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload>
                 <Input placeholder="请输入群组名称"
-                       onChange={e => updateGroupInfo(e.target.value,null)}/>
+                       value={textValue}
+                       onChange={e => setTextValue(e.target.value)}/>
                 <Flex>
                     <Space >
                         <Button

@@ -3,8 +3,8 @@ import {Avatar, Button, Flex, Image, message, Modal, Space, Tag} from "antd";
 import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {HOME_CHAT, HOME_PERSON_SETTING} from "@/router/index.jsx";
+import {useLocation, useNavigate} from "react-router-dom";
+import {HOME_CHAT, HOME_CREATE_GROUP, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
@@ -155,7 +155,8 @@ const UserInfo = memo(({userInfo}) => {
 const GroupInfo = memo(({groupInfo}) => {
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
     const [closeOrOpenModal, setCloseOrOpenModel] = useState(false)
-
+    const navigate = useNavigate();
+    const {closeDrawer} = useContext(DrawerContext)
     return (
         <div className='relative w-full'>
             <Image
@@ -192,8 +193,11 @@ const GroupInfo = memo(({groupInfo}) => {
                             {groupInfo.groupName}
                         </Tag>
                         <Tag
-                            onClick={()=>{
-                                //todo 跳转群成员哪里
+                            onClick={()=> {
+                                //关闭抽屉
+                                closeDrawer()
+                                //跳转
+                                navigate(HOME_CREATE_GROUP,{state:{from:HOME_CHAT,group:groupInfo}})
                             }}
                             className='max-w-15rem text-overflow cursor-pointer'
                             color={"blue"}>
