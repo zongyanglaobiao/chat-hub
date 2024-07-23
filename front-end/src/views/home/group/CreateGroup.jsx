@@ -73,8 +73,6 @@ const CreateGroup = memo(() => {
     return (
         <div className="p-4 flex w-full flex-row items-center">
             <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
-                <LeftCircleTwoTone style={{fontSize:30}}/>
-
                 {
                     !isNullOrUndefined(groupInfo.avatar) &&
                     <Avatar size={240}
@@ -95,7 +93,11 @@ const CreateGroup = memo(() => {
                         </Button>
                         <Button
                             onClick={() => {
-                                doCreateOrModifyProxy(groupInfo)
+                                groupInfo.members.length >= 3
+                                    ?
+                                    doCreateOrModifyProxy(groupInfo)
+                                    :
+                                    message.error("群组成员不能少于3人")
                             }}
                             type={"primary"}>
                             保存
