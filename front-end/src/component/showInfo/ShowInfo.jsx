@@ -3,7 +3,7 @@ import {Avatar, Button, Flex, Image, message, Modal, Space, Tag} from "antd";
 import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {HOME_CHAT, HOME_CREATE_GROUP, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
