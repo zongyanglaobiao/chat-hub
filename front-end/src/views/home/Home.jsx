@@ -34,6 +34,7 @@ const Home = memo(() => {
 
         //加载用户信息、朋友列表信息
         init(dispatch)
+        navigate(HOME_CHAT);
     }, [authorize, dispatch, navigate]);
 
     return (

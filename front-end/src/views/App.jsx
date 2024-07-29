@@ -52,7 +52,7 @@ export  default  function App() {
                 </DrawerContext.Provider>
             </DisplayNoneImageContext.Provider>
             <div className=' fixed bottom-5px left-0 right-0 flex justify-center items-center'>
-                <a className='no-underline text-[#666] text-12px' href="https://beian.miit.gov.cn/" target="_blank">您的备案号：皖ICP备2023023405号-1</a>
+                <a className='no-underline text-[#666] text-12px' href="https://beian.miit.gov.cn/" target="_blank">备案号：皖ICP备2023023405号-1</a>
             </div>
         </>
     )
