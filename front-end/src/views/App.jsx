@@ -34,22 +34,27 @@ export  default  function App() {
     }
 
     return (
-        <DisplayNoneImageContext.Provider value={{openOrCloseImage}}>
-            <DisplayNoneImage setVisible={setVisible} visible={visible} imgUrl={imgUrlRef.current}/>
-            <DrawerContext.Provider value={{showDrawer,closeDrawer}}>
-                <Suspense fallback={<Loading/>}>
-                    <Provider store={store}>
-                        {router}
-                        <Drawer styles={{body:{padding:'0px'}}}
-                                title='信息展示'
-                                onClose={()=>{ closeDrawer()}}
-                                open={open}>
-                            {reactNode}
-                        </Drawer>
-                    </Provider>
-                </Suspense>
-            </DrawerContext.Provider>
-        </DisplayNoneImageContext.Provider>
+        <>
+            <DisplayNoneImageContext.Provider value={{openOrCloseImage}}>
+                <DisplayNoneImage setVisible={setVisible} visible={visible} imgUrl={imgUrlRef.current}/>
+                <DrawerContext.Provider value={{showDrawer,closeDrawer}}>
+                    <Suspense fallback={<Loading/>}>
+                        <Provider store={store}>
+                            {router}
+                            <Drawer styles={{body:{padding:'0px'}}}
+                                    title='信息展示'
+                                    onClose={()=>{ closeDrawer()}}
+                                    open={open}>
+                                {reactNode}
+                            </Drawer>
+                        </Provider>
+                    </Suspense>
+                </DrawerContext.Provider>
+            </DisplayNoneImageContext.Provider>
+            <div className=' fixed bottom-5px left-0 right-0 flex justify-center items-center'>
+                <a className='no-underline text-[#666] text-12px' href="https://beian.miit.gov.cn/" target="_blank">您的备案号：皖ICP备2023023405号-1</a>
+            </div>
+        </>
     )
 }
 
