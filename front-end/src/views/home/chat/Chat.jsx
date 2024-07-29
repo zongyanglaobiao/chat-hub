@@ -96,7 +96,7 @@ const ChatSidebar = ({setShowInfoWindows}) => {
         <div className='flex flex-col w-40% h-full'>
             <Flex gap={"small"}  className=' p-5px' >
                 <Search className='w-90%' placeholder="input search text" onSearch={onSearch} enterButton />
-                <PlusCircleTwoTone style={{fontSize:30}}
+                <PlusSquareTwoTone style={{fontSize:30}}
                                    className=' cursor-pointer'
                                    onClick={onPlusCircleTwoToneClick}/>
             </Flex>

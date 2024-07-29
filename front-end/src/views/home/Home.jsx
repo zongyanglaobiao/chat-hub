@@ -1,9 +1,9 @@
 import {friendListInfoThunk} from "@/redux/feature/friend.thunk.js";
 import {userInfoThunk} from "@/redux/feature/user.thunk.js";
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {memo, useCallback, useEffect} from "react";
-import {HOME_CHAT, HOME_FRIEND, HOME_GROUP_LIST, HOME_PERSON_SETTING, LOGIN} from "@/router/index.jsx";
+import {HOME, HOME_CHAT, HOME_FRIEND, HOME_GROUP_LIST, HOME_PERSON_SETTING, LOGIN, ROOT} from "@/router/index.jsx";
 import Message from '@/assets/message.svg'
 import Dialogue from '@/assets/dialogue.svg'
 import Friend from '@/assets/friends.svg'
@@ -24,6 +24,7 @@ const Home = memo(() => {
     const authorize = useSelector(state => state.authorize)
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         //存在token则不判断
@@ -34,7 +35,11 @@ const Home = memo(() => {
 
         //加载用户信息、朋友列表信息
         init(dispatch)
-        navigate(HOME_CHAT);
+
+        //刚进入应用跳转到聊天页
+        if (location.pathname === HOME) {
+            navigate(HOME_CHAT);
+        }
     }, [authorize, dispatch, navigate]);
 
     return (
