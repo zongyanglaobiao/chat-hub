@@ -197,7 +197,7 @@ const GroupInfo = memo(({groupInfo}) => {
                                 //关闭抽屉
                                 closeDrawer()
                                 //跳转
-                                navigate(HOME_CREATE_GROUP,{state:{from:HOME_CHAT,group:groupInfo}})
+                                // navigate(HOME_CREATE_GROUP,{state:{from:HOME_CHAT,group:groupInfo}})
                             }}
                             className='max-w-15rem text-overflow cursor-pointer'
                             color={"blue"}>

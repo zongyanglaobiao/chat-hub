@@ -111,20 +111,6 @@ const ShowSearchContent = ({users,friends,groups}) => {
     return (
         <div className='scroll-y-style max-h-100'>
             <List
-                loadMore={(
-                    <div
-                        style={{
-                            textAlign: 'center',
-                            marginTop: 12,
-                            height: 32,
-                            lineHeight: '32px',
-                        }}
-                    >
-                        <Button onClick={() => {
-                            message.info("暂时无数据")
-                        }}>loading more</Button>
-                    </div>
-                )}
                 dataSource={list}
                 renderItem={item => {
                     return (

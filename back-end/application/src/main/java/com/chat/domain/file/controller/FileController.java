@@ -21,6 +21,6 @@ public class FileController extends Controller {
 
     @PostMapping("doUpload")
     public RespEntity<String> doUpload(@RequestPart @NotNull(message = "文件不能为空") MultipartFile file) {
-        return  RespEntity.base(HttpCode.SUCCESS.getCode(), HttpCode.SUCCESS.getReasonPhrase(),fileService.upload(file));
+        return  RespEntity.success(fileService.upload(file));
     }
 }

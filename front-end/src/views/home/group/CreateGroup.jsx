@@ -20,26 +20,6 @@ const CreateGroup = memo(() => {
     const [doCreateOrModifyResp,doCreateOrModifyProxy] = useFetch(doCreateOrModify)
     const [doQueryUserInfosResp,doQueryUserInfosProxy] = useFetch(doQueryUserInfos)
     const [selectMembers, setGetSelectMembers] = useState([])
-    const [textValue, setTextValue] = useState('')
-
-    useEffect(() => {
-        updateGroupInfo(textValue,null)
-    }, [textValue]);
-
-    useEffect(() => {
-        const {group} = location.state
-        //初始化如果数据存在
-        if (!isNullOrUndefined(group)) {
-            //群信息
-            setGroupInfo(group);
-            //群名称
-            setTextValue(group.groupName);
-            //成员信息
-            //todo 群信息不能直接跳转过来
-            doQueryUserInfosProxy(group.members.map(t => t.userId))
-        }
-
-    }, [location]);
 
     useEffect(() => {
         !isNullOrUndefined(doQueryUserInfosResp) && setGetSelectMembers(doQueryUserInfosResp.data)
@@ -98,31 +78,28 @@ const CreateGroup = memo(() => {
                             shape={"square"}
                             src={groupInfo.avatar} />
                 }
-                <Upload {...props} className=' cursor-pointer'>
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Upload {...props} rootClassName=" w-full" className='cursor-pointer'>
+                    <Button icon={<UploadOutlined />}>上传图片</Button>
                 </Upload>
                 <Input placeholder="请输入群组名称"
-                       value={textValue}
-                       onChange={e => setTextValue(e.target.value)}/>
-                <Flex>
-                    <Space >
-                        <Button
-                            onClick={()=>navigate(location.state.from)}
-                            type={"primary"}>
-                            返回
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                groupInfo.members.length >= 3
-                                    ?
-                                    doCreateOrModifyProxy(groupInfo)
-                                    :
-                                    message.error("群组成员不能少于3人")
-                            }}
-                            type={"primary"}>
-                            保存
-                        </Button>
-                    </Space>
+                       onChange={e => updateGroupInfo(e.target.value,null)}/>
+                <Flex justify={"space-between"}>
+                    <Button
+                        onClick={()=>navigate(location.state.from)}
+                        type={"primary"}>
+                        返回
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            groupInfo.members.length >= 3
+                                ?
+                                doCreateOrModifyProxy(groupInfo)
+                                :
+                                message.error("群组成员不能少于3人")
+                        }}
+                        type={"primary"}>
+                        保存
+                    </Button>
                 </Flex>
             </Flex>
             <Divider type={"vertical"} className='h-full'/>
