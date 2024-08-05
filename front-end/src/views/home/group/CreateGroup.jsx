@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {memo, useEffect, useRef, useState} from "react";
-import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Space, Typography, Upload} from "antd";
+import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Typography, Upload} from "antd";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
 import {UploadOutlined} from "@ant-design/icons";
