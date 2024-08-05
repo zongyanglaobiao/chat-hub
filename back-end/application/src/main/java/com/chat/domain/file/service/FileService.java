@@ -10,6 +10,7 @@ import com.common.util.AssertUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileService {
 
     @Value("${file.upload.url}")
@@ -44,12 +46,13 @@ public class FileService {
                 addHeaders(Map.of("signature", signature, "cipherText", cipherText)).
                 form("file", file.getBytes(), file.getOriginalFilename()).
                 executeAsync()){
-            RespEntity resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
+            RespEntity<?> resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
             logger.warn(this.getClass(),"上传文件: {}",httpResponse.body());
             AssertUtils.assertTrue(resp.getCode() == 200, "上传文件失败: " + resp.getMessage());
             return (String) resp.getData();
-        } catch (IOException e) {
-            throw new ChatException("上传文件失败: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("上传文件失败: ", e);
+            throw new ChatException("上传文件失败");
         }
     }
 }

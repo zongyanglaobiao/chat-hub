@@ -64,7 +64,7 @@ const CreateGroup = memo(() => {
                 updateGroupInfo(null,info.file.response.data)
                 message.success(`${info.file.name} 上传成功`);
             } else {
-                message.error(`文件上传失败: ${info.file.response.message}`);
+                message.error(info.file.response.message);
             }
         },
     };
