@@ -37,7 +37,6 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean doCreateOrModify(SysGroupInformation information, String userId) {
-        //todo 创建的的是需要带成员
         SysGroupMember member;
         if (!StrUtil.isBlank(information.getId())) {
             //如果不为空则需要验证修改的用户是否合法
@@ -48,7 +47,6 @@ public class GroupInformationService extends AbstractService<SysGroupInformation
 
         //群信息 && 群成员添加
         information.setCreateUserId(userId);
-        //return this.save(information) && memberService.save(information.getId(), userId, IdentityType.LORD, SysGroupMember.AGREE);
         AssertUtils.assertTrue(!information.getMembers().isEmpty(), "群成员不能为空");
         AssertUtils.assertTrue(information.getMembers().stream().anyMatch(t -> Objects.equals(t.getUserId(), userId)), "创建人不存在成员之中");
         return this.save(information) && memberService.saveBatch(information.

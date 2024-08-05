@@ -49,7 +49,7 @@ public class FileService {
             RespEntity<?> resp = JSONUtil.toBean(httpResponse.body(), RespEntity.class);
             logger.warn(this.getClass(),"上传文件: {}",httpResponse.body());
             AssertUtils.assertTrue(resp.getCode() == 200, "上传文件失败: " + resp.getMessage());
-            return (String) resp.getData();
+            return resp.getMessage();
         } catch (Exception e) {
             log.error("上传文件失败: ", e);
             throw new ChatException("上传文件失败");

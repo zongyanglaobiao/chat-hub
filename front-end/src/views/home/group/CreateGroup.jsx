@@ -3,13 +3,13 @@ import {memo, useEffect, useRef, useState} from "react";
 import {Avatar, Button, Divider, Flex, Input, List, message, Modal, Typography, Upload} from "antd";
 import {getUploadUrl} from "@/http/api/file.api.js";
 import {getToken} from "@/http/http.request.js";
-import {UploadOutlined} from "@ant-design/icons";
-import {isNullOrUndefined} from "@/lib/toolkit/util.js";
+import {isBlank, isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doCreateOrModify} from "@/http/api/group.info.api.js";
 import {ChatList} from "@/component/list/ChatList.jsx";
 import {useSelector} from "react-redux";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
+import {HOME_CHAT} from "@/router/index.jsx";
 
 const { Title } = Typography;
 
@@ -26,20 +26,22 @@ const CreateGroup = memo(() => {
     }, [doQueryUserInfosResp]);
 
     useEffect(() => {
-        !isNullOrUndefined(doCreateOrModifyResp) &&
-        (
-            doCreateOrModifyResp.code !== 200 && message.error(doCreateOrModifyResp.message) ||
-            doCreateOrModifyResp.code === 200 && message.success("保存成功")
-        )
+        if(isNullOrUndefined(doCreateOrModifyResp)){
+            return
+        }
+
+        if(doCreateOrModifyResp.code === 200){
+            message.success("保存成功")
+            navigate(HOME_CHAT)
+            return;
+        }
+
+        message.error(doCreateOrModifyResp.message)
     }, [doCreateOrModifyResp]);
 
     useEffect(() => {
         setGroupInfo(prevState => ({...prevState,members:[...selectMembers.map(t => ({userId:t.id}))]}))
     }, [selectMembers]);
-
-    useEffect(() => {
-        console.log('doQueryUserInfosResp',doQueryUserInfosResp)
-    });
 
     const updateGroupInfo = (groupName,avatar) => {
         setGroupInfo(prev => {
@@ -71,31 +73,41 @@ const CreateGroup = memo(() => {
 
     return (
         <div className="p-4 flex w-full flex-row items-center">
-            <Flex justify={"center"} className='w-1/3' vertical gap={'small'}>
-                {
-                    !isNullOrUndefined(groupInfo.avatar) &&
-                    <Avatar size={240}
-                            shape={"square"}
-                            src={groupInfo.avatar} />
-                }
-                <Upload {...props} rootClassName=" w-full" className='cursor-pointer'>
-                    <Button icon={<UploadOutlined />}>上传图片</Button>
+            <Flex justify={"center"} className='w-1/3 h-full' vertical gap={'small'}>
+                <Avatar
+                    shape={"square"}
+                    className={"cursor-pointer w-full h-full"}
+                    onClick={e => {
+                        document.getElementById("upload-group-avatar").click()
+                    }}
+                    src={!isNullOrUndefined(groupInfo.avatar) ?
+                        groupInfo.avatar : null} >
+                    {
+                        isNullOrUndefined(groupInfo.avatar) ? '点击上传头像' : ''
+                    }
+                </Avatar>
+                <Upload {...props}
+                        className={"hidden"}
+                        listType={"text"}
+                        maxCount={1}
+                        accept={"image/png, image/jpeg"}>
+                    <Button id={"upload-group-avatar"}>上传</Button>
                 </Upload>
                 <Input placeholder="请输入群组名称"
-                       onChange={e => updateGroupInfo(e.target.value,null)}/>
+                       onChange={e => updateGroupInfo(isBlank(e.target.value) ? null : e.target.value, null)}/>
                 <Flex justify={"space-between"}>
                     <Button
-                        onClick={()=>navigate(location.state.from)}
+                        onClick={() => navigate(location.state.from)}
                         type={"primary"}>
                         返回
                     </Button>
                     <Button
                         onClick={() => {
-                            groupInfo.members.length >= 3
-                                ?
+                            if (groupInfo.members.length >= 3) {
                                 doCreateOrModifyProxy(groupInfo)
-                                :
-                                message.error("群组成员不能少于3人")
+                                return
+                            }
+                            message.error("群组成员不能少于3人")
                         }}
                         type={"primary"}>
                         保存
