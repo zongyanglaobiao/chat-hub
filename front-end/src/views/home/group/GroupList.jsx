@@ -1,11 +1,12 @@
 import {memo, useContext, useEffect, useState} from 'react';
-import {Avatar, List, Typography} from 'antd';
+import {Avatar, Button, List, Typography} from 'antd';
 import {useSelector} from "react-redux";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {useFetch} from "@/hook/useFetch.jsx";
 import {doQueryUserInfos} from "@/http/api/user.api.js";
 import ChatTab from "@/component/tab/ChatTab.jsx";
 import {DisplayNoneImageContext} from "@/views/App.jsx";
+import {useLocation} from "react-router-dom";
 
 const { Text, Title } = Typography;
 
@@ -15,10 +16,8 @@ const ChatGroupList = memo(() => {
     const [groupMemberInfo, setGroupMemberInfo] = useState([])
     const [group, setGroup] = useState(null)
     const {openOrCloseImage} = useContext(DisplayNoneImageContext)
-
-    useEffect(() => {
-        !isNullOrUndefined(doQueryUserInfosResp) && setGroupMemberInfo(doQueryUserInfosResp?.data || [])
-    }, [doQueryUserInfosResp]);
+    const location = useLocation();
+    const userInfo = useSelector(state => state.userInfo);
 
     const queryGroupMember = (group) => {
         const memberIds = group?.members.map(t => t.userId)
@@ -28,7 +27,18 @@ const ChatGroupList = memo(() => {
         memberIds.length > 0 && doQueryUserInfosProxy(memberIds)
     }
 
-    //todo 删除群
+    //群主就是true，否 false
+    const isGroupLoad = (group) => {
+        return !isNullOrUndefined(group.members.find(t => t.userId === userInfo.id))
+    }
+
+    useEffect(() => {
+        !isNullOrUndefined(location.state?.groupInfo) && queryGroupMember(location.state.groupInfo)
+    },[location]);
+
+    useEffect(() => {
+        !isNullOrUndefined(doQueryUserInfosResp) && setGroupMemberInfo(doQueryUserInfosResp?.data || [])
+    }, [doQueryUserInfosResp]);
 
     const items = [
         {
@@ -41,7 +51,8 @@ const ChatGroupList = memo(() => {
                         dataSource={groupMemberInfo}
                         renderItem={member => {
                             return (
-                                <List.Item key={member.id}>
+                                <List.Item key={member.id}
+                                           extra={isGroupLoad(group) ? <Button danger={true}>删除</Button> : null}>
                                     <List.Item.Meta
                                         avatar={<Avatar src={member.avatar} />}
                                         title={<Text>{member.nickname}</Text>}

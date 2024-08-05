@@ -4,7 +4,7 @@ import {AntDesignOutlined} from "@ant-design/icons";
 import infoBg from '@/assets/infoBg.jpg'
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {HOME_CHAT, HOME_CREATE_GROUP, HOME_PERSON_SETTING} from "@/router/index.jsx";
+import {HOME_CHAT, HOME_GROUP_LIST, HOME_PERSON_SETTING} from "@/router/index.jsx";
 import {isNullOrUndefined} from "@/lib/toolkit/util.js";
 import {DisplayNoneImageContext, DrawerContext} from "@/views/App.jsx";
 import {useFetch} from "@/hook/useFetch.jsx";
@@ -197,7 +197,7 @@ const GroupInfo = memo(({groupInfo}) => {
                                 //关闭抽屉
                                 closeDrawer()
                                 //跳转
-                                // navigate(HOME_CREATE_GROUP,{state:{from:HOME_CHAT,group:groupInfo}})
+                                navigate(HOME_GROUP_LIST,{state:{groupInfo:groupInfo}})
                             }}
                             className='max-w-15rem text-overflow cursor-pointer'
                             color={"blue"}>
